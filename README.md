@@ -13,6 +13,10 @@ $ ./build_images.sh exozet/draft-docker-php:8.1.13 3.17.0 8.1.13 php81 1.28.0 2.
 
 or run for php 8.0
 
+````shell
+$ ./build_images.sh exozet/draft-docker-php:8.0.26 3.16.3 8.0.26 php8 1.26.1 2.4.54
+````
+
 If you lack specific emulators (for running the multiarch build), install:
 
 ```shell

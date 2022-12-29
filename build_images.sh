@@ -26,7 +26,7 @@ docker buildx create --node buildx --name buildx --use
 for TARGET_PLATFORM in `echo $TARGET_PLATFORMS | tr -s ',' ' '`
 do
   TARGET_PLATFORM_SUFFIX=`echo $TARGET_PLATFORM | tr -s '/' '-'`
-  docker buildx build --load --platform $TARGET_PLATFORM -f $DOCKER_FILE_FOLDER/Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} --build-arg PHP_VERSION=$PHP_VERSION --build-arg PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME --build-arg UNIT_VERSION=$UNIT_VERSION --build-arg APACHE2_VERSION=$APACHE2_VERSION .
+  docker buildx build --pull --load --platform $TARGET_PLATFORM -f $DOCKER_FILE_FOLDER/Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} --build-arg PHP_VERSION=$PHP_VERSION --build-arg PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME --build-arg UNIT_VERSION=$UNIT_VERSION --build-arg APACHE2_VERSION=$APACHE2_VERSION .
 done
 
 
