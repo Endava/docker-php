@@ -33,7 +33,7 @@ $ echo '<?php phpinfo();' > public/index.php
 4. Run the NGINX Unit Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  exozet/draft-docker-php:8.1.13 unitd --no-daemon --user www-data --group www-data
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  exozet/draft-docker-php:8.1.13 unitd --no-daemon --user www-data --group www-data --log /dev/stdout
 ```
 
 and open http://localhost:8080 to see phpinfo unit.

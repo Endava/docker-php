@@ -22,11 +22,6 @@ jobs:
             alpine-version: "3.17.0"
             unit-version: "1.28.0"
             apache2-version: "2.4.54"
-          - php-version: "8.0.26"
-            php-package: "php8"
-            alpine-version: "3.16.3"
-            unit-version: "1.26.1"
-            apache2-version: "2.4.54"
     steps:
       -   name: "Checkout code"
           uses: actions/checkout@v3
