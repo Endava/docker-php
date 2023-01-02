@@ -85,4 +85,4 @@ jobs:
 
       -   if: contains(github.ref, 'refs/heads/release/')
           name: "Build and Push Multi Arch PHP ${{ matrix.php-version }}"
-          run: ./build_and_push_multi_arch_images.sh exozet/draft-docker-php:${{ matrix.php-version }} ${{ matrix.alpine-version }} ${{ matrix.php-version }} ${{ matrix.php-package }} ${{ matrix.unit-version }} ${{ matrix.apache2-version }}
+          run: ./build_and_push_multi_arch_images.sh exozet/draft-docker-php:${{ matrix.php-version }} ${{ matrix.php-version }}
