@@ -1,4 +1,6 @@
 <?php
+$imageName = $_SERVER['argv'][1];
+
 $osReleaseDescription = file_get_contents('/etc/os-release');
 $osNameAndVersion = 'unknown';
 if(preg_match_all("/^PRETTY_NAME=\"(.+?)\"$/im",$osReleaseDescription,$matches)) {
@@ -8,6 +10,14 @@ if(preg_match_all("/^PRETTY_NAME=\"(.+?)\"$/im",$osReleaseDescription,$matches))
 
 ?>
 This docker image is based on the <?php echo $osNameAndVersion; ?> distribution and contains a list of tools and php extensions.
+
+You can run this image via:
+
+```
+docker run --rm -it <?php echo $imageName; ?> -v
+```
+
+and will get the version pasted.
 
 <?php
 
