@@ -14,7 +14,7 @@ This docker image is based on the <?php echo $osNameAndVersion; ?> distribution 
 You can run this image via:
 
 ```
-docker run --rm -it <?php echo $imageName; ?> -v
+docker run --rm -it <?php echo $imageName; ?> php -v
 ```
 
 and will get the version pasted.
