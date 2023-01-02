@@ -14,10 +14,6 @@ jobs:
 
     continue-on-error: false
 
-    strategy:
-      matrix:
-        include:
-          - php-version: "8.1.13"
     steps:
       -   name: "Checkout code"
           uses: actions/checkout@v3
