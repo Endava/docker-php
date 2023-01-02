@@ -3,11 +3,12 @@
 set -e
 
 DOCKER_IMAGE_NAME=$1
+PHP_VERSION=$2
 TARGET_PLATFORMS=linux/arm64/v8,linux/amd64
 
-if [ ! -z "$2" ]
+if [ ! -z "$3" ]
 then
-  TARGET_PLATFORMS=$2
+  TARGET_PLATFORMS=$3
 fi
 
 docker buildx create --node buildx --name buildx --use
@@ -16,7 +17,7 @@ docker buildx create --node buildx --name buildx --use
 for TARGET_PLATFORM in `echo $TARGET_PLATFORMS | tr -s ',' ' '`
 do
   TARGET_PLATFORM_SUFFIX=`echo $TARGET_PLATFORM | tr -s '/' '-'`
-  docker buildx build --pull --load --platform $TARGET_PLATFORM -f Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} .
+  docker buildx build --pull --load --platform $TARGET_PLATFORM -f Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} --build-arg PHP_VERSION=$PHP_VERSION .
 done
 
 
