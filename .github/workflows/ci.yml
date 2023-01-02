@@ -35,6 +35,11 @@ jobs:
       -   name: "Check Alpine -v"
           run: docker run --rm -t exozet/draft-docker-php:${{ matrix.php-version }}-linux-amd64 php -v
 
+      -   name: "Run Tests"
+          run: tests/run_tests.sh
+          env:
+            DOCKER_REGISTRY_IMAGE: "exozet/draft-docker-php:${{ matrix.php-version }}-linux-amd64"
+
       -   name: Run Alpine Trivy vulnerability scanner
           uses: aquasecurity/trivy-action@master
           with:
