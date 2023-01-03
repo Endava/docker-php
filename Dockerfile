@@ -78,6 +78,8 @@ COPY php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
 RUN apk add -U composer
+ENV COMPOSER_HOME=/composer
+RUN mkdir /composer && chown www-data:www-data /composer
 
 # install php-fpm
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-fpm~=${PHP_VERSION}
