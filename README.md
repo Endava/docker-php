@@ -35,3 +35,9 @@ The new approach has some advantages:
 * It ships linux/arm64/v8 and linux/amd64 version of the image
 * The web server user is root, but web requests are executed as www-data
 * The github release notes (including tool versions and php extension versions) is automatically generated if a commit is tagged
+* The release is available only as exozet/draft-docker-php:8.1.13 (no suffix for -root, -xdebug -alpine or -sudo or others)
+
+The new approach has also some disadvantages:
+
+* It does not support debian. If we want to do it: we need to do the same approach for debian based on official repositories.
+* We depend on the release of php packages at alpine (e.g. on 2023/01/03 the php82 was not officially packaged on alpine including nginx unit - so we cannot support it. at the same time it is available as docker image on official docker php)
