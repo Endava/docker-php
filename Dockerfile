@@ -2,6 +2,7 @@ FROM alpine:3.17.0
 
 ARG PHP_VERSION
 ARG PHP_PACKAGE_BASENAME="php81"
+ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm81"
 ARG UNIT_VERSION="1.28.0"
 ARG APACHE2_VERSION="2.4.54"
 ARG GRPC_EXTENSION_VERSION="1.51.1"
@@ -10,6 +11,7 @@ ARG PCOV_EXTENSION_VERSION="1.0.11"
 ARG PCOV_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/testing"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
+ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
 ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
 ENV GRPC_EXTENSION_VERSION=$GRPC_EXTENSION_VERSION
@@ -77,6 +79,15 @@ COPY php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 # add composer
 RUN apk add -U composer
 
+# install php-fpm
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-fpm~=${PHP_VERSION}
+# the alpine php fpm package, does not deliver php-fpm binary without suffix
+RUN ln -s $PHP_FPM_BINARY_PATH /usr/sbin/php-fpm
+# use user www-data
+RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/php81/php-fpm.d/www.conf
+# use group www-data
+RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/php81/php-fpm.d/www.conf
+
 # install nginx unit and the php module for nginx unit
 RUN apk add -U unit~=$UNIT_VERSION unit-${PHP_PACKAGE_BASENAME}~=$UNIT_VERSION
 # add default nginx unit json file (listening on port 8080)
@@ -92,7 +103,7 @@ RUN sed -i -e 's/#LoadModule rewrite_module/LoadModule rewrite_module/g' /etc/ap
 RUN sed -i -e 's/Listen 80/Listen 8080/g' /etc/apache2/httpd.conf
 # use user www-data
 RUN sed -i -e 's/User apache/User www-data/g' /etc/apache2/httpd.conf
-# use user www-data
+# use group www-data
 RUN sed -i -e 's/Group apache/Group www-data/g' /etc/apache2/httpd.conf
 
 CMD ["php", "-a"]
