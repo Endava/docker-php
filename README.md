@@ -13,3 +13,25 @@ This is a docker php image is based on an alpine distribution including some too
 
 [github_actions_81_badge]: https://github.com/exozet/draft-docker-php/workflows/CI/badge.svg?branch=release/8.1
 [github_actions_81_link]: https://github.com/exozet/draft-docker-php/actions?query=branch%3Arelease%2F8.1
+
+# Why?
+
+At https://github.com/exozet/docker-php-fpm/wiki/Draft-for-new-Structure we collected ideas on how a new (including breaking changes) version of our heavily used php-fpm image could look like.
+
+We figured that our old approach had some disadvantages (it was a php-fpm build based on [official docker php images](https://hub.docker.com/_/php)):
+
+* it is based on a source build from php, so we could not use any packages from alpine/debian to speed up the build time
+* there are differences between the php package on debian/alpine 
+* there is no official alpine apache2 build
+* we cannot add nginx unit to alpine build, as it lacks php embed SAPI [comment on php!1355](https://github.com/docker-library/php/pull/1355#issuecomment-1352087633)
+* the non-alpine image has lots of (fixable) CVEs, we cannot fix (e.g. trivy image --ignore-unfixed php:8.1.13-fpm-buster says: Total: 23)
+
+The new approach has some advantages:
+
+* It uses the latest package distributed by alpine team/community (which is pretty fast when it comes to security updates - 1 or 2 days after release)
+* The precompiled packages (e.g. xdebug) are very fast installed
+* No need for custom scripts like [docker-php-ext-install](https://github.com/docker-library/php/blob/master/docker-php-ext-install)
+* It ships with httpd binary (for apache2), unitd binary (for nginx unit) and php-fpm binary (for php fpm) to execute php web requests
+* It ships linux/arm64/v8 and linux/amd64 version of the image
+* The web server user is root, but web requests are executed as www-data
+* The github release notes (including tool versions and php extension versions) is automatically generated if a commit is tagged
