@@ -8,7 +8,7 @@ This is a docker php image is based on an alpine distribution including some too
 
 | Version | Branch | Latest Release | Status | 
 | --- | --- | --- | --- |
-| **8.1** | [release/8.1](https://github.com/exozet/draft-docker-php/tree/release/8.1) | 8.1.13 | [![Build Status][github_actions_81_badge]][github_actions_81_link] 
+| **8.1** | [release/8.1](https://github.com/exozet/draft-docker-php/tree/release/8.1) | [8.1.13](https://github.com/exozet/draft-docker-php/releases/tag/8.1.13) | [![Build Status][github_actions_81_badge]][github_actions_81_link] 
 
 
 [github_actions_81_badge]: https://github.com/exozet/draft-docker-php/workflows/CI/badge.svg?branch=release/8.1
