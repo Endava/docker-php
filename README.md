@@ -36,8 +36,11 @@ The new approach has some advantages:
 * The web server user is root, but web requests are executed as www-data
 * The github release notes (including tool versions and php extension versions) is automatically generated if a commit is tagged
 * The release is available only as exozet/draft-docker-php:8.1.13 (no suffix for -root, -xdebug -alpine or -sudo or others)
+* The CI/CD pipeline includes tests to validate the image as nginx unit or apache2 delivery
+* The CI/CD pipeline only builds the latest version (if necessary we can git checkout -b 8.1.13 if you really want to fix something in a release)
 
 The new approach has also some disadvantages:
 
 * It does not support debian. If we want to do it: we need to do the same approach for debian based on official repositories.
 * We depend on the release of php packages at alpine (e.g. on 2023/01/03 the php82 was not officially packaged on alpine including nginx unit - so we cannot support it. at the same time it is available as docker image on official docker php)
+* If the packaged package version number is not available on alpine anymore - we cannot recreate the docker image
