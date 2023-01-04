@@ -132,6 +132,7 @@ ENV PHP_DATE_TIMEZONE="" \
     PHP_MAX_INPUT_VARS=1000 \
     PHP_MEMORY_LIMIT=128M \
     PHP_VARIABLES_ORDER="EGPCS" \
+    PHP_SHORT_OPEN_TAG="On" \
     # default is: no value, but grpc breaks pcntl if not activated.
     # https://github.com/grpc/grpc/blob/master/src/php/README.md#pcntl_fork-support \
     PHP_GRPC_ENABLE_FORK_SUPPORT='1' \
