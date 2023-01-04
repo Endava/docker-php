@@ -45,6 +45,8 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-calendar
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-curl
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-ctype
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-gd
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-fileinfo
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-ftp
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-iconv
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-intl
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-ldap
@@ -54,6 +56,8 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-opcache
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-openssl
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pcntl
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_mysql
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_pgsql
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_sqlite3
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pear
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-amqp
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-igbinary
@@ -62,10 +66,13 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-memcached
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-protobuf
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-phar
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-posix
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-redis
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-simplexml
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-soap
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-sockets
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-sodium
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-sqlite3
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-xdebug
 RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
