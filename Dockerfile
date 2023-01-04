@@ -43,6 +43,7 @@ ENV PHP_INI_DIR=/etc/${PHP_PACKAGE_BASENAME}/
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-bcmath
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-calendar
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-curl
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-ctype
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-gd
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-iconv
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-intl
@@ -62,11 +63,16 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-protobuf
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-phar
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-redis
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-simplexml
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-soap
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-sockets
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-xdebug
 RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
 RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-xml
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-xmlwriter
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-xmlreader
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-xsl
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-zip
 
