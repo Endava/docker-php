@@ -29,7 +29,7 @@ fi
 /usr/sbin/crond -b -d 8
 
 # trap SIGINT and SIGTERM signals and gracefully exit
-trap "service cron stop; kill \$!; exit" SIGINT SIGTERM
+trap "kill \$!; exit" SIGINT SIGTERM
 
 # start "daemon"
 while true
