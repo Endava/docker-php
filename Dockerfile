@@ -118,6 +118,10 @@ ENV PHP_DATE_TIMEZONE="" \
     PHP_MAX_INPUT_VARS=1000 \
     PHP_MEMORY_LIMIT=128M \
     PHP_VARIABLES_ORDER="EGPCS" \
+    # https://github.com/grpc/grpc/blob/master/src/php/README.md#pcntl_fork-support \
+    PHP_GRPC_ENABLE_FORK_SUPPORT='1' \
+    # https://github.com/grpc/grpc/blob/master/doc/core/grpc-polling-engines.md#polling-engine-implementations-in-grpc
+    PHP_GRPC_POLL_STRATEGY='epoll1' \
     PHP_OPCACHE_PRELOAD="" \
     PHP_OPCACHE_PRELOAD_USER="" \
     PHP_OPCACHE_MEMORY_CONSUMPTION=128 \
