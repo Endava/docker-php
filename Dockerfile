@@ -112,14 +112,17 @@ CMD ["php", "-a"]
 
 ENV PHP_DATE_TIMEZONE="" \
     PHP_LOG_ERRORS_MAX_LEN=1024 \
+    # default is: 0, but we need logs to stdout. https://www.php.net/manual/en/errorfunc.configuration.php#ini.log-errors
     PHP_LOG_ERRORS="1" \
     PHP_MAX_EXECUTION_TIME=0 \
     PHP_MAX_FILE_UPLOADS=20 \
     PHP_MAX_INPUT_VARS=1000 \
     PHP_MEMORY_LIMIT=128M \
     PHP_VARIABLES_ORDER="EGPCS" \
+    # default is: no value, but grpc breaks pcntl if not activated.
     # https://github.com/grpc/grpc/blob/master/src/php/README.md#pcntl_fork-support \
     PHP_GRPC_ENABLE_FORK_SUPPORT='1' \
+    # default is: no value, but grpc breaks pcntl if not having a fork support with a poll strategy.
     # https://github.com/grpc/grpc/blob/master/doc/core/grpc-polling-engines.md#polling-engine-implementations-in-grpc
     PHP_GRPC_POLL_STRATEGY='epoll1' \
     PHP_OPCACHE_PRELOAD="" \
