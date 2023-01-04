@@ -57,7 +57,7 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-openssl
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pcntl
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_mysql
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_pgsql
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_sqlite3
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pear
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-amqp
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-igbinary
