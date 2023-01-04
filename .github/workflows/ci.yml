@@ -82,4 +82,4 @@ jobs:
 
       -   if: contains(github.ref, 'refs/heads/release/')
           name: "Build and Push Multi Arch PHP"
-          run: ./build_and_push_multi_arch_images.sh temporary-build-image exozet/draft-docker-php
+          run: ./build_and_push_multi_arch_images.sh temporary-build-image-linux-amd64 exozet/draft-docker-php
