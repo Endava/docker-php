@@ -2,7 +2,7 @@
 
 set -e
 
-PHP_VERSION=`docker run --rm $1 php -r 'echo PHP_VERSION;'`
+PHP_VERSION=`docker run --rm --pull=never $1 php -r 'echo PHP_VERSION;'`
 
 if [ -z "$PHP_VERSION" ]
 then

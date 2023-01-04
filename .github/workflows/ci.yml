@@ -23,10 +23,10 @@ jobs:
             ./build_images.sh temporary-build-image
 
       -   name: "Check Alpine -i"
-          run: docker run --rm -t temporary-build-image-linux-amd64 php -i
+          run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -i
 
       -   name: "Check Alpine -v"
-          run: docker run --rm -t temporary-build-image-linux-amd64 php -v
+          run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
 
       -   name: "Run Tests"
           run: tests/run_tests.sh
