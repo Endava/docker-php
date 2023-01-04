@@ -14,9 +14,9 @@ DOCKER_IMAGE_NAME=$2:$PHP_VERSION
 QUAY_DOCKER_IMAGE_NAME=quay.io/$DOCKER_IMAGE_NAME
 TARGET_PLATFORMS=linux/arm64/v8,linux/amd64
 
-if [ ! -z "$2" ]
+if [ ! -z "$3" ]
 then
-  TARGET_PLATFORMS=$2
+  TARGET_PLATFORMS=$3
 fi
 
 # we have to do it like this, because of https://github.com/docker/buildx/issues/59#issuecomment-1168619521
