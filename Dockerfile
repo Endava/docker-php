@@ -31,7 +31,8 @@ RUN apk add -U \
     unzip \
     make \
     openssh-client \
-    bash
+    bash \
+    sed
 
 RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
@@ -120,6 +121,11 @@ RUN sed -i -e 's/Listen 80/Listen 8080/g' /etc/apache2/httpd.conf
 RUN sed -i -e 's/User apache/User www-data/g' /etc/apache2/httpd.conf
 # use group www-data
 RUN sed -i -e 's/Group apache/Group www-data/g' /etc/apache2/httpd.conf
+
+# the start-cron script
+RUN mkfifo -m 0666 /var/log/cron.log
+COPY start-cron /usr/sbin/start-cron
+RUN chmod +x /usr/sbin/start-cron
 
 CMD ["php", "-a"]
 
