@@ -8,38 +8,35 @@ on:
 
 jobs:
   ci:
-    name: Build PHP ${{ matrix.php-version }}
+    name: Build PHP Image
 
     runs-on: ubuntu-latest
 
     continue-on-error: false
 
-    strategy:
-      matrix:
-        include:
-          - php-version: "8.1.13"
     steps:
       -   name: "Checkout code"
           uses: actions/checkout@v3
 
       -   name: "Build Alpine"
-          run: ./build_images.sh exozet/draft-docker-php:${{ matrix.php-version }} ${{ matrix.alpine-version }} ${{ matrix.php-version }} ${{ matrix.php-package }} ${{ matrix.unit-version }} ${{ matrix.apache2-version }}
+          run: >
+            ./build_images.sh temporary-build-image
 
       -   name: "Check Alpine -i"
-          run: docker run --rm -t exozet/draft-docker-php:${{ matrix.php-version }}-linux-amd64 php -i
+          run: docker run --rm -t temporary-build-image-linux-amd64 php -i
 
       -   name: "Check Alpine -v"
-          run: docker run --rm -t exozet/draft-docker-php:${{ matrix.php-version }}-linux-amd64 php -v
+          run: docker run --rm -t temporary-build-image-linux-amd64 php -v
 
       -   name: "Run Tests"
           run: tests/run_tests.sh
           env:
-            DOCKER_REGISTRY_IMAGE: "exozet/draft-docker-php:${{ matrix.php-version }}-linux-amd64"
+            DOCKER_REGISTRY_IMAGE: "temporary-build-image-linux-amd64"
 
       -   name: Run Alpine Trivy vulnerability scanner
           uses: aquasecurity/trivy-action@master
           with:
-            image-ref: 'exozet/draft-docker-php:${{ matrix.php-version }}-linux-amd64'
+            image-ref: 'temporary-build-image-linux-amd64'
             format: 'table'
             exit-code: '0' # we don't break the build if vulnerabilities are included!
             ignore-unfixed: true
@@ -50,7 +47,7 @@ jobs:
           name: Run Alpine Trivy vulnerability scanner and upload to github security tab
           uses: aquasecurity/trivy-action@master
           with:
-            image-ref: 'exozet/draft-docker-php:${{ matrix.php-version }}-linux-amd64'
+            image-ref: 'temporary-build-image-linux-amd64'
             format: 'sarif'
             output: 'trivy-results.sarif'
 
@@ -66,7 +63,7 @@ jobs:
           with:
             format: 'github'
             output: 'dependency-results.sbom.json'
-            image-ref: 'exozet/draft-docker-php:${{ matrix.php-version }}-linux-amd64'
+            image-ref: 'temporary-build-image-linux-amd64'
             github-pat: ${{ secrets.PAT }}
       -   if: contains(github.ref, 'refs/heads/release/')
           name: Login to DockerHub
@@ -84,5 +81,5 @@ jobs:
             password: ${{ secrets.QUAY_PASSWORD }}
 
       -   if: contains(github.ref, 'refs/heads/release/')
-          name: "Build and Push Multi Arch PHP ${{ matrix.php-version }}"
-          run: ./build_and_push_multi_arch_images.sh exozet/draft-docker-php:${{ matrix.php-version }} ${{ matrix.php-version }}
+          name: "Build and Push Multi Arch PHP"
+          run: ./build_and_push_multi_arch_images.sh temporary-build-image exozet/draft-docker-php
