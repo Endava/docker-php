@@ -26,7 +26,7 @@ $CRONTAB_CONTENT" | crontab ${CRONTAB_USER_OPTIONS} -
 fi
 
 # start cron
-/usr/sbin/crond -b -d 8
+/usr/sbin/crond
 
 # trap SIGINT and SIGTERM signals and gracefully exit
 trap "kill \$!; exit" SIGINT SIGTERM

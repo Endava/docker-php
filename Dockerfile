@@ -124,6 +124,7 @@ RUN sed -i -e 's/Group apache/Group www-data/g' /etc/apache2/httpd.conf
 
 # the start-cron script
 RUN mkfifo -m 0666 /var/log/cron.log
+RUN chown www-data:www-data /var/log/cron.log
 COPY start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
