@@ -55,6 +55,7 @@ ENV PCOV_EXTENSION_REPOSITORY=$PCOV_EXTENSION_REPOSITORY
 RUN apk upgrade -U # 2023/01/05 to fix CVE-2022-3996
 
 RUN apk add -U \
+    libc6-compat \
     git \
     git-lfs \
     mysql-client \
