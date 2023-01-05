@@ -23,12 +23,6 @@ RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 RUN sed -i -e 's/_phpver=81/_phpver=82/' /workspace/aports/community/unit/APKBUILD
 RUN cd /workspace/aports/community/unit && abuild checksum && abuild -r
 
-# make php 8.2 the default php version
-RUN sed -i -e 's/_default_php="no"/_default_php="yes"/' /workspace/aports/community/php82/APKBUILD
-RUN cd /workspace/aports/community/php82 && abuild checksum && abuild -r
-
-RUN cd /workspace/packages/community/* && ls -al /workspace/packages/community/*
-
 FROM alpine:edge
 
 ARG PHP_VERSION="8.2.0"
@@ -128,6 +122,20 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-zip
 
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
 # FIXME: RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
+
+# we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
+RUN cd /usr/bin \
+    && ln -s php82 php \
+    && ln -s peardev82 peardev \
+    && ln -s pecl82 pecl \
+    && ln -s phar82 phar \
+    && ln -s phpize82 phpize \
+    && ln -s php-config82 php-config \
+    && ln -s phpdbg82 phpdbg \
+    && ln -s lsphp82 lsphp \
+    && ln -s php-cgi82 php-cgi \
+    && ln -s phar.phar82 phar.phar \
+    && ln -s phar82 phar
 
 # add php.ini containing environment variables
 COPY php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
