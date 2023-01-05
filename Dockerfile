@@ -1,5 +1,6 @@
 FROM alpine:edge as PHP82BUILDER
 
+RUN apk add -U libc6-compat
 RUN apk add -U alpine-sdk
 RUN apk add -U git git-lfs bash vim vimdiff curl
 
