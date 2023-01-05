@@ -60,7 +60,7 @@ jobs:
           with:
             sarif_file: 'trivy-results.sarif'
             sha: ${{ github.sha }}
-            ref: main
+            ref: refs/heads/main
 #
       -   if: contains(github.ref, 'refs/heads/release/')
           name: Run Trivy in GitHub SBOM mode and submit results to Dependency Snapshots
