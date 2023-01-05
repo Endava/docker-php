@@ -185,7 +185,7 @@ RUN chmod +x /usr/sbin/start-cron
 
 CMD ["php", "-a"]
 
-ENV PHP_DATE_TIMEZONE="" \
+ENV PHP_DATE_TIMEZONE="UTC" \
     PHP_ALLOW_URL_FOPEN="On" \
     PHP_LOG_ERRORS_MAX_LEN=1024 \
     # default is: 0, but we need logs to stdout. https://www.php.net/manual/en/errorfunc.configuration.php#ini.log-errors
