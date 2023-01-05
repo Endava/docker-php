@@ -100,9 +100,9 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-fpm~=${PHP_VERSION}
 # the alpine php fpm package, does not deliver php-fpm binary without suffix
 RUN ln -s $PHP_FPM_BINARY_PATH /usr/sbin/php-fpm
 # use user www-data
-RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/php81/php-fpm.d/www.conf
+RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
 # use group www-data
-RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/php81/php-fpm.d/www.conf
+RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
 
 # install nginx unit and the php module for nginx unit
 RUN apk add -U unit~=$UNIT_VERSION unit-${PHP_PACKAGE_BASENAME}~=$UNIT_VERSION
