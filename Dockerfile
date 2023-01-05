@@ -22,14 +22,12 @@ RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 # set php version for unit to php 8.2
 RUN sed -i -e 's/_phpver=81/_phpver=82/' /workspace/aports/community/unit/APKBUILD
 RUN cd /workspace/aports/community/unit && abuild checksum && abuild -r
-RUN rm /workspace/packages/community/*/APKINDEX.tar.gz
 
 # make php 8.2 the default php version
 RUN sed -i -e 's/_default_php="no"/_default_php="yes"/' /workspace/aports/community/php82/APKBUILD
 RUN cd /workspace/aports/community/php82 && abuild checksum && abuild -r
-RUN rm /workspace/packages/community/*/APKINDEX.tar.gz
 
-RUN cd /workspace/packages/community/* && apk index -vU -o APKINDEX.tar.gz *.apk && ls -al /workspace/packages/community/*
+RUN cd /workspace/packages/community/* && ls -al /workspace/packages/community/*
 
 FROM alpine:edge
 
