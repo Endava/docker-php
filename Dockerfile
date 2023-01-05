@@ -1,9 +1,41 @@
-FROM alpine:3.17.0
+FROM alpine:edge as PHP82BUILDER
 
-ARG PHP_VERSION="8.1.13"
-ARG PHP_PACKAGE_BASENAME="php81"
-ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm81"
-ARG UNIT_VERSION="1.28.0"
+RUN apk add -U alpine-sdk
+RUN apk add -U git git-lfs bash vim vimdiff curl
+
+RUN adduser -h /workspace -s /bin/bash -S -D -u 501 -G dialout alpiner
+RUN addgroup alpiner abuild
+
+RUN apk add --no-cache sudo
+RUN echo "alpiner ALL = NOPASSWD: ALL" > /etc/sudoers.d/alpiner
+
+WORKDIR /workspace/
+USER alpiner
+RUN abuild-keygen -n -a
+USER root
+RUN cp /workspace/.abuild/*.rsa.pub /etc/apk/keys/
+USER alpiner
+
+RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
+
+# set php version for unit to php 8.2
+RUN sed -i -e 's/_phpver=81/_phpver=82/' /workspace/aports/community/unit/APKBUILD
+RUN cd /workspace/aports/community/unit && abuild checksum && abuild -r
+RUN rm /workspace/packages/community/*/APKINDEX.tar.gz
+
+# make php 8.2 the default php version
+RUN sed -i -e 's/_default_php="no"/_default_php="yes"/' /workspace/aports/community/php82/APKBUILD
+RUN cd /workspace/aports/community/php82 && abuild checksum && abuild -r
+RUN rm /workspace/packages/community/*/APKINDEX.tar.gz
+
+RUN cd /workspace/packages/community/* && apk index -vU -o APKINDEX.tar.gz *.apk && ls -al /workspace/packages/community/*
+
+FROM alpine:edge
+
+ARG PHP_VERSION="8.2.0"
+ARG PHP_PACKAGE_BASENAME="php82"
+ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm82"
+ARG UNIT_VERSION="1.29.0"
 ARG APACHE2_VERSION="2.4.54"
 ARG GRPC_EXTENSION_VERSION="1.51.1"
 ARG GRPC_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/testing"
@@ -39,6 +71,14 @@ RUN apk add -U \
 RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
 
+COPY --from=PHP82BUILDER /workspace/packages/community /opt/php82-packages
+RUN apk add -U abuild && \
+     abuild-keygen -a -n && \
+     abuild-sign -k ~/.abuild/*.rsa /opt/php82-packages/*/APKINDEX.tar.gz && \
+     cp ~/.abuild/*.rsa.pub /etc/apk/keys/ && \
+     apk del abuild
+RUN echo -e "/opt/php82-packages\n$(cat /etc/apk/repositories)" > /etc/apk/repositories
+
 RUN apk add -U ${PHP_PACKAGE_BASENAME}~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed~=${PHP_VERSION}
 
 ENV PHP_INI_DIR=/etc/${PHP_PACKAGE_BASENAME}/
@@ -62,11 +102,11 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_mysql
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_pgsql
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pear
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-amqp
+# FIXME: RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-amqp
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-imagick
+# FIXME: RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-imagick
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-memcached
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-protobuf
+# FIXME: RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-protobuf
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-phar
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-posix
@@ -87,13 +127,13 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-xsl
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-zip
 
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
+# FIXME: RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 
 # add php.ini containing environment variables
 COPY php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
-RUN apk add -U composer
+COPY --from=composer:2.5.1 /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
