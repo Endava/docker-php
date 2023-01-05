@@ -127,7 +127,6 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repo
 # FIXME: RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 
 # we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
-
 RUN cd /usr/bin \
     && ln -s php82 php \
     && ln -s peardev82 peardev \
@@ -139,6 +138,9 @@ RUN cd /usr/bin \
     && ln -s php-cgi82 php-cgi \
     && ln -s phar.phar82 phar.phar \
     && ln -s phar82 phar
+
+# we need this, because memcached expects msgpack to be loaded before memcached
+RUN mv /etc/php82/conf.d/20_memcached.ini /etc/php82/conf.d/60_memcached.ini
 
 # add php.ini containing environment variables
 COPY php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
