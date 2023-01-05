@@ -15,14 +15,14 @@
       },
 
       "action": {
-        "pass": "applications/phpapp/direct"
+        "pass": "applications/phpapp"
       }
     },
     {
       "action": {
-        "share": "/usr/src/app/public",
+        "share": "/usr/src/app/public$uri",
         "fallback": {
-          "pass": "applications/phpapp/index"
+          "pass": "applications/phpapp"
         }
       }
     }
@@ -31,16 +31,8 @@
   "applications": {
     "phpapp": {
       "type": "php",
-      "targets": {
-        "direct": {
-          "root": "/usr/src/app/public/"
-        },
-
-        "index": {
-          "root": "/usr/src/app/public/",
-          "script": "index.php"
-        }
-      }
+      "root": "/usr/src/app/public/",
+      "script": "index.php"
     }
   },
 
