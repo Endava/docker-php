@@ -68,6 +68,9 @@ RUN set -eux; \
 COPY --from=PHP82BUILDER /workspace/packages/community /opt/php82-packages
 RUN apk add -U abuild && \
      abuild-keygen -a -n && \
+     rm /opt/php82-packages/*/APKINDEX.tar.gz && \
+     cd /opt/php82-packages/*/ && \
+     apk index -vU -o APKINDEX.tar.gz *.apk && \
      abuild-sign -k ~/.abuild/*.rsa /opt/php82-packages/*/APKINDEX.tar.gz && \
      cp ~/.abuild/*.rsa.pub /etc/apk/keys/ && \
      apk del abuild
@@ -124,11 +127,11 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repo
 # FIXME: RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 
 # we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
+
 RUN cd /usr/bin \
     && ln -s php82 php \
     && ln -s peardev82 peardev \
     && ln -s pecl82 pecl \
-    && ln -s phar82 phar \
     && ln -s phpize82 phpize \
     && ln -s php-config82 php-config \
     && ln -s phpdbg82 phpdbg \
