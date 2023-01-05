@@ -26,13 +26,13 @@ jobs:
           run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -r 'echo PHP_VERSION;'`" >> $GITHUB_ENV
 
       -   name: Tag also with php:${{ env.PHP_VERSION }}
-          run: docker tag temporary-build-image-linux-amd64 php:${{ env.PHP_VERSION }}
+          run: docker tag temporary-build-image-linux-amd64 php-${{ env.PHP_VERSION }}
 
       -   name: "Check Alpine -i"
-          run: docker run --pull=never --rm -t php:${{ env.PHP_VERSION }} php -i
+          run: docker run --pull=never --rm -t php-${{ env.PHP_VERSION }} php -i
 
       -   name: "Check Alpine -v"
-          run: docker run --pull=never --rm -t php:${{ env.PHP_VERSION }} php -v
+          run: docker run --pull=never --rm -t php-${{ env.PHP_VERSION }} php -v
 
       -   name: "Run Tests"
           run: tests/run_tests.sh
@@ -42,7 +42,7 @@ jobs:
       -   name: Run Alpine Trivy vulnerability scanner
           uses: aquasecurity/trivy-action@master
           with:
-            image-ref: 'temporary-build-image-linux-amd64'
+            image-ref: php-${{ env.PHP_VERSION }}
             format: 'table'
             exit-code: '0' # we don't break the build if vulnerabilities are included!
             ignore-unfixed: true
@@ -53,7 +53,7 @@ jobs:
           name: Run Alpine Trivy vulnerability scanner and upload to github security tab
           uses: aquasecurity/trivy-action@master
           with:
-            image-ref: php:${{ env.PHP_VERSION }}
+            image-ref: php-${{ env.PHP_VERSION }}
             format: 'sarif'
             output: 'trivy-results.sarif'
 
