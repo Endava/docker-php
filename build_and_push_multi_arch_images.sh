@@ -2,21 +2,13 @@
 
 set -e
 
-PHP_VERSION=`docker run --rm --pull=never $1 php -r 'echo PHP_VERSION;'`
-
-if [ -z "$PHP_VERSION" ]
-then
-  echo "Cannot find PHP version in docker image $1"
-  exit 1;
-fi
-
-DOCKER_IMAGE_NAME=$2:$PHP_VERSION
+DOCKER_IMAGE_NAME=$1
 QUAY_DOCKER_IMAGE_NAME=quay.io/$DOCKER_IMAGE_NAME
 TARGET_PLATFORMS=linux/arm64/v8,linux/amd64
 
-if [ ! -z "$3" ]
+if [ ! -z "$2" ]
 then
-  TARGET_PLATFORMS=$3
+  TARGET_PLATFORMS=$2
 fi
 
 # we have to do it like this, because of https://github.com/docker/buildx/issues/59#issuecomment-1168619521

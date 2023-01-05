@@ -22,6 +22,9 @@ jobs:
           run: >
             ./build_images.sh temporary-build-image
 
+      -   name: "PHP_VERSION Env"
+          run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -r 'echo PHP_VERSION;'`" >> $GITHUB_ENV
+
       -   name: "Check Alpine -i"
           run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -i
 
@@ -84,4 +87,4 @@ jobs:
 
       -   if: contains(github.ref, 'refs/heads/release/')
           name: "Build and Push Multi Arch PHP"
-          run: ./build_and_push_multi_arch_images.sh temporary-build-image-linux-amd64 exozet/draft-docker-php
+          run: ./build_and_push_multi_arch_images.sh exozet/draft-docker-php:{{ env.PHP_VERSION }}
