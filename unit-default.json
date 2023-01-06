@@ -4,7 +4,6 @@
       "pass": "routes"
     }
   },
-
   "routes": [
     {
       "match": {
@@ -13,26 +12,31 @@
           "*.php/*"
         ]
       },
-
       "action": {
-        "pass": "applications/phpapp"
+        "pass": "applications/phpapp/direct"
       }
     },
     {
       "action": {
         "share": "/usr/src/app/public$uri",
         "fallback": {
-          "pass": "applications/phpapp"
+          "pass": "applications/phpapp/index"
         }
       }
     }
   ],
-
   "applications": {
     "phpapp": {
       "type": "php",
-      "root": "/usr/src/app/public/",
-      "script": "index.php"
+      "targets": {
+        "direct": {
+          "root": "/usr/src/app/public/"
+        },
+        "index": {
+          "root": "/usr/src/app/public/",
+          "script": "index.php"
+        }
+      }
     }
   },
 
