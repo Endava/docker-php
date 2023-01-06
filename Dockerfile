@@ -108,6 +108,8 @@ RUN apk add -U binutils build-base openssl-dev autoconf pcre2-dev automake libto
     && apk del --no-network .build-deps \
     && apk add -U rabbitmq-c
 
+RUN apk add -U ${PHP_PACKAGE_BASENAME}-tokenizer
+
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-igbinary
 # FIXME: RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-imagick
 RUN apk add -U binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
@@ -134,7 +136,6 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-soap
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-sockets
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-sodium
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-sqlite3
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-xdebug
 RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
 RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
