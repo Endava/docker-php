@@ -2,7 +2,7 @@ name: Security Scan
 
 on:
   schedule:
-    - cron:  '0 12 * * *' # each day at lunch time
+    - cron:  '40 13 * * *' # each day at lunch time
 
 jobs:
   ci:
