@@ -9,8 +9,8 @@ This is a docker php image is based on an alpine distribution including some too
 | Version | Branch | Latest Release | Status | Security Report |
 | --- | --- | --- | --- | --- |
 | **8.2** | [release/8.2](https://github.com/exozet/draft-docker-php/tree/release/8.2) | [8.2.1](https://github.com/exozet/draft-docker-php/releases/tag/8.2.1) | [![Build Status][github_actions_82_badge]][github_actions_82_link] | [Security Report][security_report_82_link]
-| **8.1** | [release/8.1](https://github.com/exozet/draft-docker-php/tree/release/8.1) | [8.1.14](https://github.com/exozet/draft-docker-php/releases/tag/8.1.13) | [![Build Status][github_actions_81_badge]][github_actions_81_link] | [Security Report][security_report_81_link]
-| **8.0** | [release/8.0](https://github.com/exozet/draft-docker-php/tree/release/8.0) | [8.0.27](https://github.com/exozet/draft-docker-php/releases/tag/8.0.26) | [![Build Status][github_actions_80_badge]][github_actions_80_link] | [Security Report][security_report_80_link]
+| **8.1** | [release/8.1](https://github.com/exozet/draft-docker-php/tree/release/8.1) | [8.1.14](https://github.com/exozet/draft-docker-php/releases/tag/8.1.14) | [![Build Status][github_actions_81_badge]][github_actions_81_link] | [Security Report][security_report_81_link]
+| **8.0** | [release/8.0](https://github.com/exozet/draft-docker-php/tree/release/8.0) | [8.0.27](https://github.com/exozet/draft-docker-php/releases/tag/8.0.27) | [![Build Status][github_actions_80_badge]][github_actions_80_link] | [Security Report][security_report_80_link]
 
 [github_actions_82_badge]: https://github.com/exozet/draft-docker-php/workflows/CI/badge.svg?branch=release/8.2
 [github_actions_82_link]: https://github.com/exozet/draft-docker-php/actions?query=branch%3Arelease%2F8.2
