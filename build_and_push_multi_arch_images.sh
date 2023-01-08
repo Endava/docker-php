@@ -4,7 +4,7 @@ set -e
 
 DOCKER_IMAGE_NAME=$1
 QUAY_DOCKER_IMAGE_NAME=quay.io/$DOCKER_IMAGE_NAME
-TARGET_PLATFORMS=linux/amd64
+TARGET_PLATFORMS=linux/arm64/v8,linux/amd64
 
 if [ ! -z "$2" ]
 then

@@ -1,4 +1,6 @@
-FROM alpine:edge as PHP82BUILDER
+FROM --platform=${BUILDPLATFORM} alpine:edge as PHP82BUILDER
+
+ARG TARGETPLATFORM
 
 RUN apk add -U libc6-compat
 RUN apk add -U alpine-sdk
@@ -23,9 +25,11 @@ RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 RUN sed -i -e 's/_phpver=81/_phpver=82/' /workspace/aports/community/unit/APKBUILD
 RUN cd /workspace/aports/community/unit && abuild checksum && abuild -r
 
-FROM alpine:edge
+FROM --platform=${BUILDPLATFORM} alpine:edge
 
-ARG PHP_VERSION="8.2.0"
+ARG TARGETPLATFORM
+
+ARG PHP_VERSION="8.2.1"
 ARG PHP_PACKAGE_BASENAME="php82"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm82"
 ARG UNIT_VERSION="1.29.0"
