@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  schedule:
+    - cron:  '0 12 * * *' # each day at lunch time
+
+jobs:
+  ci:
+    name: Build PHP Image
+
+    runs-on: ubuntu-latest
+
+    continue-on-error: false
+
+    steps:
+      -   name: "Checkout code"
+          uses: actions/checkout@v3
+
+      -   name: "PHP_VERSION Env"
+          run: echo "PHP_VERSION=`grep "ARG PHP_VERSION" Dockerfile | cut -f 2 -d '"'`" > GITHUB_ENV
+
+      -   name: Run Alpine Trivy vulnerability scanner
+          uses: aquasecurity/trivy-action@master
+          with:
+            image-ref: exozet/draft-docker-php:${{ env.PHP_VERSION }}
+            format: 'table'
+            exit-code: '0' # we don't break the build if vulnerabilities are included!
+            ignore-unfixed: true
+            vuln-type: 'os,library'
+            severity: 'CRITICAL,HIGH'
+
+      -   if: contains(github.ref, 'refs/heads/release/')
+          name: Run Alpine Trivy vulnerability scanner and upload to github security tab
+          uses: aquasecurity/trivy-action@master
+          with:
+            image-ref: exozet/draft-docker-php:${{ env.PHP_VERSION }}
+            format: 'sarif'
+            output: 'trivy-results.sarif'
+
+      -   if: contains(github.ref, 'refs/heads/release/')
+          name: Upload Alpine Trivy scan results to GitHub Security tab
+          uses: github/codeql-action/upload-sarif@v2
+          with:
+            sarif_file: 'trivy-results.sarif'
