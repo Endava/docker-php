@@ -17,8 +17,14 @@ for TARGET_PLATFORM in `echo $TARGET_PLATFORMS | tr -s ',' ' '`
 do
   TARGET_PLATFORM_SUFFIX=`echo $TARGET_PLATFORM | tr -s '/' '-'`
   docker buildx build --pull --load --platform $TARGET_PLATFORM -f Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} .
+
+  for SUFFIX in unit fpm apache2
+  do
+    cat Dockerfile > Dockerfile-${SUFFIX}
+    echo "" >> Dockerfile-${SUFFIX}
+    cat files/$SUFFIX/$SUFFIX.Dockerfile.snippet.txt >> Dockerfile-${SUFFIX}
+
+    docker buildx build --pull --load --platform $TARGET_PLATFORM -f Dockerfile-${SUFFIX} -t ${DOCKER_IMAGE_NAME}-${SUFFIX}-${TARGET_PLATFORM_SUFFIX} .
+    rm Dockerfile-${SUFFIX}
+  done
 done
-
-
-
-
