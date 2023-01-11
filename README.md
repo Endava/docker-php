@@ -5,16 +5,10 @@ The PoC for https://github.com/exozet/docker-php-fpm/wiki/Draft-for-new-Structur
 ## Test it
 
 1. Clone the repo
-2. Run for php 8.1
-
-```shell
-$ ./build_images.sh exozet/draft-docker-php:8.1.13 3.17.0 8.1.13 php81 1.28.0 2.4.54
-```
-
-or run for php 8.0
+2. Run for php 8.0
 
 ````shell
-$ ./build_images.sh exozet/draft-docker-php:8.0.26 3.16.3 8.0.26 php8 1.26.1 2.4.54
+$ ./build_images.sh exozet/draft-docker-php:8.0.27
 ````
 
 If you lack specific emulators (for running the multiarch build), install:
@@ -33,7 +27,7 @@ $ echo '<?php phpinfo();' > public/index.php
 4. Run the NGINX Unit Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  exozet/draft-docker-php:8.1.13 unitd --no-daemon --user www-data --group www-data --log /dev/stdout
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  exozet/draft-docker-php:8.0.27-unit
 ```
 
 and open http://localhost:8080 to see phpinfo unit.
@@ -47,7 +41,7 @@ Time per request:       93.651 [ms] (mean)
 5. Run the Apache2 Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  exozet/draft-docker-php:8.1.13 httpd -DFOREGROUND
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  exozet/draft-docker-php:8.0.27-apache2
 ```
 
 and open http://localhost:8080 to see phpinfo on apache2.
