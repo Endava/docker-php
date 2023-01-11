@@ -1,0 +1,5 @@
+# start: source at files/fpm/fpm.Dockerfile.snippet.txt
+# graceful STOPSIGNAL is SIGQUIT as of https://github.com/php/php-src/blob/17baa87faddc2550def3ae7314236826bc1b1398/sapi/fpm/php-fpm.8.in#L163
+STOPSIGNAL QUIT
+CMD ["php-fpm", "--nodaemonize"]
+# end  : source at files/fpm/fpm.Dockerfile.snippet.txt
