@@ -17,3 +17,16 @@ docker buildx create --node buildx --name buildx --use
 docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $DOCKER_IMAGE_NAME .
 echo "Build and Push ${QUAY_DOCKER_IMAGE_NAME}"
 docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $QUAY_DOCKER_IMAGE_NAME .
+
+for SUFFIX in unit fpm apache2
+do
+  cat Dockerfile > Dockerfile-${SUFFIX}
+  echo "" >> Dockerfile-${SUFFIX}
+  cat files/$SUFFIX/$SUFFIX.Dockerfile.snippet.txt >> Dockerfile-${SUFFIX}
+
+  echo "Build and Push ${DOCKER_IMAGE_NAME}-${SUFFIX}"
+  docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $DOCKER_IMAGE_NAME-${SUFFIX} .
+  echo "Build and Push ${QUAY_DOCKER_IMAGE_NAME}-${SUFFIX}"
+  docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $QUAY_DOCKER_IMAGE_NAME-${SUFFIX} .
+  rm Dockerfile-${SUFFIX}
+done
