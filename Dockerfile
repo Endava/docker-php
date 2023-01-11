@@ -90,7 +90,7 @@ RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repo
 RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 
 # add php.ini containing environment variables
-COPY php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
+COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
 RUN apk add -U composer
@@ -109,12 +109,12 @@ RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/${PHP_PACKAGE_BASENAME}
 # install nginx unit and the php module for nginx unit
 RUN apk add -U unit~=$UNIT_VERSION unit-${PHP_PACKAGE_BASENAME}~=$UNIT_VERSION
 # add default nginx unit json file (listening on port 8080)
-COPY unit-default.json /var/lib/unit/conf.json
+COPY files/unit/unit-default.json /var/lib/unit/conf.json
 
 # install apache2 and the php module for apache2
 RUN apk add -U apache2~=$APACHE2_VERSION ${PHP_PACKAGE_BASENAME}-apache2~=${PHP_VERSION}
 # add default apache2 config file
-COPY apache2-default.conf /etc/apache2/conf.d/00_apache2-default.conf
+COPY files/apache2/apache2-default.conf /etc/apache2/conf.d/00_apache2-default.conf
 # activate rewrite module
 RUN sed -i -e 's/#LoadModule rewrite_module/LoadModule rewrite_module/g' /etc/apache2/httpd.conf
 # listen port 8080
@@ -127,7 +127,7 @@ RUN sed -i -e 's/Group apache/Group www-data/g' /etc/apache2/httpd.conf
 # the start-cron script
 RUN mkfifo -m 0666 /var/log/cron.log
 RUN chown www-data:www-data /var/log/cron.log
-COPY start-cron /usr/sbin/start-cron
+COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 CMD ["php", "-a"]
