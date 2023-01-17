@@ -21,7 +21,7 @@ ENV PCOV_EXTENSION_REPOSITORY=$PCOV_EXTENSION_REPOSITORY
 
 RUN apk upgrade -U # 2023/01/05 to fix CVE-2022-2097, CVE-2022-30065 and CVE-2022-37434
 
-RUN apk add -U \
+RUN apk add --no-cache \
     git \
     git-lfs \
     mysql-client \
@@ -39,66 +39,66 @@ RUN apk add -U \
 RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
 
-RUN apk add -U ${PHP_PACKAGE_BASENAME}~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed~=${PHP_VERSION}
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed~=${PHP_VERSION}
 
 ENV PHP_INI_DIR=/etc/${PHP_PACKAGE_BASENAME}/
 
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-bcmath
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-calendar
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-curl
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-ctype
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-gd
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-fileinfo
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-ftp
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-iconv
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-intl
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-ldap
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-mbstring
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-mysqli
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-opcache
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-openssl
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pcntl
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_mysql
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_pgsql
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pdo_sqlite
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pear
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-amqp
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-imagick
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-memcached
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-protobuf
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pgsql
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-phar
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-posix
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-redis
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-simplexml
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-soap
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-sockets
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-sodium
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-sqlite3
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-tokenizer
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-xdebug
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-bcmath
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-calendar
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-curl
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-ctype
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-gd
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-fileinfo
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-ftp
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-iconv
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-intl
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-ldap
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-mbstring
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-mysqli
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-opcache
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-openssl
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pcntl
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_pgsql
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-posix
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-simplexml
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-soap
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sodium
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sqlite3
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xdebug
 RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
 RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-xml
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-xmlwriter
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-xmlreader
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-xsl
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-zip
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xml
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlwriter
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlreader
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xsl
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
-RUN apk add -U composer
+RUN apk add --no-cache composer
 ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
 # install php-fpm
-RUN apk add -U ${PHP_PACKAGE_BASENAME}-fpm~=${PHP_VERSION}
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-fpm~=${PHP_VERSION}
 # the alpine php fpm package, does not deliver php-fpm binary without suffix
 RUN ln -s $PHP_FPM_BINARY_PATH /usr/sbin/php-fpm
 # use user www-data
@@ -107,12 +107,12 @@ RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/p
 RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
 
 # install nginx unit and the php module for nginx unit
-RUN apk add -U unit~=$UNIT_VERSION unit-${PHP_PACKAGE_BASENAME}~=$UNIT_VERSION
+RUN apk add --no-cache unit~=$UNIT_VERSION unit-${PHP_PACKAGE_BASENAME}~=$UNIT_VERSION
 # add default nginx unit json file (listening on port 8080)
 COPY files/unit/unit-default.json /var/lib/unit/conf.json
 
 # install apache2 and the php module for apache2
-RUN apk add -U apache2~=$APACHE2_VERSION ${PHP_PACKAGE_BASENAME}-apache2~=${PHP_VERSION}
+RUN apk add --no-cache apache2~=$APACHE2_VERSION ${PHP_PACKAGE_BASENAME}-apache2~=${PHP_VERSION}
 # add default apache2 config file
 COPY files/apache2/apache2-default.conf /etc/apache2/conf.d/00_apache2-default.conf
 # activate rewrite module
