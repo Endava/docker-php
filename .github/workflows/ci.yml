@@ -19,10 +19,11 @@ jobs:
           uses: actions/checkout@v3
 
       -   name: Lint Dockerfile
-          uses: hadolint/hadolint-action@master
+          uses: hadolint/hadolint-action@v2.1.0
           with:
             dockerfile: "Dockerfile"
             format: "tty"
+            no-color: "true"
 
       -   name: "Build Alpine"
           run: >
