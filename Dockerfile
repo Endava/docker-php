@@ -108,7 +108,8 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+# hadolint ignore=DL3019
+RUN apk add -U binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && MAKEFLAGS="-j $(nproc)" pecl82 install amqp \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
     && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_amqp.ini \
@@ -119,7 +120,8 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+# hadolint ignore=DL3019
+RUN apk add -U binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && MAKEFLAGS="-j $(nproc)" pecl82 install imagick \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/imagick.so \
     && echo "extension=imagick" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_imagick.ini \
@@ -128,7 +130,8 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+# hadolint ignore=DL3019
+RUN apk add -U binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && MAKEFLAGS="-j $(nproc)" pecl82 install protobuf \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/protobuf.so \
     && echo "extension=protobuf" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_protobuf.ini \
