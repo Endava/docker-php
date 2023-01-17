@@ -61,5 +61,5 @@ The new approach has also some disadvantages:
 Please refer to [CONTRIBUTING.md](CONTRIBUTING.md). 
 
 # License
-Please refer to [LICENSE.md](LICENSE.md). 
+Please refer to [LICENSE](LICENSE). 
 
