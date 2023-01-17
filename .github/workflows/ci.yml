@@ -25,7 +25,7 @@ jobs:
             format: "tty"
             no-color: "true"
             output-file: "/dev/stdout"
-            ignores: DL3018,DL3059
+            ignore: DL3018,DL3059
             # DL3018: warning: Pin versions in apk add. Instead of `apk add <package>` use `apk add <package>=<version>`
             # DL3059: info: Multiple consecutive `RUN` instructions. Consider consolidation.
 
