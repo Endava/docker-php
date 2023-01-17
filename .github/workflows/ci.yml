@@ -24,7 +24,7 @@ jobs:
             dockerfile: "Dockerfile"
             format: "tty"
             no-color: "true"
-            output-file: "/dev/std"
+            output-file: "/dev/stdout"
 
       -   name: "Build Alpine"
           run: >
