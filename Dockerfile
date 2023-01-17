@@ -24,7 +24,10 @@ RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 # set php version for unit to php 8.2
 RUN sed -i -e 's/_phpver=81/_phpver=82/' /workspace/aports/community/unit/APKBUILD
 WORKDIR /workspace/aports/community/unit
-RUN apk update && abuild checksum && abuild -r
+USER root
+RUN apk update
+USER alpiner
+RUN abuild checksum && abuild -r
 
 FROM --platform=${BUILDPLATFORM} alpine:edge
 
