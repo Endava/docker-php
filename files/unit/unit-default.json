@@ -28,6 +28,11 @@
   "applications": {
     "phpapp": {
       "type": "php",
+      "processes": {
+        "max": 32,
+        "spare": 2,
+        "idle_timeout": 10
+      },
       "targets": {
         "direct": {
           "root": "/usr/src/app/public/"
