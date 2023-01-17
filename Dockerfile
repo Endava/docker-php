@@ -71,6 +71,7 @@ RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
 
 COPY --from=PHP82BUILDER /workspace/packages/community /opt/php82-packages
+# hadolint ignore=DL3003,SC2035
 RUN apk add --no-cache abuild && \
      abuild-keygen -a -n && \
      rm /opt/php82-packages/*/APKINDEX.tar.gz && \
@@ -79,6 +80,7 @@ RUN apk add --no-cache abuild && \
      abuild-sign -k ~/.abuild/*.rsa /opt/php82-packages/*/APKINDEX.tar.gz && \
      cp ~/.abuild/*.rsa.pub /etc/apk/keys/ && \
      apk del abuild
+# hadolint ignore=SC3037
 RUN echo -e "/opt/php82-packages\n$(cat /etc/apk/repositories)" > /etc/apk/repositories
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed~=${PHP_VERSION}

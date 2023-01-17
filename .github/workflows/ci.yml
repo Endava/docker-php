@@ -25,12 +25,9 @@ jobs:
             format: "tty"
             no-color: "true"
             output-file: "/dev/stdout"
-            ignore: DL3018,DL3059,DL3003,SC2035,SC3037
+            ignore: DL3018,DL3059
             # DL3018: warning: Pin versions in apk add. Instead of `apk add <package>` use `apk add <package>=<version>`
             # DL3059: info: Multiple consecutive `RUN` instructions. Consider consolidation.
-            # DL3003: warning: Use WORKDIR to switch to a directory
-            # SC2035: info: Use ./*glob* or -- *glob* so names with dashes won't become options.
-            # SC3037: warning: In POSIX sh, echo flags are undefined.
 
       -   name: "Build Alpine"
           run: >
