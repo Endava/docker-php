@@ -24,7 +24,7 @@ This is a docker php image is based on an alpine distribution including some too
 [github_actions_80_link]: https://github.com/exozet/draft-docker-php/actions?query=branch%3Arelease%2F8.0
 [security_report_80_link]: https://github.com/exozet/draft-docker-php/security/code-scanning?query=is%3Aopen+branch%3Arelease%2F8.0
 
-# Why?
+# Overview
 
 At https://github.com/exozet/docker-php-fpm/wiki/Draft-for-new-Structure we collected ideas on how a new (including breaking changes) version of our heavily used php-fpm image could look like.
 
@@ -54,3 +54,12 @@ The new approach has also some disadvantages:
 * It does not support debian. If we want to do it: we need to do the same approach for debian based on official repositories.
 * We depend on the release of php packages at alpine (e.g. on 2023/01/03 the php82 was not officially packaged on alpine including nginx unit - so we cannot support it. at the same time it is available as docker image on official docker php)
 * If the packaged package version number is not available on alpine anymore - we cannot recreate the docker image
+
+
+
+# Contributing
+Please refer to [CONTRIBUTING.md](CONTRIBUTING.md). 
+
+# License
+Please refer to [LICENSE.md](LICENSE.md). 
+
