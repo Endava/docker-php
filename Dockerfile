@@ -195,11 +195,16 @@ RUN ln -s $PHP_FPM_BINARY_PATH /usr/sbin/php-fpm
 RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
 # use group www-data
 RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
+# write error_log to /dev/stderr
+RUN sed -i -e 's/;error_log.*/error_log=\/dev\/stderr/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.conf
 
 # install nginx unit and the php module for nginx unit
 RUN apk add --no-cache unit~=$UNIT_VERSION unit-${PHP_PACKAGE_BASENAME}~=$UNIT_VERSION
 # add default nginx unit json file (listening on port 8080)
 COPY files/unit/unit-default.json /var/lib/unit/conf.json
+# add folder for control socket file
+RUN mkdir /run/unit/
+RUN chown www-data:www-data /run/unit/
 
 # install apache2 and the php module for apache2
 RUN apk add --no-cache apache2~=$APACHE2_VERSION ${PHP_PACKAGE_BASENAME}-apache2~=${PHP_VERSION}
@@ -213,6 +218,12 @@ RUN sed -i -e 's/Listen 80/Listen 8080/g' /etc/apache2/httpd.conf
 RUN sed -i -e 's/User apache/User www-data/g' /etc/apache2/httpd.conf
 # use group www-data
 RUN sed -i -e 's/Group apache/Group www-data/g' /etc/apache2/httpd.conf
+# write ErrorLog to /dev/stderr
+RUN sed -i -e 's/ErrorLog logs\/error.log/ErrorLog \/dev\/stderr/g' /etc/apache2/httpd.conf
+# write CustomLog to /dev/stdout
+RUN sed -i -e 's/CustomLog logs\/access.log/CustomLog \/dev\/stdout/g' /etc/apache2/httpd.conf
+# write make it possible to write pid as www-data user to /run/apache2/httpd.pid
+RUN chown www-data:www-data /run/apache2/
 
 # the start-cron script
 RUN mkfifo -m 0666 /var/log/cron.log
@@ -260,3 +271,5 @@ ENV PHP_DATE_TIMEZONE="UTC" \
 RUN mkdir -p /usr/src/app
 RUN chown -R www-data:www-data /usr/src/app
 WORKDIR /usr/src/app
+
+USER www-data
