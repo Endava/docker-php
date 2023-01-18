@@ -96,7 +96,8 @@ The `-unit` tagged docker image (because it has attached this snippet at [files/
 * The `STOPSIGNAL` is set to `SIGQUIT` to allow graceful stop.
 * The `CMD` has `unitd --no-daemon` set to run unitd in foreground
 * The `CMD` has `--user www-data` and `--group www-data` to ensure it's running www-data as user/group
-* The `CMD` has `--log /dev/stdout` 
+* The `CMD` has `--log /dev/stdout`
+* THE `CMD` has `--control unix:/run/unit/control.unit.sock --pid /run/unit/unit.pid` set to be writeable by www-data
 
 ## apache2
 
@@ -104,19 +105,18 @@ This docker image contains a [files/apache2/apache2-default.conf](files/apache2/
 
 The directive `DocumentRoot` is set to `/usr/src/app/public` to deliver `index.php` from this folder.
 
-The directive `ErrorLog` is set to `/dev/stderr` to ensure that we have the error log as output to the docker container.
+The directive `ErrorLog` in `httpd.conf` is set to `/dev/stderr` to ensure that we have the error log as output to the docker container.
 
-The directive `TransferLog` and `CustomLog` is set to `/dev/stdout` to ensure that we have the access log and normal log as output to the docker container.
- 
+The directive `CustomLog` (which includes `TransferLog`) in `httpd.conf` is set to `/dev/stdout` to ensure that we have the access log and normal log as output to the docker container.
+
 The `/etc/apache2/httpd.conf` is adjusted to enable `LoadModule rewrite_module`.
 
 The default `Listen 8080` in `httpd.conf` to ensure that the server is reachable via port 8080.
 
-The default user and group is set to `www-data`.
+The default user and group in `httpd.conf` is set to `www-data`.
 
 
 The `-apache2` tagged docker image (because it has attached this snippet at [files/apache2/apache2.Dockerfile.snippet.txt](files/apache2/apache2.Dockerfile.snippet.txt) has two settings set:
 
 * The `STOPSIGNAL` is set to `WINCH` to allow graceful stop.
 * The `CMD` has `httpd -DFOREGROUND` set to run httpd in foreground
-
