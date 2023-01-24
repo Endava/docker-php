@@ -118,6 +118,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
     && apk del --no-network .build-deps \
     && apk add --no-cache rabbitmq-c
 
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
