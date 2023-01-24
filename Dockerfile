@@ -177,7 +177,25 @@ RUN chown www-data:www-data /var/log/cron.log
 COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
+# install caddy with frankenphp
+RUN apk add -U libxml2-dev go sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION}
+WORKDIR /opt
+RUN git clone https://github.com/dunglas/frankenphp.git --recursive
+WORKDIR /opt/frankenphp/caddy/frankenphp
+RUN export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
+    && export PHP_CPPFLAGS="$PHP_CFLAGS" \
+    && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags`" \
+#    && export CGO_LDFLAGS="-lssl -lcrypto -lreadline -largon2 -lcurl -lonig -lz $PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
+    && export CGO_LDFLAGS="$PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
+    && go build
+RUN mv /opt/frankenphp/caddy/frankenphp/frankenphp /usr/sbin/frankenphp
+COPY files/frankenphp/Caddyfile /etc/Caddyfile
+# FIXME: start with /usr/sbin/frankenphp run --config /etc/Caddyfile
+# LISTEN on port 443! is always SSL and localhost!
+# FIXME: check for modules via `./frankenphp list-modules | grep php` and see `frankenphp` and `http.handlers.php`
+
 CMD ["php", "-a"]
+
 
 ENV PHP_DATE_TIMEZONE="UTC" \
     PHP_ALLOW_URL_FOPEN="On" \
