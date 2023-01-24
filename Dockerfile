@@ -232,10 +232,11 @@ COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 # install caddy with frankenphp
-RUN apk add -U libxml2-dev go sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION}
+RUN apk add --no-cache libxml2-dev go sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION}
 WORKDIR /opt
 RUN git clone https://github.com/dunglas/frankenphp.git --recursive
 WORKDIR /opt/frankenphp/caddy/frankenphp
+# hadolint ignore=SC2086
 RUN export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
     && export PHP_CPPFLAGS="$PHP_CFLAGS" \
     && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags`" \
