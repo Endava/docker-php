@@ -111,8 +111,9 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
+# FIXME: remove version sed as soon as rabbitmq-c 0.13.0 is available in alpine
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && sed -i "s/Version: \$/Version: `apk list rabbitmq-c | cut -f 3 -d '-'`/g" /usr/lib/pkgconfig/librabbitmq.pc \ # FIXME: remove as soon as rabbitmq-c 0.13.0 is available in alpine
+    && sed -i "s/Version: \$/Version: `apk list rabbitmq-c | cut -f 3 -d '-'`/g" /usr/lib/pkgconfig/librabbitmq.pc \ 
     && MAKEFLAGS="-j $(nproc)" pecl82 install amqp \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
     && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_amqp.ini \
