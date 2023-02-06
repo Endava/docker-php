@@ -6,7 +6,7 @@ This is a docker php image is based on an alpine distribution including some too
 
 # Supported Versions
 
-| Version | Branch | Latest Release | Status | Security Report |
+| Version | Branch | Latest Release | Status | Security Report (Owners only) |
 | --- | --- | --- | --- | --- |
 | **8.2** | [release/8.2](https://github.com/exozet/draft-docker-php/tree/release/8.2) | [8.2.2](https://github.com/exozet/draft-docker-php/releases/tag/8.2.2) | [![Build Status][github_actions_82_badge]][github_actions_82_link] | [Security Report][security_report_82_link]
 | **8.1** | [release/8.1](https://github.com/exozet/draft-docker-php/tree/release/8.1) | [8.1.15](https://github.com/exozet/draft-docker-php/releases/tag/8.1.15) | [![Build Status][github_actions_81_badge]][github_actions_81_link] | [Security Report][security_report_81_link]
