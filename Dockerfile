@@ -1,3 +1,4 @@
+# FIXME: remove PHP82BUILDER as soon as unit-php82 is available on alpine
 FROM --platform=${BUILDPLATFORM} alpine:edge as PHP82BUILDER
 
 ARG TARGETPLATFORM
@@ -29,6 +30,7 @@ RUN apk update
 USER alpiner
 RUN abuild checksum && abuild -r
 
+# FIXME: use a fixed alpine release as soon as it is available with php8.2 support
 FROM --platform=${BUILDPLATFORM} alpine:edge
 
 ARG TARGETPLATFORM
@@ -75,6 +77,7 @@ RUN apk add --no-cache \
 RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
 
+# FIXME: remove PHP82BUILDER as soon as unit-php82 is available on alpine
 COPY --from=PHP82BUILDER /workspace/packages/community /opt/php82-packages
 # hadolint ignore=DL3003,SC2035
 RUN apk add --no-cache abuild && \
@@ -169,7 +172,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
     && echo "extension=pcov" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_pcov.ini \
     && apk del --no-network .build-deps
 
-# we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
+# FIXME: we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
 WORKDIR /usr/bin
 RUN    ln -s php82 php \
     && ln -s peardev82 peardev \
