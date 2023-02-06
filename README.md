@@ -121,3 +121,8 @@ The `-apache2` tagged docker image (because it has attached this snippet at [fil
 * The `STOPSIGNAL` is set to `WINCH` to allow graceful stop.
 * The `CMD` has `httpd -DFOREGROUND` set to run httpd in foreground
 
+# Contributing
+Please refer to [CONTRIBUTING.md](CONTRIBUTING.md). 
+
+# License
+Please refer to [LICENSE](LICENSE). 
