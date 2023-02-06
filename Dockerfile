@@ -70,6 +70,8 @@ RUN apk add --no-cache \
     bash \
     sed
 
+# Ensure we have www-data added with alpine's default uid/gid: 82
+# (e.g. https://git.alpinelinux.org/aports/tree/main/apache2/apache2.pre-install for reference)
 RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
 
