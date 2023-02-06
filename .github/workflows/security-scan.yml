@@ -5,7 +5,7 @@ on:
     branches:
       - 'main'
   schedule:
-    - cron:  '0 12 * * *' # each day at lunch time
+    - cron:  '8 10 * * *' # each day at 10:08 UTC
 
 jobs:
   security-scan:
@@ -33,10 +33,13 @@ jobs:
       -   name: "BRANCH_SHA Env"
           run: echo "BRANCH_SHA=`git rev-parse HEAD`" >> $GITHUB_ENV
 
+      -   name: Tag also with php:${{ env.PHP_VERSION }}
+          run: docker tag exozet/draft-docker-php:${{ env.PHP_VERSION }} php-${{ env.PHP_VERSION }}
+          
       -   name: Run Alpine Trivy vulnerability scanner
           uses: aquasecurity/trivy-action@master
           with:
-            image-ref: exozet/draft-docker-php:${{ env.PHP_VERSION }}
+            image-ref: php-${{ env.PHP_VERSION }}
             format: 'table'
             exit-code: '0' # we don't break the build if vulnerabilities are included!
             ignore-unfixed: true
@@ -47,7 +50,7 @@ jobs:
           name: Run Alpine Trivy vulnerability scanner and upload to github security tab
           uses: aquasecurity/trivy-action@master
           with:
-            image-ref: exozet/draft-docker-php:${{ env.PHP_VERSION }}
+            image-ref: php-${{ env.PHP_VERSION }}
             format: 'sarif'
             output: 'trivy-results.sarif'
 
