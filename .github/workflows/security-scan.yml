@@ -64,3 +64,12 @@ jobs:
             ref: refs/heads/${{ matrix.branch-name }}
             sha: ${{ env.BRANCH_SHA }}
             sarif_file: 'trivy-results.sarif'
+      -   if: contains(github.ref, 'refs/heads/main')
+          name: Run Snyk to check Docker images for vulnerabilities
+          uses: snyk/actions/docker@master
+          continue-on-error: true
+          env:
+             SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+          with:
+            image: exozet/draft-docker-php:${{ env.PHP_VERSION }}
+            command: monitor
