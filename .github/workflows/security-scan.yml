@@ -72,5 +72,5 @@ jobs:
              SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           with:
             image: exozet/draft-docker-php:${{ env.PHP_VERSION }}
-            args: "--org=${{ secrets.SNYK_ORG }}"
+            args: "--org=${{ secrets.SNYK_ORG }} --project-name=draft-docker-php --target-reference=${{ env.PHP_VERSION }}"
             command: monitor
