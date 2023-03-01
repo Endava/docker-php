@@ -49,8 +49,7 @@ jobs:
             vuln-type: 'os,library'
             severity: 'CRITICAL,HIGH'
 
-      -   if: contains(github.ref, 'refs/heads/main')
-          name: Run Alpine Trivy vulnerability scanner and create html file
+      -   name: Run Alpine Trivy vulnerability scanner and create html file
           uses: aquasecurity/trivy-action@master
           with:
             image-ref: php-${{ env.PHP_VERSION }}
@@ -58,8 +57,24 @@ jobs:
             template: '@/contrib/html.tpl'
             output: 'vulnerability-report.html'
 
-      -   if: contains(github.ref, 'refs/heads/main')
-          name: Run Alpine Trivy vulnerability scanner and upload to github security tab
+      -   name: Run Alpine Trivy vulnerability scanner and create html file
+          uses: aquasecurity/trivy-action@master
+          with:
+            image-ref: php-${{ env.PHP_VERSION }}
+            format: 'json'
+            ignore-unfixed: true
+            output: 'vulnerability-report.json'
+
+      -   name: "FIXED_VULNERABILITIES Env"
+          run: echo "FIXED_VULNERABILITIES=`cat vulnerability-report.json | jq '.Results[0].Vulnerabilities | length'`" > $GITHUB_ENV
+
+      -   if: ${{ env.FIXED_VULNERABILITIES == '0' }}
+          run: wget "https://img.shields.io/static/v1?label=vulnerabilites&message=0&color=green" -O vulnerability-status.svg
+
+      -   if: ${{ env.FIXED_VULNERABILITIES != '0' }}
+          run: wget "https://img.shields.io/static/v1?label=vulnerabilites&message=${{ env.FIXED_VULNERABILITIES }}&color=red" -O vulnerability-status.svg
+
+      -   name: Run Alpine Trivy vulnerability scanner and upload to github security tab
           uses: aquasecurity/trivy-action@master
           with:
             image-ref: php-${{ env.PHP_VERSION }}
@@ -92,3 +107,4 @@ jobs:
             body: ""
             files: |
               vulnerability-report.html
+              vulnerability-status.svg
