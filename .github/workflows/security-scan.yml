@@ -69,10 +69,10 @@ jobs:
           run: echo "FIXED_VULNERABILITIES=`cat vulnerability-report.json | jq '.Results[0].Vulnerabilities | length'`" > $GITHUB_ENV
 
       -   if: ${{ env.FIXED_VULNERABILITIES == '0' }}
-          run: wget "https://img.shields.io/static/v1?label=vulnerabilites&message=0&color=green" -O vulnerability-status.svg
+          run: wget "https://img.shields.io/static/v1.png?label=vulnerabilites&message=0&color=green" -O vulnerability-status.png
 
       -   if: ${{ env.FIXED_VULNERABILITIES != '0' }}
-          run: wget "https://img.shields.io/static/v1?label=vulnerabilites&message=${{ env.FIXED_VULNERABILITIES }}&color=red" -O vulnerability-status.svg
+          run: wget "https://img.shields.io/static/v1.png?label=vulnerabilites&message=${{ env.FIXED_VULNERABILITIES }}&color=red" -O vulnerability-status.png
 
       -   name: Run Alpine Trivy vulnerability scanner and upload to github security tab
           uses: aquasecurity/trivy-action@master
@@ -107,4 +107,4 @@ jobs:
             body: ""
             files: |
               vulnerability-report.html
-              vulnerability-status.svg
+              vulnerability-status.png
