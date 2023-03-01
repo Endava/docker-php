@@ -54,7 +54,8 @@ jobs:
           uses: aquasecurity/trivy-action@master
           with:
             image-ref: php-${{ env.PHP_VERSION }}
-            format: 'html'
+            format: 'template'
+            template: '@/contrib/html.tpl'
             output: 'vulnerability-report.html'
 
       -   if: contains(github.ref, 'refs/heads/main')
