@@ -50,6 +50,14 @@ jobs:
             severity: 'CRITICAL,HIGH'
 
       -   if: contains(github.ref, 'refs/heads/main')
+          name: Run Alpine Trivy vulnerability scanner and create html file
+          uses: aquasecurity/trivy-action@master
+          with:
+            image-ref: php-${{ env.PHP_VERSION }}
+            format: 'html'
+            output: 'vulnerability-report.html'
+
+      -   if: contains(github.ref, 'refs/heads/main')
           name: Run Alpine Trivy vulnerability scanner and upload to github security tab
           uses: aquasecurity/trivy-action@master
           with:
@@ -74,3 +82,12 @@ jobs:
             image: exozet/draft-docker-php:${{ env.PHP_VERSION }}
             args: "--org=${{ secrets.SNYK_ORG }} --fail-on=upgradable --project-name=draft-docker-php:${{ env.PHP_VERSION }} --target-reference=${{ env.PHP_VERSION }}"
             command: monitor
+      -   if: contains(github.ref, 'refs/heads/main')
+          name: Upload vulnerability Report to Github Release Artifacts
+          uses: softprops/action-gh-release@v1
+          with:
+            tag_name: ${{ env.PHP_VERSION }}
+            append_body: true
+            body: ""
+            files: |
+              vulnerability-report.html
