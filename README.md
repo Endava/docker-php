@@ -9,7 +9,7 @@ This is a docker php image is based on an alpine distribution including some too
 | Version | Branch | Latest Release | Status | Vulnerability Report |
 | --- | --- | --- | --- | --- |
 | **8.2** | [release/8.2](https://github.com/exozet/draft-docker-php/tree/release/8.2) | [8.2.2](https://github.com/exozet/draft-docker-php/releases/tag/8.2.2) | [![Build Status][github_actions_82_badge]][github_actions_82_link] | [![Security Report][security_report_82_badge]][security_report_82_link]
-| **8.1** | [release/8.1](https://github.com/exozet/draft-docker-php/tree/release/8.1) | [8.1.15](https://github.com/exozet/draft-docker-php/releases/tag/8.1.15) | [![Build Status][github_actions_81_badge]][github_actions_81_link] | [![Security Report][security_report_81_badge]][security_report_81_link]
+| **8.1** | [release/8.1](https://github.com/exozet/draft-docker-php/tree/release/8.1) | [8.1.16](https://github.com/exozet/draft-docker-php/releases/tag/8.1.16) | [![Build Status][github_actions_81_badge]][github_actions_81_link] | [![Security Report][security_report_81_badge]][security_report_81_link]
 | **8.0** | [release/8.0](https://github.com/exozet/draft-docker-php/tree/release/8.0) | [8.0.27](https://github.com/exozet/draft-docker-php/releases/tag/8.0.27) | [![Build Status][github_actions_80_badge]][github_actions_80_link] | [![Security Report][security_report_80_badge]][security_report_80_link]
 
 [github_actions_82_badge]: https://github.com/exozet/draft-docker-php/workflows/CI/badge.svg?branch=release/8.2
@@ -20,8 +20,8 @@ This is a docker php image is based on an alpine distribution including some too
 
 [github_actions_81_badge]: https://github.com/exozet/draft-docker-php/workflows/CI/badge.svg?branch=release/8.1
 [github_actions_81_link]: https://github.com/exozet/draft-docker-php/actions?query=branch%3Arelease%2F8.1
-[security_report_81_badge]: https://github.com/exozet/draft-docker-php/releases/download/8.1.15/vulnerability-status.png
-[security_report_81_link]: https://github.com/exozet/draft-docker-php/releases/download/8.1.15/vulnerability-report.html
+[security_report_81_badge]: https://github.com/exozet/draft-docker-php/releases/download/8.1.16/vulnerability-status.png
+[security_report_81_link]: https://github.com/exozet/draft-docker-php/releases/download/8.1.16/vulnerability-report.html
 
 [github_actions_80_badge]: https://github.com/exozet/draft-docker-php/workflows/CI/badge.svg?branch=release/8.0
 [github_actions_80_link]: https://github.com/exozet/draft-docker-php/actions?query=branch%3Arelease%2F8.0
