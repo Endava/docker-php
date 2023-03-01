@@ -3,7 +3,7 @@
 set -e
 
 DOCKER_IMAGE_NAME=$1
-QUAY_DOCKER_IMAGE_NAME=quay.io/$DOCKER_IMAGE_NAME
+QUAY_DOCKER_IMAGE_NAME=quay.io/`echo "$DOCKER_IMAGE_NAME" | sed 's/exozet/endava/' | sed 's/draft-docker-php/php/'`
 TARGET_PLATFORMS=linux/arm64/v8,linux/amd64
 
 if [ ! -z "$2" ]
