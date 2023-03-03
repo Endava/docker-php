@@ -1,6 +1,4 @@
-# draft-docker-php
-
-The PoC for https://github.com/exozet/docker-php-fpm/wiki/Draft-for-new-Structure
+# endava/docker-php
 
 This is a docker php image is based on an alpine distribution including some tools and php extensions. You can find more details at the respective release pages on github.
 
@@ -8,29 +6,29 @@ This is a docker php image is based on an alpine distribution including some too
 
 | Version | Branch | Latest Release | Status | Vulnerability Report |
 | --- | --- | --- | --- | --- |
-| **8.2** | [release/8.2](https://github.com/exozet/draft-docker-php/tree/release/8.2) | [8.2.3](https://github.com/exozet/draft-docker-php/releases/tag/8.2.3) | [![Build Status][github_actions_82_badge]][github_actions_82_link] | [![Security Report][security_report_82_badge]][security_report_82_link]
-| **8.1** | [release/8.1](https://github.com/exozet/draft-docker-php/tree/release/8.1) | [8.1.16](https://github.com/exozet/draft-docker-php/releases/tag/8.1.16) | [![Build Status][github_actions_81_badge]][github_actions_81_link] | [![Security Report][security_report_81_badge]][security_report_81_link]
-| **8.0** | [release/8.0](https://github.com/exozet/draft-docker-php/tree/release/8.0) | [8.0.28](https://github.com/exozet/draft-docker-php/releases/tag/8.0.28) | [![Build Status][github_actions_80_badge]][github_actions_80_link] | [![Security Report][security_report_80_badge]][security_report_80_link]
+| **8.2** | [release/8.2](https://github.com/endava/docker-php/tree/release/8.2) | [8.2.3](https://github.com/endava/docker-php/releases/tag/8.2.3) | [![Build Status][github_actions_82_badge]][github_actions_82_link] | [![Security Report][security_report_82_badge]][security_report_82_link]
+| **8.1** | [release/8.1](https://github.com/endava/docker-php/tree/release/8.1) | [8.1.16](https://github.com/endava/docker-php/releases/tag/8.1.16) | [![Build Status][github_actions_81_badge]][github_actions_81_link] | [![Security Report][security_report_81_badge]][security_report_81_link]
+| **8.0** | [release/8.0](https://github.com/endava/docker-php/tree/release/8.0) | [8.0.28](https://github.com/endava/docker-php/releases/tag/8.0.28) | [![Build Status][github_actions_80_badge]][github_actions_80_link] | [![Security Report][security_report_80_badge]][security_report_80_link]
 
-[github_actions_82_badge]: https://github.com/exozet/draft-docker-php/workflows/CI/badge.svg?branch=release/8.2
-[github_actions_82_link]: https://github.com/exozet/draft-docker-php/actions?query=branch%3Arelease%2F8.2
-[security_report_82_badge]: https://github.com/exozet/draft-docker-php/releases/download/8.2.3/vulnerability-status.png
-[security_report_82_link]: https://github.com/exozet/draft-docker-php/releases/download/8.2.3/vulnerability-report.html
+[github_actions_82_badge]: https://github.com/endava/docker-php/workflows/CI/badge.svg?branch=release/8.2
+[github_actions_82_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2
+[security_report_82_badge]: https://github.com/endava/docker-php/releases/download/8.2.3/vulnerability-status.png
+[security_report_82_link]: https://github.com/endava/docker-php/releases/download/8.2.3/vulnerability-report.html
 
 
-[github_actions_81_badge]: https://github.com/exozet/draft-docker-php/workflows/CI/badge.svg?branch=release/8.1
-[github_actions_81_link]: https://github.com/exozet/draft-docker-php/actions?query=branch%3Arelease%2F8.1
-[security_report_81_badge]: https://github.com/exozet/draft-docker-php/releases/download/8.1.16/vulnerability-status.png
-[security_report_81_link]: https://github.com/exozet/draft-docker-php/releases/download/8.1.16/vulnerability-report.html
+[github_actions_81_badge]: https://github.com/endava/docker-php/workflows/CI/badge.svg?branch=release/8.1
+[github_actions_81_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.1
+[security_report_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.16/vulnerability-status.png
+[security_report_81_link]: https://github.com/endava/docker-php/releases/download/8.1.16/vulnerability-report.html
 
-[github_actions_80_badge]: https://github.com/exozet/draft-docker-php/workflows/CI/badge.svg?branch=release/8.0
-[github_actions_80_link]: https://github.com/exozet/draft-docker-php/actions?query=branch%3Arelease%2F8.0
-[security_report_80_badge]: https://github.com/exozet/draft-docker-php/releases/download/8.0.28/vulnerability-status.png
-[security_report_80_link]: https://github.com/exozet/draft-docker-php/security/code-scanning?query=is%3Aopen+branch%3Arelease%2F8.0
+[github_actions_80_badge]: https://github.com/endava/docker-php/workflows/CI/badge.svg?branch=release/8.0
+[github_actions_80_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.0
+[security_report_80_badge]: https://github.com/endava/docker-php/releases/download/8.0.28/vulnerability-status.png
+[security_report_80_link]: https://github.com/endava/docker-php/security/code-scanning?query=is%3Aopen+branch%3Arelease%2F8.0
 
 # Overview
 
-At https://github.com/exozet/docker-php-fpm/wiki/Draft-for-new-Structure we collected ideas on how a new (including breaking changes) version of our heavily used php-fpm image could look like.
+This is the successor of the deprecated [exozet/php-fpm](https://hub.docker.com/r/exozet/php-fpm/) docker image. We collected ideas on how a new (including breaking changes) version of our heavily used php-fpm image could look like.
 
 We figured that our old approach had some disadvantages (it was a php-fpm build based on [official docker php images](https://hub.docker.com/_/php)):
 
