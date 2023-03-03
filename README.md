@@ -8,7 +8,7 @@ The PoC for https://github.com/exozet/docker-php-fpm/wiki/Draft-for-new-Structur
 2. Run for php 8.1
 
 ```shell
-$ ./build_images.sh exozet/draft-docker-php:8.1.14
+$ ./build_images.sh endava/php:8.1.16
 ```
 
 If you lack specific emulators (for running the multiarch build), install:
@@ -27,7 +27,7 @@ $ echo '<?php phpinfo();' > public/index.php
 4. Run the NGINX Unit Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  exozet/draft-docker-php:8.1.14-unit
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.1.16-unit
 ```
 
 and open http://localhost:8080 to see phpinfo unit.
@@ -41,7 +41,7 @@ Time per request:       12.144 [ms] (mean)
 5. Run the Apache2 Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  exozet/draft-docker-php:8.1.14-apache2
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.1.16-apache2
 ```
 
 and open http://localhost:8080 to see phpinfo on apache2.
