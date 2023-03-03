@@ -45,7 +45,7 @@ The new approach has some advantages:
 * No need for custom scripts like [docker-php-ext-install](https://github.com/docker-library/php/blob/master/docker-php-ext-install)
 * It ships with httpd binary (for apache2), unitd binary (for nginx unit) and php-fpm binary (for php fpm) to execute php web requests
 * It ships linux/arm64/v8 and linux/amd64 version of the image
-* The web server user is root, but web requests are executed as www-data
+* The web server and the web requests are executed as non-privileged user www-data
 * The github release notes (including tool versions and php extension versions) is automatically generated if a commit is tagged
 * The release is available only as endava/php:8.1.16 (no suffix for -root, -xdebug -alpine or -sudo or others)
 * The CI/CD pipeline includes tests to validate the image as nginx unit or apache2 delivery
