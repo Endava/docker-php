@@ -1,6 +1,4 @@
-# draft-docker-php
-
-The PoC for https://github.com/exozet/docker-php-fpm/wiki/Draft-for-new-Structure
+# endava/docker-php:8.2.x
 
 ## Test it
 
