@@ -44,6 +44,7 @@ The new approach has some advantages:
 * The precompiled packages (e.g. xdebug) are very fast installed
 * No need for custom scripts like [docker-php-ext-install](https://github.com/docker-library/php/blob/master/docker-php-ext-install)
 * It ships with httpd binary (for apache2), unitd binary (for nginx unit) and php-fpm binary (for php fpm) to execute php web requests
+* For apache2 and nginx unit variants an external webserver (like nginx) is not necessary anymore 
 * It ships linux/arm64/v8 and linux/amd64 version of the image
 * The web server and the web requests are executed as non-privileged user www-data
 * The github release notes (including tool versions and php extension versions) is automatically generated if a commit is tagged
