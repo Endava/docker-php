@@ -49,7 +49,7 @@ The new approach has some advantages:
 * It ships linux/arm64/v8 and linux/amd64 version of the image
 * The web server user is root, but web requests are executed as www-data
 * The github release notes (including tool versions and php extension versions) is automatically generated if a commit is tagged
-* The release is available only as exozet/draft-docker-php:8.1.13 (no suffix for -root, -xdebug -alpine or -sudo or others)
+* The release is available only as endava/php:8.1.16 (no suffix for -root, -xdebug -alpine or -sudo or others)
 * The CI/CD pipeline includes tests to validate the image as nginx unit or apache2 delivery
 * The CI/CD pipeline only builds the latest version (if necessary we can git checkout -b 8.1.13 if you really want to fix something in a release)
 
