@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Generate Changelog
-        run: docker run --rm -v `pwd`/generate-changelog.php:/opt/generate-changelog.php exozet/draft-docker-php:${{ github.ref_name }} php /opt/generate-changelog.php exozet/draft-docker-php:${{ github.ref_name }} > RELEASE_NOTES.txt
+        run: docker run --rm -v `pwd`/generate-changelog.php:/opt/generate-changelog.php endava/php:${{ github.ref_name }} php /opt/generate-changelog.php endava/php:${{ github.ref_name }} > RELEASE_NOTES.txt
       - name: Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
