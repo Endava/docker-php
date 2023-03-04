@@ -81,7 +81,6 @@ server {
         try_files $uri /index.php$is_args$args;
     }
 
-
     location ~ \.php$ {
         fastcgi_pass php-fpm:9000;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
@@ -95,20 +94,19 @@ server {
 Launch the php cli bash:
 
 ``` console
-$ docker-compose run --rm php-cli
-Creating network "dockerphpfpm_default" with the default driver
-Creating dockerphpfpm_php-fpm_1
-Creating dockerphpfpm_nginx_1
-www-data@bf4eb5663c05:/usr/src/app$ ls -al
-total 592
-drwxr-xr-x 8 www-data www-data    510 Mar 17 13:05 .
-drwxr-xr-x 3 root     root       4096 Mar 17 13:05 ..
--rw-r--r-- 1 www-data www-data    478 Mar 17 13:02 docker-compose.yml
--rw-r--r-- 1 www-data www-data    350 Mar 17 12:55 nginx.conf
--rw-r--r-- 1 www-data www-data     18 Mar 17 13:03 index.php
+$docker-compose run php-cli
+⠿ Network docker-php_default
+⠿ Container docker-php-php-fpm-1
+⠿ Container docker-php-nginx-1
+bash-5.1$ php -v
+PHP 8.0.28 (cli) (built: Feb 14 2023 20:50:39) ( NTS )
+Copyright (c) The PHP Group
+Zend Engine v4.0.28, Copyright (c) Zend Technologies
+    with Zend OPcache v8.0.28, Copyright (c), by Zend Technologies
+    with Xdebug v3.1.6, Copyright (c) 2002-2022, by Derick Rethans
 ```
 
-And open at http://localhost:8080/index.php.
+and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
 
 # Best Practices
 
