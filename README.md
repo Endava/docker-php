@@ -1,28 +1,15 @@
 # endava/docker-php:8.0.x
 
-## Test it
+## Usage
 
-1. Clone the repo
-2. Run for php 8.0
-
-```shell
-$ ./build_images.sh endava/php:8.0.28
-```
-
-If you lack specific emulators (for running the multiarch build), install:
-
-```shell
-docker run --privileged --rm tonistiigi/binfmt --install arm64,riscv64,arm,386
-```
-
-3. Create a folder public with an index.php
+1. Create a folder public with an index.php
 
 ```shell
 $ mkdir public
 $ echo '<?php phpinfo();' > public/index.php
 ```
 
-4. Run the NGINX Unit Version with:
+2. Run the NGINX Unit Version with:
 
 ```shell
 $ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.0.28-unit
@@ -36,7 +23,7 @@ Requests per second:    1646.91 [#/sec] (mean)
 Time per request:       12.144 [ms] (mean)
 ```
 
-5. Run the Apache2 Version with:
+3. Run the Apache2 Version with:
 
 ```shell
 $ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.0.28-apache2
@@ -52,6 +39,76 @@ Requests per second:    2844.56 [#/sec] (mean)
 Time per request:       7.031 [ms] (mean)
 ```
 
+4. Run the php fpm version with (e.g. docker-compose.yml)
+
+Create a `docker-compose.yml`:
+
+```yaml
+version: "2.1"
+
+services:
+  php-cli:
+    image: endava/php:8.0.28
+    volumes:
+      - ./:/usr/src/app
+    user: "${UID-www-data}:${GID-www-data}"
+    entrypoint: bash
+    depends_on:
+      - nginx
+  php-fpm:
+    image: endava/php:8.0.28-fpm
+    user: "${UID-www-data}:${GID-www-data}"
+    volumes:
+      - ./:/usr/src/app
+  nginx:
+    image: nginx:1.11.10
+    depends_on:
+      - php-fpm
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/usr/src/app
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+```
+
+Create a `nginx.conf`:
+```text
+server {
+    listen 8080 default_server;
+    root /usr/src/app/public;
+
+    location / {
+        try_files $uri /index.php$is_args$args;
+    }
+
+
+    location ~ \.php$ {
+        fastcgi_pass php-fpm:9000;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+    }
+}
+```
+
+Launch the php cli bash:
+
+``` console
+$ docker-compose run --rm php-cli
+Creating network "dockerphpfpm_default" with the default driver
+Creating dockerphpfpm_php-fpm_1
+Creating dockerphpfpm_nginx_1
+www-data@bf4eb5663c05:/usr/src/app$ ls -al
+total 592
+drwxr-xr-x 8 www-data www-data    510 Mar 17 13:05 .
+drwxr-xr-x 3 root     root       4096 Mar 17 13:05 ..
+-rw-r--r-- 1 www-data www-data    478 Mar 17 13:02 docker-compose.yml
+-rw-r--r-- 1 www-data www-data    350 Mar 17 12:55 nginx.conf
+-rw-r--r-- 1 www-data www-data     18 Mar 17 13:03 index.php
+```
+
+And open at http://localhost:8080/index.php.
 
 # Best Practices
 
