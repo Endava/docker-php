@@ -119,6 +119,135 @@ The `-apache2` tagged docker image (because it has attached this snippet at [fil
 * The `STOPSIGNAL` is set to `WINCH` to allow graceful stop.
 * The `CMD` has `httpd -DFOREGROUND` set to run httpd in foreground
 
+
+## php.ini Variables
+
+We made it possible for you to override special php ini settings with environment variables: (see included [php.ini](./files/php.ini) for a full list, see [this blog post for reasons](https://dracoblue.net/dev/use-environment-variables-for-php-ini-settings-in-docker/)).
+
+Some special settings for this docker image (can be found in the [Dockerfile](./Dockerfile)):
+
+    # default is: 30, but we want to be able to have it configurable for server and cli the same
+    PHP_MAX_EXECUTION_TIME=0 \
+    # default is: GPRCS, but is necessary to make environment variables available in nginx unit, too 
+    PHP_VARIABLES_ORDER="EGPCS" \
+    # default is: 0, but we need logs to stdout. https://www.php.net/manual/en/errorfunc.configuration.php#ini.log-errors
+    PHP_LOG_ERRORS="1" \
+    # default is: no value, but grpc breaks pcntl if not activated.
+    # https://github.com/grpc/grpc/blob/master/src/php/README.md#pcntl_fork-support \
+    PHP_GRPC_ENABLE_FORK_SUPPORT='1' \
+    # default is: no value, but grpc breaks pcntl if not having a fork support with a poll strategy.
+    # https://github.com/grpc/grpc/blob/master/doc/core/grpc-polling-engines.md#polling-engine-implementations-in-grpc
+    PHP_GRPC_POLL_STRATEGY='epoll1' \
+    
+
+## Sending E-Mail
+
+Since there is no exim or something like this running in your docker image, it's not possible to send emails with `mail()`
+ out of the box on php with docker. But this image ships with [msmtp](https://wiki.archlinux.org/index.php/msmtp) and a configurable sendmail path.
+
+Thus you can configure send mail for instance like this:
+
+```text
+PHP_SENDMAIL_PATH=/usr/bin/msmtp -t --host=smtp.example.org --port=1025
+```
+
+and `mail('hans@example.org', 'subject', 'message!');` will use the smtp host at `smtp.example.org`.
+
+We recommend to use a service like [mailhog](https://hub.docker.com/r/mailhog/mailhog/) as a service to fetch mails
+on development.
+
+This in your `docker-compose.yaml`:
+
+```yaml
+services:
+  mailhog:
+    image: mailhog/mailhog:v1.0.0
+    ports:
+      - "1025"
+      - "8025:8025"
+```
+
+makes a mailhog server at `http://127.0.0.1:8025` available. If you set 
+
+```text
+PHP_SENDMAIL_PATH=/usr/bin/msmtp -t --host=mailhog --port=1025
+```
+
+all your mails will be visible there.
+
+## Using "Cron": Setting `CRONTAB_CONTENT` and `CRONTAB_USER`
+
+You can define the crontab's content with an environment variable like this:
+
+`docker-compose.yml`:
+```yaml
+services:
+  import-data-cron:
+    image: endava/php:8.2.3
+    command: start-cron
+    environment:
+      - 'CRONTAB_USER=www-data'
+      - |
+         CRONTAB_CONTENT=
+         */10 * * * * cd /usr/src/app && php run-import.php >> /var/log/cron.log 2>&1
+    volumes:
+      - ./:/usr/src/app:cached
+```
+
+It's very important to specify `/var/log/cron.log` as response for all outputs of your
+cronjob, since crontab will otherwise try to send the response by email, which cannot work
+in this docker setup.
+
+We recommend to use **one** cronjob/container to ensure that your monitoring, restarting, recovery and
+ so on works properly. Otherwise you don't **know**, which of your cronjobs is consuming which amount of
+ resources.
+
+## Alternative way to use "Cron": Mounting `/etc/cron.d` OR setting `CRON_PATH`
+
+**Hint:** Please use this way only, if the previous way (setting `CRONTAB_CONTENT` Environment variable) does not work for your
+project.
+
+Create your crontab directory in project folder and put all your cron files in this directory.
+
+`crontabs` directory:
+```text
+  - one-cron
+  - other-cron
+```
+`one-cron` file:
+```console
+*/10 * * * * root php your-command/script >> /var/log/cron.log 2>&1
+# Don't remove the empty line at the end of this file. It is required to run the cron job
+```
+
+Even though it's possible, we do not recommend to use **multiple** cronjob/container in one crontab file. This makes
+monitoring the different cron jobs harder for your operation/monitoring/alerting tools.
+
+Usage in your `docker-compose.yml`:
+```yaml
+services:
+  crontab:
+    image: endava/php:8.2.3
+    command: start-cron
+    volumes:
+      - ./:/usr/src/app
+      - ./crontabs:/etc/cron.d
+```
+
+If your cron folder is already part or your project, you can override the
+cron location with the `CRON_PATH` environment variable:
+
+```yaml
+services:
+  crontab:
+    image: endava/php:8.2.3
+    command: start-cron
+    environment:
+      - CRON_PATH=/usr/src/app/crontabs
+    volumes:
+      - ./:/usr/src/app
+```
+
 # Contributing
 Please refer to [CONTRIBUTING.md](CONTRIBUTING.md). 
 
