@@ -43,7 +43,7 @@ RUN apk add --no-cache \
 # Ensure we have www-data added with alpine's default uid/gid: 82
 # (e.g. https://git.alpinelinux.org/aports/tree/main/apache2/apache2.pre-install for reference)
 RUN set -eux; \
-	adduser -u 82 -D -S -G www-data www-RUN echo -e "/opt/php82-packages\n$(cat /etc/apk/repositories)" > /etc/apk/repositories
+	adduser -u 82 -D -S -G www-data www-data
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed~=${PHP_VERSION}
 
