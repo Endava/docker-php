@@ -1,35 +1,3 @@
-# FIXME: remove PHP82BUILDER as soon as unit-php82 is available on alpine
-FROM --platform=${BUILDPLATFORM} alpine:edge as PHP82BUILDER
-
-ARG TARGETPLATFORM
-
-RUN apk add --no-cache libc6-compat
-RUN apk add --no-cache alpine-sdk
-RUN apk add --no-cache git git-lfs bash vim vimdiff curl
-
-RUN adduser -h /workspace -s /bin/bash -S -D -u 501 -G dialout alpiner
-RUN addgroup alpiner abuild
-
-RUN apk add --no-cache sudo
-RUN echo "alpiner ALL = NOPASSWD: ALL" > /etc/sudoers.d/alpiner
-
-WORKDIR /workspace/
-USER alpiner
-RUN abuild-keygen -n -a
-USER root
-RUN cp /workspace/.abuild/*.rsa.pub /etc/apk/keys/
-USER alpiner
-
-RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
-
-# set php version for unit to php 8.2
-RUN sed -i -e 's/_phpver=81/_phpver=82/' /workspace/aports/community/unit/APKBUILD
-WORKDIR /workspace/aports/community/unit
-USER root
-RUN apk update
-USER alpiner
-RUN abuild checksum && abuild -r
-
 # FIXME: use a fixed alpine release as soon as it is available with php8.2 support
 FROM --platform=${BUILDPLATFORM} alpine:edge
 
@@ -76,20 +44,6 @@ RUN apk add --no-cache \
 # (e.g. https://git.alpinelinux.org/aports/tree/main/apache2/apache2.pre-install for reference)
 RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
-
-# FIXME: remove PHP82BUILDER as soon as unit-php82 is available on alpine
-COPY --from=PHP82BUILDER /workspace/packages/community /opt/php82-packages
-# hadolint ignore=DL3003,SC2035
-RUN apk add --no-cache abuild && \
-     abuild-keygen -a -n && \
-     rm /opt/php82-packages/*/APKINDEX.tar.gz && \
-     cd /opt/php82-packages/*/ && \
-     apk index -vU -o APKINDEX.tar.gz *.apk && \
-     abuild-sign -k ~/.abuild/*.rsa /opt/php82-packages/*/APKINDEX.tar.gz && \
-     cp ~/.abuild/*.rsa.pub /etc/apk/keys/ && \
-     apk del abuild
-# hadolint ignore=SC3037
-RUN echo -e "/opt/php82-packages\n$(cat /etc/apk/repositories)" > /etc/apk/repositories
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed~=${PHP_VERSION}
 
