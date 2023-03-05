@@ -68,38 +68,15 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
-
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
-# FIXME: remove version sed as soon as rabbitmq-c 0.13.0 is available in alpine
-# hadolint ignore=DL4006
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && sed -i "s/Version: \$/Version: $(apk list rabbitmq-c | cut -f 3 -d '-')/g" /usr/lib/pkgconfig/librabbitmq.pc \
-    && MAKEFLAGS="-j $(nproc)" pecl82 install amqp \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
-    && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_amqp.ini \
-    && apk del --no-network .build-deps \
-    && apk add --no-cache rabbitmq-c
-
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
-
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl82 install imagick \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/imagick.so \
-    && echo "extension=imagick" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_imagick.ini \
-    && apk del --no-network .build-deps \
-    && apk add --no-cache imagemagick imagemagick-libs libgomp
-
+# FIXME: necessary to have "ImageMagick number of supported formats:  => 252"
+RUN apk add --no-cache imagemagick imagemagick-libs libgomp
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl82 install protobuf \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/protobuf.so \
-    && echo "extension=protobuf" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_protobuf.ini \
-    && apk del --no-network .build-deps
-
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-posix
