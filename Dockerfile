@@ -73,7 +73,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
 # FIXME: necessary to have "ImageMagick number of supported formats:  => 252"
-RUN apk add --no-cache imagemagick imagemagick-libs libgomp
+RUN apk add --no-cache imagemagick
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
