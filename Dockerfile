@@ -69,6 +69,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-msgpack
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
