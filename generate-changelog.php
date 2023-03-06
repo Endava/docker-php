@@ -85,3 +85,18 @@ foreach ($extensionNames as $extensionName) {
         }
     }
 }
+
+if (file_exists('previous-php-i.txt')) {
+  echo PHP_EOL;
+  # we want to see what the php version this php -i was created from
+  $previousPhpVersion = trim(shell_exec('cat previous-php-i.txt | grep "PHP Version" | head -n 1 | cut -f 4 -d " "'));
+  # we want to pull php -i but ignore after environment (because it's not sorted properly)
+  shell_exec('php -i | sed \'/^Environment$/,$d\' > current-php-i.txt');
+  # we diff the stripped php -i from previous and the current php version
+  $diff = shell_exec('diff previous-php-i.txt current-php-i.txt');
+  echo "# `php -i` diff compared to php:" . $previousPhpVersion . PHP_EOL;
+  echo PHP_EOL;
+  echo '```diff' . PHP_EOL;
+  echo $diff;
+  echo '```' . PHP_EOL;
+}
