@@ -11,11 +11,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: "Figure and export previous version"
-        run: >
-          curl -L -s 'https://registry.hub.docker.com/v2/repositories/endava/php/tags?page_size=9999'|jq -r '."results"[]["name"] | select(test( "^[0-9]+.[0-9]+.[0-9]+$"))' > existing_docker_tags.txt
-          echo ${{ github.ref_name }} > current_tag.txt
-          echo "PREVIOUS_PHP_VERSION=`cat existing_docker_tags.txt current_tag.txt | sort -n | uniq | grep -Fx -a1 ${{ github.ref_name }} | head -n 1`" >> $GITHUB_ENV
+      - name: "Fetch all existing tags"
+        run: curl -L -s 'https://registry.hub.docker.com/v2/repositories/endava/php/tags?page_size=9999'|jq -r '."results"[]["name"] | select(test( "^[0-9]+.[0-9]+.[0-9]+$"))' > existing_docker_tags.txt
+      - name: "Store the current tag"
+        run: echo ${{ github.ref_name }} > current_tag.txt
+      - name: "Export PREVIOUS_PHP_VERSION environment variable"
+        run: echo "PREVIOUS_PHP_VERSION=`cat existing_docker_tags.txt current_tag.txt | sort -n | uniq | grep -Fx -a1 ${{ github.ref_name }} | head -n 1`" >> $GITHUB_ENV
       - name: "Export the php -i of previous php version ${{ env.PREVIOUS_PHP_VERSION }}"
         run: docker run --rm endava/php:${{ env.PREVIOUS_PHP_VERSION }} php -i | sed '/^Environment$/,$d' > previous-php-i.txt
       - name: Generate Changelog
