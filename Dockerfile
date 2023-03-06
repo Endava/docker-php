@@ -116,9 +116,6 @@ RUN    ln -s php82 php \
     && ln -s phar.phar82 phar.phar \
     && ln -s phar82 phar
 
-# we need this, because memcached expects msgpack to be loaded before memcached
-RUN mv /etc/php82/conf.d/20_memcached.ini /etc/php82/conf.d/60_memcached.ini
-
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
