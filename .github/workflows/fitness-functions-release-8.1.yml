@@ -25,7 +25,7 @@ jobs:
     strategy:
       matrix:
         package:
-          - php81-pecl-protobuf
+          - php81-pecl-pcov
           - php81-pecl-grpc
     steps:
       -   name: Execute
