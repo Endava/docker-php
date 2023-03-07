@@ -1,0 +1,32 @@
+name: php 8.1 Fitness Functions
+  
+on:
+  push:
+    branches:
+      - 'main'
+  schedule:
+    - cron:  '15 10 * * *' # each day at 10:15 UTC
+
+jobs:
+  configured-release-8-1-alpine-is-latest-version:
+    name: "Ensure that Alpine is the latest alpine version for release 8.1"
+    env:
+      LATEST_ALPINE_RELEASE: "3.17.2"    
+    runs-on: ubuntu-latest
+    steps:
+      -  name: Execute
+         run: >
+             docker run --rm alpine:3.17 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+
+  # packages necessary for release/8.1 branch
+  packages-not-available-on-alpine-for-relase-8-1:
+    name: Package not available on alpine for php 8.1 in community, yet
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - php81-pecl-protobuf
+          - php81-pecl-grpc
+    steps:
+      -   name: Execute
+          run: "! docker run --rm -it alpine:3.17.2 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
