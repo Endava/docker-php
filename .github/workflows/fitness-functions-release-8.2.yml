@@ -41,14 +41,3 @@ jobs:
     steps:
       -   name: Execute
           run: "! docker run --rm alpine:edge apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
-
-  packages-not-available-on-alpine-testing-for-release-8-2:
-    name: Package not available on alpine for php 8.2 in testing, yet
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - php82-pecl-pcov
-    steps:
-      -   name: Execute
-          run: "! docker run --rm alpine:edge apk --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
