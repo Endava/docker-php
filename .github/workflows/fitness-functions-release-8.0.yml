@@ -30,4 +30,4 @@ jobs:
           - php8-pecl-grpc
     steps:
       -   name: Execute
-          run: "! docker run --rm -it alpine:3.16.4 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+          run: "! docker run --rm alpine:3.16.4 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
