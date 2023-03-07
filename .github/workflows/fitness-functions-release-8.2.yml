@@ -25,7 +25,7 @@ jobs:
     steps:
       -  name: Execute
          run: >
-             ! docker run --rm -it alpine:edge sh -c 'apk -U add php82 && php -v'
+             ! docker run --rm alpine:edge sh -c 'apk -U add php82 && php -v'
 
   packages-not-available-on-alpine-for-release-8-2:
     name: Package not available on alpine for php 8.2 in community, yet
@@ -40,7 +40,7 @@ jobs:
           - php82-pecl-pcov
     steps:
       -   name: Execute
-          run: "! docker run --rm -it alpine:edge apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+          run: "! docker run --rm alpine:edge apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
 
   packages-not-available-on-alpine-testing-for-release-8-2:
     name: Package not available on alpine for php 8.2 in testing, yet
@@ -51,4 +51,4 @@ jobs:
           - php82-pecl-pcov
     steps:
       -   name: Execute
-          run: "! docker run --rm -it alpine:edge apk --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+          run: "! docker run --rm alpine:edge apk --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
