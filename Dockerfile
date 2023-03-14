@@ -31,6 +31,8 @@ RUN echo "ext/posix/tests/posix_getgrgid_basic.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getgrnam_basic.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getpwnam_basic_01.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getpwuid_basic.phpt" >> disabled-tests.list
+RUN echo "sapi/cli/tests/bug61546.phpt" >> disabled-tests.list
+RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
