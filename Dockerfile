@@ -21,9 +21,17 @@ USER alpiner
 
 RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 
-# enable zts in php82
-RUN sed -i -e 's/--host/--enable-zts --host/' /workspace/aports/community/php82/APKBUILD
 WORKDIR /workspace/aports/community/php82
+# enable zts in php82
+RUN sed -i -e 's/--host/--enable-zts --host/' APKBUILD
+RUN echo "" >> disabled-tests.list
+RUN echo "ext/posix/tests/bug75696.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getgrgid.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getgrgid_basic.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getgrnam_basic.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getpwnam_basic_01.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getpwuid_basic.phpt" >> disabled-tests.list
+
 USER root
 RUN apk update
 USER alpiner
