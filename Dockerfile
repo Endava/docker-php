@@ -119,12 +119,12 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-posix
@@ -143,8 +143,8 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlreader
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xsl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 
 # we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
 WORKDIR /usr/bin
