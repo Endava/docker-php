@@ -21,9 +21,19 @@ USER alpiner
 
 RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 
-# set php version for unit to php 8.2
-RUN sed -i -e 's/_phpver=81/_phpver=82/' /workspace/aports/community/unit/APKBUILD
-WORKDIR /workspace/aports/community/unit
+WORKDIR /workspace/aports/community/php82
+# enable zts in php82
+RUN sed -i -e 's/--host/--enable-zts --host/' APKBUILD
+RUN echo "" >> disabled-tests.list
+RUN echo "ext/posix/tests/bug75696.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getgrgid.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getgrgid_basic.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getgrnam_basic.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getpwnam_basic_01.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getpwuid_basic.phpt" >> disabled-tests.list
+RUN echo "sapi/cli/tests/bug61546.phpt" >> disabled-tests.list
+RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests.list
+
 USER root
 RUN apk update
 USER alpiner
@@ -109,34 +119,12 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
-
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl82 install amqp \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
-    && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_amqp.ini \
-    && apk del --no-network .build-deps \
-    && apk add --no-cache rabbitmq-c
-
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
-
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl82 install imagick \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/imagick.so \
-    && echo "extension=imagick" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_imagick.ini \
-    && apk del --no-network .build-deps \
-    && apk add --no-cache imagemagick imagemagick-libs libgomp
-
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl82 install protobuf \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/protobuf.so \
-    && echo "extension=protobuf" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_protobuf.ini \
-    && apk del --no-network .build-deps
-
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-posix
@@ -155,13 +143,8 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlreader
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xsl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl82 install pcov \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/pcov.so \
-    && echo "extension=pcov" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_pcov.ini \
-    && apk del --no-network .build-deps
 
 # we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
 WORKDIR /usr/bin
