@@ -22,7 +22,7 @@ USER alpiner
 RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 
 # enable zts in php82
-RUN sed -i -e 's/--enable-embed/--enable-embed --enable-zts/' /workspace/aports/community/php82/APKBUILD
+RUN sed -i -e 's/--host/--enable-zts --host/' /workspace/aports/community/php82/APKBUILD
 WORKDIR /workspace/aports/community/php82
 USER root
 RUN apk update
