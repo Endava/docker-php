@@ -96,4 +96,4 @@ jobs:
 
       -   if: contains(github.ref, 'refs/heads/release/')
           name: "Build and Push Multi Arch PHP"
-          run: ./build_and_push_multi_arch_images.sh exozet/draft-docker-php:${{ env.PHP_VERSION }}
+          run: ./build_and_push_multi_arch_images.sh endava/php:${{ env.PHP_VERSION }}

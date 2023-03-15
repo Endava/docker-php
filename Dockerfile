@@ -39,6 +39,7 @@ RUN apk update
 USER alpiner
 RUN abuild checksum && abuild -r
 
+# FIXME: use a fixed alpine release as soon as it is available with php8.2 support
 FROM --platform=${BUILDPLATFORM} alpine:edge
 
 ARG TARGETPLATFORM
@@ -80,6 +81,8 @@ RUN apk add --no-cache \
     bash \
     sed
 
+# Ensure we have www-data added with alpine's default uid/gid: 82
+# (e.g. https://git.alpinelinux.org/aports/tree/main/apache2/apache2.pre-install for reference)
 RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
 
@@ -120,6 +123,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
@@ -146,7 +150,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 
-# we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
+# FIXME: we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
 WORKDIR /usr/bin
 RUN    ln -s php82 php \
     && ln -s peardev82 peardev \
@@ -158,9 +162,6 @@ RUN    ln -s php82 php \
     && ln -s php-cgi82 php-cgi \
     && ln -s phar.phar82 phar.phar \
     && ln -s phar82 phar
-
-# we need this, because memcached expects msgpack to be loaded before memcached
-RUN mv /etc/php82/conf.d/20_memcached.ini /etc/php82/conf.d/60_memcached.ini
 
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
@@ -178,6 +179,8 @@ RUN ln -s $PHP_FPM_BINARY_PATH /usr/sbin/php-fpm
 RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
 # use group www-data
 RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
+# listen also externally for the php-fpm process
+RUN sed -i -e 's/listen = 127.0.0.1:9000/listen = 0.0.0.0:9000/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
 # write error_log to /dev/stderr
 RUN sed -i -e 's/;error_log.*/error_log=\/dev\/stderr/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.conf
 
