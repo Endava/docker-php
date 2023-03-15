@@ -89,7 +89,7 @@ RUN apk add --no-cache abuild && \
      abuild-keygen -a -n && \
      rm /opt/php82-packages/*/APKINDEX.tar.gz && \
      cd /opt/php82-packages/*/ && \
-     apk index -vU -o APKINDEX.tar.gz *.apk && \
+     apk index -vU -o APKINDEX.tar.gz *.apk --no-warnings && \
      abuild-sign -k ~/.abuild/*.rsa /opt/php82-packages/*/APKINDEX.tar.gz && \
      cp ~/.abuild/*.rsa.pub /etc/apk/keys/ && \
      apk del abuild

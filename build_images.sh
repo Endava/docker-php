@@ -16,7 +16,7 @@ docker buildx create --node buildx --name buildx --use
 for TARGET_PLATFORM in `echo $TARGET_PLATFORMS | tr -s ',' ' '`
 do
   TARGET_PLATFORM_SUFFIX=`echo $TARGET_PLATFORM | tr -s '/' '-'`
-  docker buildx build --pull --load --platform $TARGET_PLATFORM -f Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} .
+  docker buildx build --progress plain --pull --load --platform $TARGET_PLATFORM -f Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} .
 
   for SUFFIX in unit fpm apache2
   do
