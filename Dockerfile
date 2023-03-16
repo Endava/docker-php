@@ -1,6 +1,6 @@
-FROM --platform=${BUILDPLATFORM} golang:1.19-alpine3.17 as GOLANG
+FROM --platform=${TARGETPLATFORM} golang:1.19-alpine3.17 as GOLANG
 
-FROM --platform=${BUILDPLATFORM} alpine:edge as PHP82BUILDER
+FROM --platform=${TARGETPLATFORM} alpine:edge as PHP82BUILDER
 
 ARG TARGETPLATFORM
 
