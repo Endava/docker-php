@@ -1,3 +1,5 @@
+FROM --platform=${BUILDPLATFORM} golang:1.19-alpine3.17 as GOLANG
+
 FROM --platform=${BUILDPLATFORM} alpine:edge as PHP82BUILDER
 
 ARG TARGETPLATFORM
@@ -218,8 +220,8 @@ COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 # install caddy with frankenphp
-COPY --from=golang:1.19-alpine3.17 /usr/local/go/bin/go /usr/local/bin/go
-COPY --from=golang:1.19-alpine3.17 /usr/local/go /usr/local/go
+COPY --from=GOLANG /usr/local/go/bin/go /usr/local/bin/go
+COPY --from=GOLANG /usr/local/go /usr/local/go
 RUN apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed
 WORKDIR /opt
 RUN git clone https://github.com/dunglas/frankenphp.git --recursive
@@ -240,6 +242,7 @@ COPY files/frankenphp/Caddyfile /etc/Caddyfile
 # FIXME: start with /usr/sbin/frankenphp run --config /etc/Caddyfile
 # LISTEN on port 443! is always SSL and localhost!
 # FIXME: check for modules via `./frankenphp list-modules | grep php` and see `frankenphp` and `http.handlers.php`
+RUN apk add --no-cache nss-tools
 
 CMD ["php", "-a"]
 
