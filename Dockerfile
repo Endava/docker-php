@@ -1,5 +1,4 @@
 FROM --platform=${TARGETPLATFORM} golang:1.19-alpine3.17 as GOLANG
-
 FROM --platform=${TARGETPLATFORM} alpine:edge as PHP82BUILDER
 
 ARG TARGETPLATFORM
@@ -42,7 +41,7 @@ USER alpiner
 RUN abuild checksum && abuild -r
 
 # FIXME: use a fixed alpine release as soon as it is available with php8.2 support
-FROM --platform=${BUILDPLATFORM} alpine:edge
+FROM --platform=${TARGETPLATFORM} alpine:edge
 
 ARG TARGETPLATFORM
 
