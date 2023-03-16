@@ -1,4 +1,3 @@
-FROM --platform=${BUILDPLATFORM} golang:1.19-alpine3.17 as GOLANG
 FROM --platform=${BUILDPLATFORM} alpine:edge as PHP82BUILDER
 
 ARG TARGETPLATFORM
@@ -219,8 +218,7 @@ COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 # install caddy with frankenphp
-COPY --from=GOLANG /usr/local/go/bin/go /usr/local/bin/go
-COPY --from=GOLANG /usr/local/go /usr/local/go
+RUN apk add --no-cache go~=1.19.7 --repository https://dl-cdn.alpinelinux.org/alpine/v3.17/community
 RUN apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed
 WORKDIR /opt
 RUN git clone https://github.com/dunglas/frankenphp.git --recursive
