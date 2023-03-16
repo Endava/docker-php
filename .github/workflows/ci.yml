@@ -95,5 +95,16 @@ jobs:
             password: ${{ secrets.QUAY_PASSWORD }}
 
       -   if: contains(github.ref, 'refs/heads/release/')
+          name: Login to ghcr.io
+          uses: docker/login-action@v1
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+      -   if: contains(github.ref, 'refs/heads/release/')
           name: "Build and Push Multi Arch PHP"
+          env:
+            GHCR_DOCKER_IMAGE_NAME: ${{ github.repository }}:${{ env.PHP_VERSION }}
+            QUAY_DOCKER_IMAGE_NAME: quay.io/endava/php:${{ env.PHP_VERSION }}
           run: ./build_and_push_multi_arch_images.sh endava/php:${{ env.PHP_VERSION }}
