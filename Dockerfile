@@ -25,7 +25,7 @@ RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 
 WORKDIR /workspace/aports/community/php82
 # enable zts in php82
-RUN sed -i -e 's/--host/--enable-zts --host/' APKBUILD
+RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --disable-zend-signals --host/' APKBUILD
 RUN echo "" >> disabled-tests.list
 RUN echo "ext/posix/tests/bug75696.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getgrgid.phpt" >> disabled-tests.list
@@ -89,12 +89,12 @@ RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
 
 COPY --from=PHP82BUILDER /workspace/packages/community /opt/php82-packages
-# hadolint ignore=DL3003,SC2035
+# hadolint ignore=DL3003,SC2035,SC2046
 RUN apk add --no-cache abuild && \
      abuild-keygen -a -n && \
      rm /opt/php82-packages/*/APKINDEX.tar.gz && \
      cd /opt/php82-packages/*/ && \
-     apk index -vU -o APKINDEX.tar.gz *.apk --no-warnings --rewrite-arch `abuild -A` && \
+     apk index -vU -o APKINDEX.tar.gz *.apk --no-warnings --rewrite-arch $(abuild -A) && \
      abuild-sign -k ~/.abuild/*.rsa /opt/php82-packages/*/APKINDEX.tar.gz && \
      cp ~/.abuild/*.rsa.pub /etc/apk/keys/ && \
      apk del abuild
