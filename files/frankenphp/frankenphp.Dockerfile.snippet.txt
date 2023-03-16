@@ -1,0 +1,6 @@
+# start: source at files/frankenphp/frankenphp.Dockerfile.snippet.txt
+# graceful STOPSIGNAL is SIGINT as of https://caddyserver.com/docs/command-line#signals
+STOPSIGNAL INT
+CMD ["/usr/sbin/frankenphp", "run", "--config", "/etc/Caddyfile"]
+EXPOSE 443
+# end  : source at files/frankenphp/frankenphp.Dockerfile.snippet.txt

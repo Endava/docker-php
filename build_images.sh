@@ -18,7 +18,7 @@ do
   TARGET_PLATFORM_SUFFIX=`echo $TARGET_PLATFORM | tr -s '/' '-'`
   docker buildx build --progress plain --pull --load --platform $TARGET_PLATFORM -f Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} .
 
-  for SUFFIX in unit fpm apache2
+  for SUFFIX in unit fpm apache2 frankenphp
   do
     cat Dockerfile > Dockerfile-${SUFFIX}
     echo "" >> Dockerfile-${SUFFIX}

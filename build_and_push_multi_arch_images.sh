@@ -18,7 +18,7 @@ docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $DOCKER
 echo "Build and Push ${QUAY_DOCKER_IMAGE_NAME}"
 docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $QUAY_DOCKER_IMAGE_NAME .
 
-for SUFFIX in unit fpm apache2
+for SUFFIX in unit fpm apache2 frankenphp
 do
   cat Dockerfile > Dockerfile-${SUFFIX}
   echo "" >> Dockerfile-${SUFFIX}
