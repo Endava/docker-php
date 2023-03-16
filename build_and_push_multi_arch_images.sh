@@ -3,7 +3,6 @@
 set -e
 
 DOCKER_IMAGE_NAME=$1
-QUAY_DOCKER_IMAGE_NAME=quay.io/$DOCKER_IMAGE_NAME
 TARGET_PLATFORMS=linux/arm64/v8,linux/amd64
 
 if [ ! -z "$2" ]
@@ -15,9 +14,17 @@ fi
 echo "Build and Push ${DOCKER_IMAGE_NAME}"
 docker buildx create --node buildx --name buildx --use
 docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $DOCKER_IMAGE_NAME .
-echo "Build and Push ${QUAY_DOCKER_IMAGE_NAME}"
-docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $QUAY_DOCKER_IMAGE_NAME .
+if [ ! -z "$QUAY_DOCKER_IMAGE_NAME" ]
+then
+  echo "Build and Push ${QUAY_DOCKER_IMAGE_NAME}"
+  docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $QUAY_DOCKER_IMAGE_NAME .
+fi
 
+if [ ! -z "$GHCR_DOCKER_IMAGE_NAME" ]
+then
+  echo "Build and Push ${GHCR_DOCKER_IMAGE_NAME}"
+  docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $GHCR_DOCKER_IMAGE_NAME .
+fi
 for SUFFIX in unit fpm apache2
 do
   cat Dockerfile > Dockerfile-${SUFFIX}
@@ -26,7 +33,15 @@ do
 
   echo "Build and Push ${DOCKER_IMAGE_NAME}-${SUFFIX}"
   docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $DOCKER_IMAGE_NAME-${SUFFIX} .
-  echo "Build and Push ${QUAY_DOCKER_IMAGE_NAME}-${SUFFIX}"
-  docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $QUAY_DOCKER_IMAGE_NAME-${SUFFIX} .
+  if [ ! -z "$QUAY_DOCKER_IMAGE_NAME" ]
+  then
+    echo "Build and Push ${QUAY_DOCKER_IMAGE_NAME}-${SUFFIX}"
+    docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $QUAY_DOCKER_IMAGE_NAME-${SUFFIX} .
+  fi
+  if [ ! -z "$GHCR_DOCKER_IMAGE_NAME" ]
+  then
+    echo "Build and Push ${GHCR_DOCKER_IMAGE_NAME}-${SUFFIX}"
+    docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $GHCR_DOCKER_IMAGE_NAME-${SUFFIX} .
+  fi
   rm Dockerfile-${SUFFIX}
 done
