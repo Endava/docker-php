@@ -30,6 +30,9 @@ jobs:
           run: >
             ./build_images.sh temporary-build-image
 
+      -   name: "Smoke test with php -v"
+          run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
+
       -   name: "PHP_VERSION Env"
           run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -r 'echo PHP_VERSION;'`" >> $GITHUB_ENV
 
