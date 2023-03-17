@@ -180,6 +180,7 @@ The `/etc/php82/php-fpm.d/www.conf` is adjusted:
 
 * `user` + `group` is set to `www-data` to ensure it's running www-data as user/group
 * `listen` is set to `0.0.0.0:9000` to be accessible by other docker hosts
+* `clear_env` is set to `yes` so that environment variables given to the container are accessible in php
 * `catch_workers_output` is set to `yes` so that stdout/stderr is exposed to the log
 * `decorate_workers_output` is set to `no` to remove the decorator like `TIMESTAMP WARNING: [pool www] child 7 said into stderr "` around each message
 * `php_admin_flag[fastcgi.logging]` is set to `off` to avoid that the fastcgi consumer (e.g. nginx) duplicates the fpm messages and prefixes it like this `FastCGI sent in stderr`

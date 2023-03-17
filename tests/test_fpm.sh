@@ -19,4 +19,6 @@ then
 	exit 1
 fi
 
-docker-compose down
+docker compose exec php-fpm bash -c 'wget nginx:8080/phpinfo.php -q -O /tmp/response && cat /tmp/response' | grep "VARIABLE_NECESSARY_FOR_TEST" > /dev/null
+
+#docker-compose down
