@@ -16,8 +16,6 @@ services:
     command: ["php-fpm", "--nodaemonize"]
     volumes:
       - ./:/usr/src/app/
-      - ./php-fpm.conf:/etc/php82/php-fpm.conf php-fpm.conf
-      - ./www.conf:/etc/php82/php-fpm.d/www.conf
   nginx:
     image: nginx:1.11.10
     platform: linux/amd64
