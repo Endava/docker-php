@@ -38,6 +38,8 @@ USER root
 RUN apk update
 USER alpiner
 RUN abuild checksum && abuild -r
+WORKDIR /workspace/aports/community/unit
+RUN abuild checksum && abuild -r
 
 # FIXME: use a fixed alpine release as soon as it is available with php8.2 support
 FROM --platform=${BUILDPLATFORM} alpine:edge
