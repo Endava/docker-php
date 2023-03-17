@@ -1,0 +1,30 @@
+version: "2.1"
+
+services:
+  php-cli:
+    image: $DOCKER_REGISTRY_IMAGE
+    volumes:
+      - ./:/usr/src/app
+    # user: "${UID-www-data}:${GID-www-data}"
+    user: root
+    entrypoint: bash
+    depends_on:
+      - nginx
+  php-fpm:
+    image: $DOCKER_REGISTRY_IMAGE
+    user: "${UID-www-data}:${GID-www-data}"
+    command: ["php-fpm", "--nodaemonize"]
+    environment:
+      VARIABLE_NECESSARY_FOR_TEST: "isset"
+    volumes:
+      - ./:/usr/src/app/
+  nginx:
+    image: nginx:1.11.10
+    platform: linux/amd64
+    depends_on:
+      - php-fpm
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/usr/src/app
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
