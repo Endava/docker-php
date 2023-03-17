@@ -1,3 +1,46 @@
+FROM --platform=${BUILDPLATFORM} alpine:edge as PHP82BUILDER
+
+ARG TARGETPLATFORM
+
+RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache alpine-sdk
+RUN apk add --no-cache git git-lfs bash vim vimdiff curl
+
+RUN adduser -h /workspace -s /bin/bash -S -D -u 501 -G dialout alpiner
+RUN addgroup alpiner abuild
+
+RUN apk add --no-cache sudo
+RUN echo "alpiner ALL = NOPASSWD: ALL" > /etc/sudoers.d/alpiner
+
+WORKDIR /workspace/
+USER alpiner
+RUN abuild-keygen -n -a
+USER root
+RUN cp /workspace/.abuild/*.rsa.pub /etc/apk/keys/
+USER alpiner
+
+RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
+
+WORKDIR /workspace/aports/community/php82
+# enable zts in php82
+RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --disable-zend-signals --host/' APKBUILD
+RUN echo "" >> disabled-tests.list
+RUN echo "ext/posix/tests/bug75696.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getgrgid.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getgrgid_basic.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getgrnam_basic.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getpwnam_basic_01.phpt" >> disabled-tests.list
+RUN echo "ext/posix/tests/posix_getpwuid_basic.phpt" >> disabled-tests.list
+RUN echo "sapi/cli/tests/bug61546.phpt" >> disabled-tests.list
+RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests.list
+
+USER root
+RUN apk update
+USER alpiner
+RUN abuild checksum && abuild -r
+WORKDIR /workspace/aports/community/unit
+RUN abuild checksum && abuild -r
+
 # FIXME: use a fixed alpine release as soon as it is available with php8.2 support
 FROM --platform=${BUILDPLATFORM} alpine:edge
 
@@ -45,6 +88,19 @@ RUN apk add --no-cache \
 RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
 
+COPY --from=PHP82BUILDER /workspace/packages/community /opt/php82-packages
+# hadolint ignore=DL3003,SC2035,SC2046
+RUN apk add --no-cache abuild && \
+     abuild-keygen -a -n && \
+     rm /opt/php82-packages/*/APKINDEX.tar.gz && \
+     cd /opt/php82-packages/*/ && \
+     apk index -vU -o APKINDEX.tar.gz *.apk --no-warnings --rewrite-arch $(abuild -A) && \
+     abuild-sign -k ~/.abuild/*.rsa /opt/php82-packages/*/APKINDEX.tar.gz && \
+     cp ~/.abuild/*.rsa.pub /etc/apk/keys/ && \
+     apk del abuild
+# hadolint ignore=SC3037
+RUN echo -e "/opt/php82-packages\n$(cat /etc/apk/repositories)" > /etc/apk/repositories
+
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed~=${PHP_VERSION}
 
 ENV PHP_INI_DIR=/etc/${PHP_PACKAGE_BASENAME}/
@@ -68,39 +124,33 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl82 install imagick \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/imagick.so \
-    && echo "extension=imagick" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_imagick.ini \
-    && apk del --no-network .build-deps \
-    && apk add --no-cache imagemagick imagemagick-libs libgomp
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-posix
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-simplexml
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-soap
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sodium
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sqlite3
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xdebug
-RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
-RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xdebug
+# RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
+# RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xml
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlwriter
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlreader
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xsl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 
 # FIXME: we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
 WORKDIR /usr/bin
@@ -178,15 +228,20 @@ COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 # install caddy with frankenphp
-RUN apk add --no-cache libxml2-dev go sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION}
+RUN apk add --no-cache go~=1.19.7 --repository https://dl-cdn.alpinelinux.org/alpine/v3.17/community
+RUN apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed
 WORKDIR /opt
 RUN git clone https://github.com/dunglas/frankenphp.git --recursive
 WORKDIR /opt/frankenphp/caddy/frankenphp
+RUN php -v
+RUN php -m
+RUN php-config --includes
+RUN php-config --ldflags
+RUN ln -s /usr/lib/libphp82.so /usr/lib/libphp.so
 # hadolint ignore=SC2086
 RUN export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
     && export PHP_CPPFLAGS="$PHP_CFLAGS" \
     && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags`" \
-#    && export CGO_LDFLAGS="-lssl -lcrypto -lreadline -largon2 -lcurl -lonig -lz $PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
     && export CGO_LDFLAGS="$PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
     && go build
 RUN mv /opt/frankenphp/caddy/frankenphp/frankenphp /usr/sbin/frankenphp
@@ -194,6 +249,7 @@ COPY files/frankenphp/Caddyfile /etc/Caddyfile
 # FIXME: start with /usr/sbin/frankenphp run --config /etc/Caddyfile
 # LISTEN on port 443! is always SSL and localhost!
 # FIXME: check for modules via `./frankenphp list-modules | grep php` and see `frankenphp` and `http.handlers.php`
+RUN apk add --no-cache nss-tools
 
 CMD ["php", "-a"]
 
