@@ -14,6 +14,8 @@ services:
     image: $DOCKER_REGISTRY_IMAGE
     user: "${UID-www-data}:${GID-www-data}"
     command: ["php-fpm", "--nodaemonize"]
+    environment:
+      VARIABLE_NECESSARY_FOR_TEST: "isset"
     volumes:
       - ./:/usr/src/app/
   nginx:
