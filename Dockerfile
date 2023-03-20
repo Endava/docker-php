@@ -197,7 +197,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-session
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers lz4-dev zstd-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && MAKEFLAGS="-j $(nproc)" peclzts82 install redis \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/redis.so \
     && echo "extension=redis" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_redis.ini \
