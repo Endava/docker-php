@@ -124,7 +124,7 @@ Requests per second:    318.70 [#/sec] (mean)
 Time per request:       62.755 [ms] (mean)
 ```
 
-5. Run the frankenphp http worker Version
+6. Run the frankenphp http worker Version
 
 ```shell
 $ docker run --rm  -e FRANKENPHP_CONFIG="worker ./public/index.php" -e SERVER_NAME=http://localhost:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-frankenphp
