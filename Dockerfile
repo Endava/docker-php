@@ -137,25 +137,88 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install amqp \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
+    && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/40_amqp.ini \
+    && apk del --no-network .build-deps \
+    && apk add --no-cache rabbitmq-c
+
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install apcu \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/apcu.so \
+    && echo "extension=apcu" > /etc/$PHP_PACKAGE_BASENAME/conf.d/apcu.ini \
+    && apk del --no-network .build-deps
+
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install igbinary \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/igbinary.so \
+    && echo "extension=igbinary" > /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.ini \
+    && apk del --no-network .build-deps
+
+# FIXME: # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install imagick \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/imagick.so \
+    && echo "extension=imagick" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_imagick.ini \
+    && apk del --no-network .build-deps \
+    && apk add --no-cache imagemagick imagemagick-libs libgomp
+
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers zlib-dev libmemcached-dev cyrus-sasl-dev libevent-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install memcached \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/memcached.so \
+    && echo "extension=memcached" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_memcached.ini \
+    && apk del --no-network .build-deps \
+    && apk add --no-cache libmemcached-libs
+
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-msgpack
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install msgpack \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/msgpack.so \
+    && echo "extension=msgpack" > /etc/$PHP_PACKAGE_BASENAME/conf.d/10_msgpack.ini \
+    && apk del --no-network .build-deps
+
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install protobuf \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/protobuf.so \
+    && echo "extension=protobuf" > /etc/$PHP_PACKAGE_BASENAME/conf.d/protobuf.ini \
+    && apk del --no-network .build-deps
+
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-posix
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-session
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
+
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install redis \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/redis.so \
+    && echo "extension=redis" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_redis.ini \
+    && apk del --no-network .build-deps
+
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-simplexml
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-soap
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sodium
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sqlite3
+
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xdebug
-# RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
-# RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install xdebug \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/xdebug.so \
+    && echo ";zend_extension=xdebug.so" > /etc/$PHP_PACKAGE_BASENAME/conf.d/50_xdebug.ini \
+    && echo ";xdebug.mode=off" >> /etc/$PHP_PACKAGE_BASENAME/conf.d/50_xdebug.ini \
+    && apk del --no-network .build-deps
+
+RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
+RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xml
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlwriter
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlreader
@@ -163,7 +226,18 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xsl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install grpc \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/grpc.so \
+    && echo "extension=grpc" > /etc/$PHP_PACKAGE_BASENAME/conf.d/grpc.ini \
+    && apk del --no-network .build-deps
+
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install pcov \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/pcov.so \
+    && echo "extension=pcov" > /etc/$PHP_PACKAGE_BASENAME/conf.d/pcov.ini \
+    && apk del --no-network .build-deps
 
 # FIXME: we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
 WORKDIR /usr/bin
@@ -246,10 +320,6 @@ RUN apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKA
 WORKDIR /opt
 RUN git clone https://github.com/dunglas/frankenphp.git --recursive
 WORKDIR /opt/frankenphp/caddy/frankenphp
-RUN php -v
-RUN php -m
-RUN php-config --includes
-RUN php-config --ldflags
 # make frankenphp to be happy about lphpzts82.so and not require us to have a lphp.so
 RUN sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go
 # hadolint ignore=SC2086
