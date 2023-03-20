@@ -25,10 +25,15 @@ WORKDIR /workspace/aports/community/php82
 RUN cp -rf /workspace/aports/community/php82 /workspace/aports/community/phpzts82
 WORKDIR /workspace/aports/community/phpzts82
 RUN sed -i -e 's/pkgname=php82/pkgname=phpzts82/' APKBUILD
+# hadolint ignore=SC2016
 RUN sed -i -e 's/\$pkgname-fpm.initd/php82-fpm.initd/' APKBUILD
+# hadolint ignore=SC2016
 RUN sed -i -e 's/\$pkgname-fpm.logrotate/php82-fpm.logrotate/' APKBUILD
+# hadolint ignore=SC2016
 RUN sed -i -e 's/\$pkgname-module.conf/php82-module.conf/' APKBUILD
+# hadolint ignore=SC2016
 RUN sed -i -e 's/\$pkgname-fpm-version-suffix.patch/php82-fpm-version-suffix.patch/' APKBUILD
+# hadolint ignore=SC2016
 RUN sed -i -e 's/php\$_suffix-module.conf/php82-module.conf/' APKBUILD
 RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --enable-zend-timer --disable-zend-signals --host/' APKBUILD
 RUN echo "" >> disabled-tests.list
@@ -51,6 +56,7 @@ WORKDIR /workspace/aports/community/unit
 # make phpver2 to be phpzts82
 RUN sed -i -e 's/_phpver2=82/_phpver2=zts82/' APKBUILD
 # make unit-php82 find the lphpzts82.so
+# hadolint ignore=SC2016
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver2/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& .\/configure php --module=php\$_phpver2/g' APKBUILD
 RUN abuild checksum && abuild -r
 
@@ -322,7 +328,7 @@ RUN git clone https://github.com/dunglas/frankenphp.git --recursive
 WORKDIR /opt/frankenphp/caddy/frankenphp
 # make frankenphp to be happy about lphpzts82.so and not require us to have a lphp.so
 RUN sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go
-# hadolint ignore=SC2086
+# hadolint ignore=SC2016,SC2086
 RUN export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
     && export PHP_CPPFLAGS="$PHP_CFLAGS" \
     && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags`" \
