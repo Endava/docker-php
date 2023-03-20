@@ -12,7 +12,7 @@ $ echo '<?php phpinfo();' > public/index.php
 2. Run the NGINX Unit Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.3-unit
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-unit
 ```
 
 and open http://localhost:8080 to see phpinfo unit.
@@ -26,7 +26,7 @@ Time per request:       12.144 [ms] (mean)
 3. Run the Apache2 Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.3-apache2
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-apache2
 ```
 
 and open http://localhost:8080 to see phpinfo on apache2.
@@ -48,7 +48,7 @@ version: "2.1"
 
 services:
   php-cli:
-    image: endava/php:8.2.3
+    image: endava/php:8.2.4
     volumes:
       - ./:/usr/src/app
     user: "${UID-www-data}:${GID-www-data}"
@@ -56,7 +56,7 @@ services:
     depends_on:
       - nginx
   php-fpm:
-    image: endava/php:8.2.3-fpm
+    image: endava/php:8.2.4-fpm
     user: "${UID-www-data}:${GID-www-data}"
     volumes:
       - ./:/usr/src/app
@@ -99,10 +99,10 @@ $docker-compose run php-cli
 ⠿ Container docker-php-php-fpm-1
 ⠿ Container docker-php-nginx-1
 bash-5.1$ php -v
-PHP 8.2.3 (cli) (built: Feb 14 2023 22:58:50) (NTS)
+PHP 8.2.4 (cli) (built: Feb 14 2023 22:58:50) (NTS)
 Copyright (c) The PHP Group
 Zend Engine v4.2.3, Copyright (c) Zend Technologies
-    with Zend OPcache v8.2.3, Copyright (c), by Zend Technologies
+    with Zend OPcache v8.2.4, Copyright (c), by Zend Technologies
     with Xdebug v3.2.0, Copyright (c) 2002-2022, by Derick Rethans
 ```
 
@@ -252,7 +252,7 @@ You can define the crontab's content with an environment variable like this:
 ```yaml
 services:
   import-data-cron:
-    image: endava/php:8.2.3
+    image: endava/php:8.2.4
     command: start-cron
     environment:
       - 'CRONTAB_USER=www-data'
@@ -296,7 +296,7 @@ Usage in your `docker-compose.yml`:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.2.3
+    image: endava/php:8.2.4
     command: start-cron
     volumes:
       - ./:/usr/src/app
@@ -309,7 +309,7 @@ cron location with the `CRON_PATH` environment variable:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.2.3
+    image: endava/php:8.2.4
     command: start-cron
     environment:
       - CRON_PATH=/usr/src/app/crontabs
