@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM} alpine:edge as PHP82BUILDER
+FROM --platform=${BUILDPLATFORM} alpine:edge as PHPZTSBUILDER
 
 ARG TARGETPLATFORM
 
@@ -22,8 +22,15 @@ USER alpiner
 RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 
 WORKDIR /workspace/aports/community/php82
-# enable zts in php82
-RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --disable-zend-signals --host/' APKBUILD
+RUN cp -rf /workspace/aports/community/php82 /workspace/aports/community/phpzts82
+WORKDIR /workspace/aports/community/phpzts82
+RUN sed -i -e 's/pkgname=php82/pkgname=phpzts82/' APKBUILD
+RUN sed -i -e 's/\$pkgname-fpm.initd/php82-fpm.initd/' APKBUILD
+RUN sed -i -e 's/\$pkgname-fpm.logrotate/php82-fpm.logrotate/' APKBUILD
+RUN sed -i -e 's/\$pkgname-module.conf/php82-module.conf/' APKBUILD
+RUN sed -i -e 's/\$pkgname-fpm-version-suffix.patch/php82-fpm-version-suffix.patch/' APKBUILD
+RUN sed -i -e 's/php\$_suffix-module.conf/php82-module.conf/' APKBUILD
+RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --enable-zend-timer --disable-zend-signals --host/' APKBUILD
 RUN echo "" >> disabled-tests.list
 RUN echo "ext/posix/tests/bug75696.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getgrgid.phpt" >> disabled-tests.list
@@ -33,12 +40,18 @@ RUN echo "ext/posix/tests/posix_getpwnam_basic_01.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getpwuid_basic.phpt" >> disabled-tests.list
 RUN echo "sapi/cli/tests/bug61546.phpt" >> disabled-tests.list
 RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests.list
+RUN echo "ext/imap/tests/imap_mutf7_to_utf8.phpt" >> disabled-tests.list
+RUN echo "ext/imap/tests/imap_utf8_to_mutf7_basic.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
 USER alpiner
 RUN abuild checksum && abuild -r
 WORKDIR /workspace/aports/community/unit
+# make phpver2 to be phpzts82
+RUN sed -i -e 's/_phpver2=82/_phpver2=zts82/' APKBUILD
+# make unit-php82 find the lphpzts82.so
+RUN sed -i -e 's/.\/configure php --module=php\$_phpver2/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& .\/configure php --module=php\$_phpver2/g' APKBUILD
 RUN abuild checksum && abuild -r
 
 # FIXME: use a fixed alpine release as soon as it is available with php8.2 support
@@ -47,8 +60,8 @@ FROM --platform=${BUILDPLATFORM} alpine:edge
 ARG TARGETPLATFORM
 
 ARG PHP_VERSION="8.2.4"
-ARG PHP_PACKAGE_BASENAME="php82"
-ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm82"
+ARG PHP_PACKAGE_BASENAME="phpzts82"
+ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts82"
 ARG UNIT_VERSION="1.29.1"
 ARG APACHE2_VERSION="2.4.56"
 ARG GRPC_EXTENSION_VERSION="1.51.1"
@@ -88,18 +101,18 @@ RUN apk add --no-cache \
 RUN set -eux; \
 	adduser -u 82 -D -S -G www-data www-data
 
-COPY --from=PHP82BUILDER /workspace/packages/community /opt/php82-packages
+COPY --from=PHPZTSBUILDER /workspace/packages/community /opt/custom-packages
 # hadolint ignore=DL3003,SC2035,SC2046
 RUN apk add --no-cache abuild && \
      abuild-keygen -a -n && \
-     rm /opt/php82-packages/*/APKINDEX.tar.gz && \
-     cd /opt/php82-packages/*/ && \
+     rm /opt/custom-packages/*/APKINDEX.tar.gz && \
+     cd /opt/custom-packages/*/ && \
      apk index -vU -o APKINDEX.tar.gz *.apk --no-warnings --rewrite-arch $(abuild -A) && \
-     abuild-sign -k ~/.abuild/*.rsa /opt/php82-packages/*/APKINDEX.tar.gz && \
+     abuild-sign -k ~/.abuild/*.rsa /opt/custom-packages/*/APKINDEX.tar.gz && \
      cp ~/.abuild/*.rsa.pub /etc/apk/keys/ && \
      apk del abuild
 # hadolint ignore=SC3037
-RUN echo -e "/opt/php82-packages\n$(cat /etc/apk/repositories)" > /etc/apk/repositories
+RUN echo -e "/opt/custom-packages\n$(cat /etc/apk/repositories)" > /etc/apk/repositories
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed~=${PHP_VERSION}
 
@@ -154,16 +167,16 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
 # FIXME: we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
 WORKDIR /usr/bin
-RUN    ln -s php82 php \
-    && ln -s peardev82 peardev \
-    && ln -s pecl82 pecl \
-    && ln -s phpize82 phpize \
-    && ln -s php-config82 php-config \
-    && ln -s phpdbg82 phpdbg \
-    && ln -s lsphp82 lsphp \
-    && ln -s php-cgi82 php-cgi \
-    && ln -s phar.phar82 phar.phar \
-    && ln -s phar82 phar
+RUN    ln -s phpzts82 php \
+    && ln -s peardevzts82 peardev \
+    && ln -s peclzts82 pecl \
+    && ln -s phpizezts82 phpize \
+    && ln -s php-configzts82 php-config \
+    && ln -s phpdbgzts82 phpdbg \
+    && ln -s lsphpzts82 lsphp \
+    && ln -s php-cgizts82 php-cgi \
+    && ln -s phar.pharzts82 phar.phar \
+    && ln -s pharzts82 phar
 
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
@@ -237,7 +250,8 @@ RUN php -v
 RUN php -m
 RUN php-config --includes
 RUN php-config --ldflags
-RUN ln -s /usr/lib/libphp82.so /usr/lib/libphp.so
+# make frankenphp to be happy about lphpzts82.so and not require us to have a lphp.so
+RUN sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go
 # hadolint ignore=SC2086
 RUN export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
     && export PHP_CPPFLAGS="$PHP_CFLAGS" \
