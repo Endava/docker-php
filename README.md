@@ -108,6 +108,55 @@ Zend Engine v4.2.3, Copyright (c) Zend Technologies
 
 and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
 
+5. Run the frankenphp Version
+
+```shell
+$ docker run --rm -p 8443:443 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-frankenphp
+```
+
+and open https://localhost:8443/ to see phpinfo with frankenphp as server api.
+
+Short benchmark:
+
+```shell
+$ ab -n 1000 -c 20 https://localhost/
+Requests per second:    318.70 [#/sec] (mean)
+Time per request:       62.755 [ms] (mean)
+```
+
+6. Run the frankenphp http worker Version
+
+```shell
+$ docker run --rm  -e FRANKENPHP_CONFIG="worker ./public/index.php" -e SERVER_NAME=http://localhost:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-frankenphp
+```
+
+and index.php like this:
+
+```
+<?php
+$myApp = true;
+
+do {
+    $running = frankenphp_handle_request(function () use ($myApp) {
+        // Called when a request is received,
+            phpinfo();
+    });
+
+    // Call the garbage collector to reduce the chances of it being triggered in the middle of a page generation
+    gc_collect_cycles();
+} while ($running);
+```
+
+and open http://localhost:8080/ to see phpinfo with frankenphp as server api.
+
+Short benchmark:
+
+```shell
+$ ab -n 1000 -c 20 http://localhost:8080/
+Requests per second:    3666.40 [#/sec] (mean)
+Time per request:       5.455 [ms] (mean)
+```
+
 # Best Practices
 
 The following best practices are included in the default configuration files for php.ini, php-fpm, nginx unit and apache2. This section is meant to describe what is implemented and why it has been done like this.

@@ -34,7 +34,7 @@ jobs:
           run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
 
       -   name: "PHP_VERSION Env"
-          run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | head -n 1 | cut -f 2 -d ' '`" >> $GITHUB_ENV
+          run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | head -n 1 | cut -f 2 -d ' '``docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | grep 'ZTS' >/dev/null && echo '-zts' || echo ''`" >> $GITHUB_ENV
 
       -   name: Tag also with php:${{ env.PHP_VERSION }}
           run: docker tag temporary-build-image-linux-amd64 php-${{ env.PHP_VERSION }}
