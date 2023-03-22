@@ -177,7 +177,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers zlib-dev libmemcached-dev cyrus-sasl-dev libevent-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts82 install memcached \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install -D 'enable-memcached-igbinary="yes" enable-memcached-session="yes" enable-memcached-json="yes" enable-memcached-protocol="yes" enable-memcached-msgpack="yes"' memcached \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/memcached.so \
     && echo "extension=memcached" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_memcached.ini \
     && apk del --no-network .build-deps \
@@ -204,7 +204,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-session
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers lz4-dev zstd-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts82 install redis \
+    && MAKEFLAGS="-j $(nproc)" peclzts82 install -D 'enable-redis-igbinary="yes" enable-redis-lz4="yes" with-liblz4="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' redis \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/redis.so \
     && echo "extension=redis" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_redis.ini \
     && apk del --no-network .build-deps
