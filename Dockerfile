@@ -299,6 +299,8 @@ RUN chown www-data:www-data /run/unit/
 RUN apk add --no-cache apache2~=$APACHE2_VERSION ${PHP_PACKAGE_BASENAME}-apache2~=${PHP_VERSION}
 # add default apache2 config file
 COPY files/apache2/apache2-default.conf /etc/apache2/conf.d/00_apache2-default.conf
+# fix that the mod_php82.so is not properly renamed in the conf
+RUN sed -i -e 's/mod_php82/mod_phpzts82/g' /etc/apache2/conf.d/php82-module.conf
 # activate rewrite module
 RUN sed -i -e 's/#LoadModule rewrite_module/LoadModule rewrite_module/g' /etc/apache2/httpd.conf
 # listen port 8080
