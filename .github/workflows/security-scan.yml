@@ -38,10 +38,10 @@ jobs:
           run: echo "BRANCH_SHA=`git rev-parse HEAD`" >> $GITHUB_ENV
 
       -   name: Pull the image
-          run: docker pull endava/php:${{ env.PHP_VERSION }}
+          run: docker pull ghcr.io/endava/docker-php:${{ env.PHP_VERSION }}
 
       -   name: Tag also with php:${{ env.PHP_VERSION }}
-          run: docker tag endava/php:${{ env.PHP_VERSION }} php-${{ env.PHP_VERSION }}
+          run: docker tag ghcr.io/endava/docker-php:${{ env.PHP_VERSION }} php-${{ env.PHP_VERSION }}
           
       -   name: Run Alpine Trivy vulnerability scanner
           uses: aquasecurity/trivy-action@master
@@ -99,8 +99,8 @@ jobs:
           env:
              SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
           with:
-            image: endava/php:${{ env.PHP_VERSION }}
-            args: "--org=${{ secrets.SNYK_ORG }} --fail-on=upgradable --project-name=draft-docker-php:${{ env.PHP_VERSION }} --target-reference=${{ env.PHP_VERSION }}"
+            image: ghcr.io/endava/docker-php:${{ env.PHP_VERSION }}
+            args: "--org=${{ secrets.SNYK_ORG }} --fail-on=upgradable --project-name=docker-php:${{ env.PHP_VERSION }} --target-reference=${{ env.PHP_VERSION }}"
             command: monitor
       -   if: contains(github.ref, 'refs/heads/main')
           name: Upload vulnerability Report to Github Release Artifacts
