@@ -189,7 +189,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/memcached.so \
     && echo "extension=memcached" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_memcached.ini \
     && apk del --no-network .build-deps \
-    && apk add --no-cache libmemcached-libs
+    && apk add --no-cache libmemcached-libs libevent
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
