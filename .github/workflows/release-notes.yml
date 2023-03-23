@@ -13,7 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Export ZTS_SUFFIX (if zts is enabled)
-        run: echo "ZTS_SUFFIX=`echo ${{ github.ref_name }} | grep 'zts' > /dev/null && echo '-zts' || echo ''` >> $GITHUB_ENV
+        run: echo "ZTS_SUFFIX=`echo ${{ github.ref_name }} | grep 'zts' > /dev/null && echo '-zts' || echo ''`" >> $GITHUB_ENV
       - name: "Fetch all existing tags"
         run: curl -L -s 'https://registry.hub.docker.com/v2/repositories/endava/php/tags?page_size=9999'|jq -r ".\"results\"[][\"name\"] | select(test( \"^[0-9]+.[0-9]+.[0-9]+${ZTS_SUFFIX}\$\"))" > existing_docker_tags.txt
       - name: "Store the current tag"
