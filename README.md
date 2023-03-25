@@ -50,7 +50,7 @@ We figured that our old approach had some disadvantages (it was a php-fpm build 
 * there is no official alpine apache2 build
 * we cannot add nginx unit to alpine build, as it lacks php embed SAPI [comment on php!1355](https://github.com/docker-library/php/pull/1355#issuecomment-1352087633)
 * the non-alpine image has lots of (fixable) CVEs, we cannot fix (e.g. trivy image --ignore-unfixed php:8.1.13-fpm-buster says: Total: 23)
-
+* depends on what the docker library team thinks fits into a docker image for php, it is not the php team releasing it
 The new approach has some advantages:
 
 * It uses the latest package distributed by alpine team/community (which is pretty fast when it comes to security updates - 1 or 2 days after release)
@@ -69,7 +69,7 @@ The new approach has also some disadvantages:
 
 * It does not support debian. If we want to do it: we need to do the same approach for debian based on official repositories.
 * We depend on the release of php packages at alpine (e.g. on 2023/01/03 the php82 was not officially packaged on alpine including nginx unit - so we cannot support it. at the same time it is available as docker image on official docker php)
-* If the packaged package version number is not available on alpine anymore - we cannot recreate the docker image
+* If the packaged package version number is not available on alpine anymore - we cannot recreate the docker image (we have a workaround to build older apk's for it - takes more time, but is 100% viable solution!)
 
 
 
