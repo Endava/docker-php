@@ -51,6 +51,7 @@ We figured that our old approach had some disadvantages (it was a php-fpm build 
 * we cannot add nginx unit to alpine build, as it lacks php embed SAPI [comment on php!1355](https://github.com/docker-library/php/pull/1355#issuecomment-1352087633)
 * the non-alpine image has lots of (fixable) CVEs, we cannot fix (e.g. trivy image --ignore-unfixed php:8.1.13-fpm-buster says: Total: 23)
 * depends on what the docker library team thinks fits into a docker image for php, it is not the php team releasing it
+
 The new approach has some advantages:
 
 * It uses the latest package distributed by alpine team/community (which is pretty fast when it comes to security updates - 1 or 2 days after release)
