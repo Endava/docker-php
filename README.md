@@ -69,8 +69,7 @@ The new approach has some advantages:
 The new approach has also some disadvantages:
 
 * It does not support debian. If we want to do it: we need to do the same approach for debian based on official repositories.
-* We depend on the release of php packages at alpine (e.g. on 2023/01/03 the php82 was not officially packaged on alpine including nginx unit - so we cannot support it. at the same time it is available as docker image on official docker php)
-* If the packaged package version number is not available on alpine anymore - we cannot recreate the docker image (we have a workaround to build older apk's for it - takes more time, but is 100% viable solution!)
+* We depend on the release of php packages at alpine (e.g. on 2023/01/03 the php82 was not officially packaged on alpine including nginx unit - so we cannot support it. at the same time it is available as docker image on official docker php). If the packaged package version number is not available on alpine anymore - we cannot recreate the docker image (we have a workaround to build older apk's for it - takes more time, but is 100% viable solution!)
 
 
 
