@@ -336,6 +336,7 @@ RUN apk add --no-cache go~=1.19.7 --repository https://dl-cdn.alpinelinux.org/al
     && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags`" \
     && export CGO_LDFLAGS="$PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
     && go build \
+    && rm -rf /root/.cache /root/go \
     && mv /opt/frankenphp/caddy/frankenphp/frankenphp /usr/sbin/frankenphp \
     && rm -rf /opt/frankenphp \
     && apk del --no-network .build-deps .go-build-deps
