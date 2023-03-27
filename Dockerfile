@@ -323,26 +323,27 @@ COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 # install caddy with frankenphp
-RUN apk add --no-cache go~=1.19.7 --repository https://dl-cdn.alpinelinux.org/alpine/v3.17/community --virtual .go-build-deps
-RUN apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps
-WORKDIR /opt
-RUN git clone https://github.com/dunglas/frankenphp.git --recursive
-WORKDIR /opt/frankenphp/caddy/frankenphp
-# make frankenphp to be happy about lphpzts82.so and not require us to have a lphp.so
-RUN sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go
-# hadolint ignore=SC2016,SC2086
-RUN export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
+# hadolint ignore=SC2016,SC2086,DL3003
+RUN apk add --no-cache go~=1.19.7 --repository https://dl-cdn.alpinelinux.org/alpine/v3.17/community --virtual .go-build-deps \
+    && apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && cd /opt \
+    && git clone https://github.com/dunglas/frankenphp.git --recursive \
+    && cd /opt/frankenphp/caddy/frankenphp \
+    # make frankenphp to be happy about lphpzts82.so and not require us to have a lphp.so
+    && sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go \
+    && export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
     && export PHP_CPPFLAGS="$PHP_CFLAGS" \
     && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags`" \
     && export CGO_LDFLAGS="$PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
-    && go build
-RUN mv /opt/frankenphp/caddy/frankenphp/frankenphp /usr/sbin/frankenphp
-RUN rm -rf /opt/frankenphp
+    && go build \
+    && mv /opt/frankenphp/caddy/frankenphp/frankenphp /usr/sbin/frankenphp \
+    && rm -rf /opt/frankenphp \
+    && apk del --no-network .build-deps .go-build-deps
+
 COPY files/frankenphp/Caddyfile /etc/Caddyfile
 # FIXME: start with /usr/sbin/frankenphp run --config /etc/Caddyfile
 # LISTEN on port 443! is always SSL and localhost!
 # FIXME: check for modules via `./frankenphp list-modules | grep php` and see `frankenphp` and `http.handlers.php`
-RUN apk del --no-network .build-deps .go-build-deps
 RUN apk add --no-cache nss-tools
 
 CMD ["php", "-a"]
