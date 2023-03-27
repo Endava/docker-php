@@ -323,8 +323,8 @@ COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 # install caddy with frankenphp
-RUN apk add --no-cache go~=1.19.7 --repository https://dl-cdn.alpinelinux.org/alpine/v3.17/community
-RUN apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed
+RUN apk add --no-cache go~=1.19.7 --repository https://dl-cdn.alpinelinux.org/alpine/v3.17/community --virtual .go-build-deps
+RUN apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps
 WORKDIR /opt
 RUN git clone https://github.com/dunglas/frankenphp.git --recursive
 WORKDIR /opt/frankenphp/caddy/frankenphp
@@ -337,10 +337,12 @@ RUN export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOU
     && export CGO_LDFLAGS="$PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
     && go build
 RUN mv /opt/frankenphp/caddy/frankenphp/frankenphp /usr/sbin/frankenphp
+RUN rm -rf /opt/frankenphp
 COPY files/frankenphp/Caddyfile /etc/Caddyfile
 # FIXME: start with /usr/sbin/frankenphp run --config /etc/Caddyfile
 # LISTEN on port 443! is always SSL and localhost!
 # FIXME: check for modules via `./frankenphp list-modules | grep php` and see `frankenphp` and `http.handlers.php`
+RUN apk del --no-network .build-deps .go-build-deps
 RUN apk add --no-cache nss-tools
 
 CMD ["php", "-a"]
