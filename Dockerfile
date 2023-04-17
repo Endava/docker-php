@@ -3,7 +3,7 @@ FROM --platform=${BUILDPLATFORM} alpine:edge
 
 ARG TARGETPLATFORM
 
-ARG PHP_VERSION="8.2.4"
+ARG PHP_VERSION="8.2.5"
 ARG PHP_PACKAGE_BASENAME="php82"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm82"
 ARG UNIT_VERSION="1.29.1"
@@ -80,7 +80,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
     && apk del --no-network .build-deps \
     && apk add --no-cache imagemagick imagemagick-libs libgomp
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf --repository http://dl-cdn.alpinelinux.org/alpine/edge/testing
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-posix
