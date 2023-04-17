@@ -324,7 +324,7 @@ RUN chmod +x /usr/sbin/start-cron
 
 # install caddy with frankenphp
 # hadolint ignore=SC2016,SC2086,DL3003
-RUN apk add --no-cache go~=1.19.7 --repository https://dl-cdn.alpinelinux.org/alpine/v3.17/community --virtual .go-build-deps \
+RUN apk add --no-cache go~=1.19 --repository https://dl-cdn.alpinelinux.org/alpine/v3.17/community --virtual .go-build-deps \
     && apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && cd /opt \
     && git clone https://github.com/dunglas/frankenphp.git --recursive \
