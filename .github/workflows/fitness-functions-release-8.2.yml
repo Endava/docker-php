@@ -35,7 +35,6 @@ jobs:
         package:
           - php82-pecl-imagick
           - php82-pecl-amqp
-          - php82-pecl-protobuf
           - php82-pecl-grpc
           - php82-pecl-pcov
     steps:
