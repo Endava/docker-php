@@ -1,5 +1,4 @@
-# FIXME: use a fixed alpine release as soon as it is available with php8.2 support
-FROM --platform=${BUILDPLATFORM} alpine:edge
+FROM --platform=${BUILDPLATFORM} alpine:3.18.0
 
 ARG TARGETPLATFORM
 
