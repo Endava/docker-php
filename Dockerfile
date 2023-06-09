@@ -91,6 +91,7 @@ RUN apk add --no-cache \
     git \
     git-lfs \
     mysql-client \
+    mariadb-connector-c \
     vim \
     rsync \
     sshpass \
