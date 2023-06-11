@@ -19,7 +19,7 @@ USER root
 RUN cp /workspace/.abuild/*.rsa.pub /etc/apk/keys/
 USER alpiner
 
-RUN git clone --depth=1 https://gitlab.alpinelinux.org/alpine/aports
+RUN git clone -b 3.18-stable --single-branch --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 
 WORKDIR /workspace/aports/community/php82
 RUN cp -rf /workspace/aports/community/php82 /workspace/aports/community/phpzts82
