@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM} alpine:3.18.0 as PHPZTSBUILDER
+FROM --platform=${TARGETPLATFORM} alpine:3.18.0 as PHPZTSBUILDER
 
 ARG TARGETPLATFORM
 
@@ -61,7 +61,7 @@ RUN sed -i -e 's/.\/configure php --module=php\$_phpver2/sed -i -e "s\/lphp\/lph
 RUN abuild checksum && abuild -r
 
 # FIXME: use a fixed alpine release as soon as it is available with php8.2 support
-FROM --platform=${BUILDPLATFORM} alpine:3.18.0
+FROM --platform=${TARGETPLATFORM} alpine:3.18.0
 
 ARG TARGETPLATFORM
 
