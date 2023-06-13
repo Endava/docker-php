@@ -51,6 +51,7 @@ RUN echo "ext/imap/tests/imap_utf8_to_mutf7_basic.phpt" >> disabled-tests.list
 USER root
 RUN apk update
 USER alpiner
+RUN arch
 RUN abuild checksum && abuild -r
 WORKDIR /workspace/aports/community/unit
 # make phpver2 to be phpzts82
