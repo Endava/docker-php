@@ -10,7 +10,10 @@ then
   TARGET_PLATFORMS=$2
 fi
 
-docker buildx create --node buildx --name buildx --use
+docker version
+docker buildx version
+
+docker buildx create --node buildx --name buildx --use --driver docker-container
 
 # we have to do it like this, because of https://github.com/docker/buildx/issues/59#issuecomment-1168619521
 for TARGET_PLATFORM in `echo $TARGET_PLATFORMS | tr -s ',' ' '`
