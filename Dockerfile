@@ -50,6 +50,8 @@ USER root
 RUN apk update
 USER alpiner
 RUN arch
+RUN uname -m
+RUN abuild -A
 RUN abuild checksum && abuild -r
 WORKDIR /workspace/aports/community/unit
 # make phpver2 to be phpzts82
