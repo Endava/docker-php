@@ -12,7 +12,7 @@ fi
 
 # we have to do it like this, because of https://github.com/docker/buildx/issues/59#issuecomment-1168619521
 echo "Build and Push ${DOCKER_IMAGE_NAME}"
-docker buildx create --node buildx --name buildx --use
+docker buildx create --node buildx --name buildx --use --driver docker-container
 docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $DOCKER_IMAGE_NAME .
 if [ ! -z "$QUAY_DOCKER_IMAGE_NAME" ]
 then
