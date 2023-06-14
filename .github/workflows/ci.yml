@@ -73,6 +73,10 @@ jobs:
     name: Upload PHP Image
 
     runs-on: ubuntu-latest
+    
+    needs: 
+      - build-arm64
+      - build-amd64
 
     continue-on-error: false
 
