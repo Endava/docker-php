@@ -1,4 +1,4 @@
-# endava/docker-php:8.2.x
+# endava/docker-php:8.2.x-zts
 
 ## Usage
 
@@ -12,7 +12,7 @@ $ echo '<?php phpinfo();' > public/index.php
 2. Run the NGINX Unit Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-unit
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.7-zts-unit
 ```
 
 and open http://localhost:8080 to see phpinfo unit.
@@ -26,7 +26,7 @@ Time per request:       12.144 [ms] (mean)
 3. Run the Apache2 Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-apache2
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.7-zts-apache2
 ```
 
 and open http://localhost:8080 to see phpinfo on apache2.
@@ -48,7 +48,7 @@ version: "2.1"
 
 services:
   php-cli:
-    image: endava/php:8.2.4
+    image: endava/php:8.2.7-zts
     volumes:
       - ./:/usr/src/app
     user: "${UID-www-data}:${GID-www-data}"
@@ -56,7 +56,7 @@ services:
     depends_on:
       - nginx
   php-fpm:
-    image: endava/php:8.2.4-fpm
+    image: endava/php:8.2.7-zts-fpm
     user: "${UID-www-data}:${GID-www-data}"
     volumes:
       - ./:/usr/src/app
@@ -99,11 +99,11 @@ $docker-compose run php-cli
 ⠿ Container docker-php-php-fpm-1
 ⠿ Container docker-php-nginx-1
 bash-5.1$ php -v
-PHP 8.2.4 (cli) (built: Feb 14 2023 22:58:50) (NTS)
+PHP 8.2.7 (cli) (built: Jun 14 2023 08:28:40) (ZTS)
 Copyright (c) The PHP Group
-Zend Engine v4.2.3, Copyright (c) Zend Technologies
-    with Zend OPcache v8.2.4, Copyright (c), by Zend Technologies
-    with Xdebug v3.2.0, Copyright (c) 2002-2022, by Derick Rethans
+Zend Engine v4.2.7, Copyright (c) Zend Technologies
+    with Zend OPcache v8.2.7, Copyright (c), by Zend Technologies
+    with Xdebug v3.2.1, Copyright (c) 2002-2023, by Derick Rethans
 ```
 
 and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
@@ -111,7 +111,7 @@ and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
 5. Run the frankenphp Version
 
 ```shell
-$ docker run --rm -p 8443:443 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-frankenphp
+$ docker run --rm -p 8443:443 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.7-zts-frankenphp
 ```
 
 and open https://localhost:8443/ to see phpinfo with frankenphp as server api.
@@ -127,7 +127,7 @@ Time per request:       62.755 [ms] (mean)
 6. Run the frankenphp http worker Version
 
 ```shell
-$ docker run --rm  -e FRANKENPHP_CONFIG="worker ./public/index.php" -e SERVER_NAME=http://localhost:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-frankenphp
+$ docker run --rm  -e FRANKENPHP_CONFIG="worker ./public/index.php" -e SERVER_NAME=http://localhost:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.7-zts-frankenphp
 ```
 
 and index.php like this:
@@ -301,7 +301,7 @@ You can define the crontab's content with an environment variable like this:
 ```yaml
 services:
   import-data-cron:
-    image: endava/php:8.2.4
+    image: endava/php:8.2.7-zts
     command: start-cron
     environment:
       - 'CRONTAB_USER=www-data'
@@ -345,7 +345,7 @@ Usage in your `docker-compose.yml`:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.2.4
+    image: endava/php:8.2.7-zts
     command: start-cron
     volumes:
       - ./:/usr/src/app
@@ -358,7 +358,7 @@ cron location with the `CRON_PATH` environment variable:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.2.4
+    image: endava/php:8.2.7-zts
     command: start-cron
     environment:
       - CRON_PATH=/usr/src/app/crontabs
