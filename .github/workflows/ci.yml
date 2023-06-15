@@ -30,12 +30,12 @@ jobs:
           run: >
             ./build_images.sh temporary-build-image linux/amd64
       -   name: "Export image"
-          run: docker save  temporary-build-image-linux-amd64 > amd64-image.tar
+          run: mv dockercache amdcache
       -   name: 'Upload Artifact'
           uses: actions/upload-artifact@v3
           with:
-            name: amd64-image
-            path: amd64-image.tar
+            name: amdcache
+            path: amdcache
             retention-days: 1
             
   build-arm64:
@@ -61,12 +61,12 @@ jobs:
           run: >
             ./build_images.sh temporary-build-image linux/arm64/v8
       -   name: "Export image"
-          run: docker save  temporary-build-image-linux-arm64-v8 > arm64-image.tar
+          run: mv dockercache armcache
       -   name: 'Upload Artifact'
           uses: actions/upload-artifact@v3
           with:
-            name: arm64-image
-            path: arm64-image.tar
+            name: armcache
+            path: armcache
             retention-days: 1
             
   upload:
@@ -87,12 +87,12 @@ jobs:
       -   name: Download amd64
           uses: actions/download-artifact@v3
           with:
-            name: amd64-image
+            name: amdcache
 
       -   name: Download arm64
           uses: actions/download-artifact@v3
           with:
-            name: arm64-image
+            name: armcache
             
       -   name: "Load amd64 image"
           run: docker load --input amd64-image.tar
