@@ -88,11 +88,13 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: amdcache
+            path: amdcache
 
       -   name: Download arm64
           uses: actions/download-artifact@v3
           with:
             name: armcache
+            path: armcache
 
       -   name: "Create docker cache"
           run: >
