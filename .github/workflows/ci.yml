@@ -94,9 +94,12 @@ jobs:
           with:
             name: armcache
 
-      -   name: "Reload build cache for amd64"
+      -   name: "Create docker cache"
           run: >
             cp -rf amdcache dockercache
+
+      -   name: "Reload build cache for amd64"
+          run: >
             ./build_images.sh temporary-build-image linux/amd64
             
       -   name: "Smoke test with php -v"
