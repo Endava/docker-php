@@ -17,6 +17,11 @@ docker run --privileged --rm tonistiigi/binfmt --install all
 
 docker buildx create --node buildx --name buildx --use --driver docker-container
 
+if [ ! -d dockercache ]
+then
+  mkdir dockercache
+fi
+
 # we have to do it like this, because of https://github.com/docker/buildx/issues/59#issuecomment-1168619521
 for TARGET_PLATFORM in `echo $TARGET_PLATFORMS | tr -s ',' ' '`
 do
