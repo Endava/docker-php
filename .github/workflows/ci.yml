@@ -93,13 +93,12 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: armcache
+
+      -   name: "Reload build cache for amd64"
+          run: >
+            cp -rf amdcache dockercache
+            ./build_images.sh temporary-build-image linux/amd64
             
-      -   name: "Load amd64 image"
-          run: docker load --input amd64-image.tar
-
-      -   name: "Load arm64 image"
-          run: docker load --input arm64-image.tar
-
       -   name: "Smoke test with php -v"
           run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
 

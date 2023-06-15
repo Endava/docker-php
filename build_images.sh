@@ -21,7 +21,7 @@ docker buildx create --node buildx --name buildx --use --driver docker-container
 for TARGET_PLATFORM in `echo $TARGET_PLATFORMS | tr -s ',' ' '`
 do
   TARGET_PLATFORM_SUFFIX=`echo $TARGET_PLATFORM | tr -s '/' '-'`
-  docker buildx build --cache-to=type=local,dest=dockercache --progress plain --pull --load --platform $TARGET_PLATFORM -f Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} .
+  docker buildx build --cache-from=type=local,dest=dockercache --cache-to=type=local,dest=dockercache --progress plain --pull --load --platform $TARGET_PLATFORM -f Dockerfile -t ${DOCKER_IMAGE_NAME}-${TARGET_PLATFORM_SUFFIX} .
 
   for SUFFIX in unit fpm apache2 frankenphp
   do
