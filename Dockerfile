@@ -128,7 +128,6 @@ RUN apk add --no-cache unit~=$UNIT_VERSION unit-${PHP_PACKAGE_BASENAME}~=$UNIT_V
 # add default nginx unit json file (listening on port 8080)
 COPY files/unit/unit-default.json /var/lib/unit/conf.json
 # add folder for control socket file
-RUN mkdir /run/unit/
 RUN chown www-data:www-data /run/unit/
 
 # install apache2 and the php module for apache2
