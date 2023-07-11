@@ -12,7 +12,7 @@ jobs:
   configured-alpine-is-latest-version:
     name: "Ensure that Alpine 3.18 is the latest alpine version"
     env:
-      LATEST_ALPINE_RELEASE: "3.18"    
+      LATEST_ALPINE_RELEASE: "3.18.2"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
@@ -25,7 +25,7 @@ jobs:
     steps:
       -  name: Execute
          run: >
-             ! docker run --rm alpine:3.18 sh -c 'apk -U add php82 && php -v'
+             ! docker run --rm alpine:3.18.2 sh -c 'apk -U add php82 && php -v'
 
   packages-not-available-on-alpine-for-release-8-2:
     name: Package not available on alpine for php 8.2 in community, yet
