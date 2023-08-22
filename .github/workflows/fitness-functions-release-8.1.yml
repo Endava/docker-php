@@ -11,7 +11,7 @@ jobs:
   configured-release-8-1-alpine-is-latest-version:
     name: "Ensure that Alpine is the latest alpine version for release 8.1"
     env:
-      LATEST_ALPINE_RELEASE: "3.18.2"    
+      LATEST_ALPINE_RELEASE: "3.18.3"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
@@ -29,4 +29,4 @@ jobs:
           - php81-pecl-grpc
     steps:
       -   name: Execute
-          run: "! docker run --rm alpine:3.18.2 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+          run: "! docker run --rm alpine:3.18.3 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
