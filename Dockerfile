@@ -1,4 +1,4 @@
-FROM alpine:3.18.2 as PHPZTSBUILDER
+FROM alpine:3.18.3 as PHPZTSBUILDER
 
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache alpine-sdk
@@ -61,7 +61,7 @@ RUN sed -i -e 's/_phpver2=82/_phpver2=zts82/' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver2/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& .\/configure php --module=php\$_phpver2/g' APKBUILD
 RUN abuild checksum && abuild -r
 
-FROM alpine:3.18.2
+FROM alpine:3.18.3
 
 ARG PHP_VERSION="8.2.8"
 ARG PHP_PACKAGE_BASENAME="phpzts82"
