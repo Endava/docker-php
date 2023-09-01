@@ -191,7 +191,8 @@ ENV PHP_DATE_TIMEZONE="" \
     PHP_XDEBUG_START_WITH_REQUEST='default' \
     PHP_XDEBUG_CLIENT_HOST='localhost' \
     PHP_XDEBUG_DISCOVER_CLIENT_HOST='false' \
-    PHP_XDEBUG_IDEKEY=''
+    PHP_XDEBUG_IDEKEY='' \
+    PHP_EXPOSE_PHP=1
 
 RUN mkdir -p /usr/src/app
 RUN chown -R www-data:www-data /usr/src/app
