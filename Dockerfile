@@ -1,6 +1,6 @@
 FROM alpine:3.18.3
 
-ARG PHP_VERSION="8.2.8"
+ARG PHP_VERSION="8.2.10"
 ARG PHP_PACKAGE_BASENAME="php82"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm82"
 ARG UNIT_VERSION="1.30.0"
@@ -203,7 +203,8 @@ ENV PHP_DATE_TIMEZONE="UTC" \
     PHP_XDEBUG_START_WITH_REQUEST='default' \
     PHP_XDEBUG_CLIENT_HOST='localhost' \
     PHP_XDEBUG_DISCOVER_CLIENT_HOST='false' \
-    PHP_XDEBUG_IDEKEY=''
+    PHP_XDEBUG_IDEKEY='' \
+    PHP_EXPOSE_PHP=1
 
 RUN mkdir -p /usr/src/app
 RUN chown -R www-data:www-data /usr/src/app
