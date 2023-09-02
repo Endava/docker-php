@@ -16,6 +16,7 @@ docker buildx version
 docker run --privileged --rm tonistiigi/binfmt --install all
 
 docker buildx create --node buildx --name buildx --use --driver docker-container
+docker buildx prune --force --all || true
 
 if [ ! -d dockercache ]
 then
