@@ -1,4 +1,4 @@
-# endava/docker-php:8.2.x
+# endava/docker-php:8.3.x
 
 ## Usage
 
@@ -12,7 +12,7 @@ $ echo '<?php phpinfo();' > public/index.php
 2. Run the NGINX Unit Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-unit
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.3.0-unit
 ```
 
 and open http://localhost:8080 to see phpinfo unit.
@@ -26,7 +26,7 @@ Time per request:       12.144 [ms] (mean)
 3. Run the Apache2 Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-apache2
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.3.0-apache2
 ```
 
 and open http://localhost:8080 to see phpinfo on apache2.
@@ -48,7 +48,7 @@ version: "2.1"
 
 services:
   php-cli:
-    image: endava/php:8.2.4
+    image: endava/php:8.3.0
     volumes:
       - ./:/usr/src/app
     user: "${UID-www-data}:${GID-www-data}"
@@ -56,7 +56,7 @@ services:
     depends_on:
       - nginx
   php-fpm:
-    image: endava/php:8.2.4-fpm
+    image: endava/php:8.3.0-fpm
     user: "${UID-www-data}:${GID-www-data}"
     volumes:
       - ./:/usr/src/app
@@ -99,11 +99,11 @@ $docker-compose run php-cli
 ⠿ Container docker-php-php-fpm-1
 ⠿ Container docker-php-nginx-1
 bash-5.1$ php -v
-PHP 8.2.4 (cli) (built: Feb 14 2023 22:58:50) (NTS)
+PHP 8.3.0RC1 (cli) (built: Aug 30 2023 18:16:52) (NTS)
 Copyright (c) The PHP Group
-Zend Engine v4.2.3, Copyright (c) Zend Technologies
-    with Zend OPcache v8.2.4, Copyright (c), by Zend Technologies
-    with Xdebug v3.2.0, Copyright (c) 2002-2022, by Derick Rethans
+Zend Engine v4.3.0RC1, Copyright (c) Zend Technologies
+    with Zend OPcache v8.3.0RC1, Copyright (c), by Zend Technologies
+    with Xdebug v3.3.0-dev, Copyright (c) 2002-2022, by Derick Rethans
 ```
 
 and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
@@ -176,7 +176,7 @@ The `-apache2` tagged docker image (because it has attached this snippet at [fil
 
 ## fpm
 
-The `/etc/php82/php-fpm.d/www.conf` is adjusted:
+The `/etc/php83/php-fpm.d/www.conf` is adjusted:
 
 * `user` + `group` is set to `www-data` to ensure it's running www-data as user/group
 * `listen` is set to `0.0.0.0:9000` to be accessible by other docker hosts
@@ -185,7 +185,7 @@ The `/etc/php82/php-fpm.d/www.conf` is adjusted:
 * `decorate_workers_output` is set to `no` to remove the decorator like `TIMESTAMP WARNING: [pool www] child 7 said into stderr "` around each message
 * `php_admin_flag[fastcgi.logging]` is set to `off` to avoid that the fastcgi consumer (e.g. nginx) duplicates the fpm messages and prefixes it like this `FastCGI sent in stderr`
 
-The `/etc/php82/php-fpm.conf` is adjusted:
+The `/etc/php83/php-fpm.conf` is adjusted:
 
 * `error_log` is set to `/dev/stderr` to log error to the stderr
 
@@ -233,10 +233,10 @@ services:
     image: mailhog/mailhog:v1.0.0
     ports:
       - "1025"
-      - "8025:8025"
+      - "8.35:8.35"
 ```
 
-makes a mailhog server at `http://127.0.0.1:8025` available. If you set 
+makes a mailhog server at `http://127.0.0.1:8.35` available. If you set 
 
 ```text
 PHP_SENDMAIL_PATH=/usr/bin/msmtp -t --host=mailhog --port=1025
@@ -252,7 +252,7 @@ You can define the crontab's content with an environment variable like this:
 ```yaml
 services:
   import-data-cron:
-    image: endava/php:8.2.4
+    image: endava/php:8.3.0
     command: start-cron
     environment:
       - 'CRONTAB_USER=www-data'
@@ -296,7 +296,7 @@ Usage in your `docker-compose.yml`:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.2.4
+    image: endava/php:8.3.0
     command: start-cron
     volumes:
       - ./:/usr/src/app
@@ -309,7 +309,7 @@ cron location with the `CRON_PATH` environment variable:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.2.4
+    image: endava/php:8.3.0
     command: start-cron
     environment:
       - CRON_PATH=/usr/src/app/crontabs

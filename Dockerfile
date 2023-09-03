@@ -1,9 +1,9 @@
-FROM alpine:3.18.3
+FROM alpine:edge
 
-ARG PHP_VERSION="8.2.10"
-ARG PHP_PACKAGE_BASENAME="php82"
-ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm82"
-ARG UNIT_VERSION="1.30.0"
+ARG PHP_VERSION="8.3.0_rc1"
+ARG PHP_PACKAGE_BASENAME="php83"
+ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm83"
+ARG UNIT_VERSION="1.31.0"
 ARG APACHE2_VERSION="2.4.57"
 ARG GRPC_EXTENSION_VERSION="1.51.1"
 ARG GRPC_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/testing"
@@ -20,6 +20,8 @@ ENV PCOV_EXTENSION_VERSION=$PCOV_EXTENSION_VERSION
 ENV PCOV_EXTENSION_REPOSITORY=$PCOV_EXTENSION_REPOSITORY
 
 RUN apk upgrade -U # 2023/01/05 to fix CVE-2022-3996
+# FIXME: add testing repo (until php83 is available in community/main repository)
+RUN echo https://dl-cdn.alpinelinux.org/alpine/edge/testing/ >> /etc/apk/repositories
 
 RUN apk add --no-cache \
     libc6-compat \
@@ -70,13 +72,36 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
+# FIXME: # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" pecl83 install imagick \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/imagick.so \
+    && echo "extension=imagick" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_imagick.ini \
+    && apk del --no-network .build-deps \
+    && apk add --no-cache imagemagick imagemagick-libs libgomp
+
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-msgpack
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
+
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers zlib-dev libmemcached-dev cyrus-sasl-dev libevent-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" pecl83 install -D 'enable-memcached-igbinary="yes" enable-memcached-session="yes" enable-memcached-json="yes" enable-memcached-protocol="yes" enable-memcached-msgpack="yes"' memcached \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/memcached.so \
+    && echo "extension=memcached" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_memcached.ini \
+    && apk del --no-network .build-deps \
+    && apk add --no-cache libmemcached-libs libevent
+
+
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" pecl83 install protobuf \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/protobuf.so \
+    && echo "extension=protobuf" > /etc/$PHP_PACKAGE_BASENAME/conf.d/protobuf.ini \
+    && apk del --no-network .build-deps
+
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-posix
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-simplexml
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-soap
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
@@ -91,21 +116,27 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlreader
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xsl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" pecl83 install grpc-1.58.0RC1 \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/grpc.so \
+    && echo "extension=grpc" > /etc/$PHP_PACKAGE_BASENAME/conf.d/grpc.ini \
+    && apk del --no-network .build-deps
+
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 
-# FIXME: we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
+# FIXME: we need this, since php83 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php83/APKBUILD
 WORKDIR /usr/bin
-RUN    ln -s php82 php \
-    && ln -s peardev82 peardev \
-    && ln -s pecl82 pecl \
-    && ln -s phpize82 phpize \
-    && ln -s php-config82 php-config \
-    && ln -s phpdbg82 phpdbg \
-    && ln -s lsphp82 lsphp \
-    && ln -s php-cgi82 php-cgi \
-    && ln -s phar.phar82 phar.phar \
-    && ln -s phar82 phar
+RUN    ln -s php83 php \
+    && ln -s peardev83 peardev \
+    && ln -s pecl83 pecl \
+    && ln -s phpize83 phpize \
+    && ln -s php-config83 php-config \
+    && ln -s phpdbg83 phpdbg \
+    && ln -s lsphp83 lsphp \
+    && ln -s php-cgi83 php-cgi \
+    && ln -s phar.phar83 phar.phar \
+    && ln -s phar83 phar
 
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
