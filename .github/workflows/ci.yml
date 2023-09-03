@@ -7,8 +7,8 @@ on:
   pull_request:
 
 jobs:
-  ci:
-    name: Build PHP Image
+  build-amd64:
+    name: Build PHP Image amd64
 
     runs-on: ubuntu-latest
 
@@ -28,8 +28,77 @@ jobs:
 
       -   name: "Build Alpine"
           run: >
-            ./build_images.sh temporary-build-image
+            ./build_images.sh temporary-build-image linux/amd64
+      -   name: "Export image"
+          run: mv dockercache amdcache
+      -   name: 'Upload Artifact'
+          uses: actions/upload-artifact@v3
+          with:
+            name: amdcache
+            path: amdcache
+            retention-days: 1
+            
+  build-arm64:
+    name: Build PHP Image arm64
 
+    runs-on: ARM64
+
+    continue-on-error: false
+
+    steps:
+      -   name: "Checkout code"
+          uses: actions/checkout@v3
+
+      -   name: Lint Dockerfile
+          uses: hadolint/hadolint-action@v3.0.0
+          with:
+            dockerfile: "Dockerfile"
+            format: "tty"
+            no-color: "true"
+            output-file: "/dev/stdout"
+
+      -   name: "Build Alpine"
+          run: >
+            ./build_images.sh temporary-build-image linux/arm64/v8
+      -   name: "Export image"
+          run: mv dockercache armcache
+      -   name: 'Upload Artifact'
+          uses: actions/upload-artifact@v3
+          with:
+            name: armcache
+            path: armcache
+            retention-days: 1
+            
+  upload:
+    name: Upload PHP Image
+
+    runs-on: ubuntu-latest
+    
+    needs: 
+      - build-arm64
+      - build-amd64
+
+    continue-on-error: false
+
+    steps:
+      -   name: "Checkout code"
+          uses: actions/checkout@v3
+
+      -   name: Download amd64
+          uses: actions/download-artifact@v3
+          with:
+            name: amdcache
+
+      -   name: Download arm64
+          uses: actions/download-artifact@v3
+          with:
+            name: armcache
+
+      -   name: "Reload build cache for amd64"
+          run: >
+            cp -rf amdcache dockercache
+            ./build_images.sh temporary-build-image linux/amd64
+            
       -   name: "Smoke test with php -v"
           run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
 
