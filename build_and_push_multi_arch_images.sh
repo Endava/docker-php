@@ -10,20 +10,23 @@ then
   TARGET_PLATFORMS=$2
 fi
 
+docker version
+docker buildx version
+
 # we have to do it like this, because of https://github.com/docker/buildx/issues/59#issuecomment-1168619521
 echo "Build and Push ${DOCKER_IMAGE_NAME}"
-docker buildx create --node buildx --name buildx --use
-docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $DOCKER_IMAGE_NAME .
+docker buildx create --node buildx --name buildx --use --driver docker-container
+docker buildx build --cache-from=type=local,src=armcache --cache-from=type=local,src=amdcache --progress plain --push --platform $TARGET_PLATFORMS -f Dockerfile -t $DOCKER_IMAGE_NAME .
 if [ ! -z "$QUAY_DOCKER_IMAGE_NAME" ]
 then
   echo "Build and Push ${QUAY_DOCKER_IMAGE_NAME}"
-  docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $QUAY_DOCKER_IMAGE_NAME .
+  docker buildx build --cache-from=type=local,src=armcache --cache-from=type=local,src=amdcache --progress plain --push --platform $TARGET_PLATFORMS -f Dockerfile -t $QUAY_DOCKER_IMAGE_NAME .
 fi
 
 if [ ! -z "$GHCR_DOCKER_IMAGE_NAME" ]
 then
   echo "Build and Push ${GHCR_DOCKER_IMAGE_NAME}"
-  docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile -t $GHCR_DOCKER_IMAGE_NAME .
+  docker buildx build --cache-from=type=local,src=armcache --cache-from=type=local,src=amdcache --progress plain --push --platform $TARGET_PLATFORMS -f Dockerfile -t $GHCR_DOCKER_IMAGE_NAME .
 fi
 for SUFFIX in unit fpm apache2
 do
@@ -32,16 +35,16 @@ do
   cat files/$SUFFIX/$SUFFIX.Dockerfile.snippet.txt >> Dockerfile-${SUFFIX}
 
   echo "Build and Push ${DOCKER_IMAGE_NAME}-${SUFFIX}"
-  docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $DOCKER_IMAGE_NAME-${SUFFIX} .
+  docker buildx build --cache-from=type=local,src=armcache --cache-from=type=local,src=amdcache --progress plain --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $DOCKER_IMAGE_NAME-${SUFFIX} .
   if [ ! -z "$QUAY_DOCKER_IMAGE_NAME" ]
   then
     echo "Build and Push ${QUAY_DOCKER_IMAGE_NAME}-${SUFFIX}"
-    docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $QUAY_DOCKER_IMAGE_NAME-${SUFFIX} .
+    docker buildx build --cache-from=type=local,src=armcache --cache-from=type=local,src=amdcache --progress plain --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $QUAY_DOCKER_IMAGE_NAME-${SUFFIX} .
   fi
   if [ ! -z "$GHCR_DOCKER_IMAGE_NAME" ]
   then
     echo "Build and Push ${GHCR_DOCKER_IMAGE_NAME}-${SUFFIX}"
-    docker buildx build --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $GHCR_DOCKER_IMAGE_NAME-${SUFFIX} .
+    docker buildx build --cache-from=type=local,src=armcache --cache-from=type=local,src=amdcache --progress plain --push --platform $TARGET_PLATFORMS -f Dockerfile-${SUFFIX} -t $GHCR_DOCKER_IMAGE_NAME-${SUFFIX} .
   fi
   rm Dockerfile-${SUFFIX}
 done
