@@ -1,6 +1,6 @@
 FROM alpine:edge
 
-ARG PHP_VERSION="8.3.0_rc1"
+ARG PHP_VERSION="8.3.0_rc2"
 ARG PHP_PACKAGE_BASENAME="php83"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm83"
 ARG UNIT_VERSION="1.31.0"
@@ -118,7 +118,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl83 install grpc-1.58.0RC1 \
+    && MAKEFLAGS="-j $(nproc)" pecl83 install grpc-1.58.0 \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/grpc.so \
     && echo "extension=grpc" > /etc/$PHP_PACKAGE_BASENAME/conf.d/grpc.ini \
     && apk del --no-network .build-deps
