@@ -3,10 +3,12 @@ FROM ubuntu:jammy-20230816
 ARG PHP_VERSION="8.2.10"
 ARG PHP_PACKAGE_BASENAME="php8.2"
 ARG PHP_PACKAGE_BASE_VERSION="8.2"
+ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm8.2"
 ARG UNIT_VERSION="1.31.0"
 ARG APACHE2_VERSION="2.4.52"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
+ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
 ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
 
@@ -100,6 +102,8 @@ RUN mkdir /composer && chown www-data:www-data /composer
 
 # install php-fpm
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-fpm=${PHP_VERSION}-*
+# the ubuntu php fpm package, does not deliver php-fpm binary without suffix
+RUN ln -s $PHP_FPM_BINARY_PATH /usr/sbin/php-fpm
 # use user www-data
 RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # use group www-data
