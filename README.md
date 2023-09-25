@@ -158,21 +158,19 @@ This docker image contains a [files/apache2/apache2-default.conf](files/apache2/
 
 The directive `DocumentRoot` is set to `/usr/src/app/public` to deliver `index.php` from this folder.
 
-The directive `ErrorLog` in `httpd.conf` is set to `/dev/stderr` to ensure that we have the error log as output to the docker container.
+The directive `ErrorLog` in `apache2.conf` is set to `/dev/stderr` to ensure that we have the error log as output to the docker container.
 
-The directive `CustomLog` (which includes `TransferLog`) in `httpd.conf` is set to `/dev/stdout` to ensure that we have the access log and normal log as output to the docker container.
+The directive `CustomLog` (which includes `TransferLog`) in `apache2.conf` is set to `/dev/stdout` to ensure that we have the access log and normal log as output to the docker container.
 
-The `/etc/apache2/httpd.conf` is adjusted to enable `LoadModule rewrite_module`.
+The default `Listen 8080` in `apache2.conf` to ensure that the server is reachable via port 8080.
 
-The default `Listen 8080` in `httpd.conf` to ensure that the server is reachable via port 8080.
-
-The default user and group in `httpd.conf` is set to `www-data`.
+The default user and group in `apache2.conf` is set to `www-data`.
 
 
 The `-apache2` tagged docker image (because it has attached this snippet at [files/apache2/apache2.Dockerfile.snippet.txt](files/apache2/apache2.Dockerfile.snippet.txt) has two settings set:
 
 * The `STOPSIGNAL` is set to `WINCH` to allow graceful stop.
-* The `CMD` has `httpd -DFOREGROUND` set to run httpd in foreground
+* The `CMD` has `apache2 -DFOREGROUND` set to run apache2 in foreground
 
 ## fpm
 
