@@ -12,11 +12,11 @@ ENV APACHE2_VERSION=$APACHE2_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && apt-get install -y software-properties-common && LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && apt-get remove --purge -y software-properties-common && apt-get autoremove -y
+RUN apt-get update && apt-get install -y software-properties-common --no-install-recommends && LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && apt-get remove --purge -y software-properties-common && apt-get autoremove -y
 
 RUN apt-get update && apt-get -y dist-upgrade
 
-RUN apt-get install -y \
+RUN apt-get install -y --no-install-recommends \
     curl \
     git \
     git-lfs \
@@ -125,14 +125,14 @@ RUN rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php.ini \
 RUN curl --output /usr/share/keyrings/nginx-keyring.gpg  https://unit.nginx.org/keys/nginx-keyring.gpg
 RUN echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ jammy unit" > /etc/apt/sources.list.d/unit.list
 RUN echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ jammy unit" >> /etc/apt/sources.list.d/unit.list
-RUN apt update && apt-get install -y  unit=$UNIT_VERSION-* unit-php=$UNIT_VERSION-*
+RUN apt-get update && apt-get install -y  unit=$UNIT_VERSION-* unit-php=$UNIT_VERSION-* --no-install-recommends
 # add default nginx unit json file (listening on port 8080)
 COPY files/unit/unit-default.json /var/lib/unit/conf.json
 # chown the folder for control socket file
 RUN mkdir /run/unit && chown www-data:www-data /run/unit/
 
 # install apache2 and the php module for apache2
-RUN apt-get install -y apache2=$APACHE2_VERSION-* libapache2-mod-${PHP_PACKAGE_BASENAME}=${PHP_VERSION}-*
+RUN apt-get install -y apache2=$APACHE2_VERSION-* libapache2-mod-${PHP_PACKAGE_BASENAME}=${PHP_VERSION}-* --no-install-recommends
 # add default apache2 config file
 COPY files/apache2/apache2-default.conf /etc/apache2/sites-available/000-default.conf
 # listen port 8080

@@ -1,3 +1,6 @@
 ignored:
-- DL3018 # warning: Pin versions in apk add. Instead of `apk add <package>` use `apk add <package>=<version>`
 - DL3059 # info: Multiple consecutive `RUN` instructions. Consider consolidation.
+- DL3008 # warning: Pin versions in apt get install. Instead of `apt-get install <package>` use `apt-get install <package>=<version>`
+- DL3009 # info: Delete the apt-get lists after installing something
+- DL3015 # info: Avoid additional packages by specifying `--no-install-recommends`
+
