@@ -26,7 +26,7 @@ jobs:
             no-color: "true"
             output-file: "/dev/stdout"
 
-      -   name: "Build Alpine"
+      -   name: "Build Ubuntu"
           run: >
             ./build_images.sh temporary-build-image
 
@@ -34,15 +34,15 @@ jobs:
           run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
 
       -   name: "PHP_VERSION Env"
-          run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | head -n 1 | cut -f 2 -d ' '`" >> $GITHUB_ENV
+          run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | head -n 1 | cut -f 2 -d ' '`-ubuntu" >> $GITHUB_ENV
 
       -   name: Tag also with php:${{ env.PHP_VERSION }}
           run: docker tag temporary-build-image-linux-amd64 php-${{ env.PHP_VERSION }}
 
-      -   name: "Check Alpine -i"
+      -   name: "Check Ubuntu -i"
           run: docker run --pull=never --rm -t php-${{ env.PHP_VERSION }} php -i
 
-      -   name: "Check Alpine -v"
+      -   name: "Check Ubuntu -v"
           run: docker run --pull=never --rm -t php-${{ env.PHP_VERSION }} php -v
 
       -   name: "Run Tests"
@@ -50,7 +50,7 @@ jobs:
           env:
             DOCKER_REGISTRY_IMAGE: "temporary-build-image-linux-amd64"
 
-      -   name: Run Alpine Trivy vulnerability scanner
+      -   name: Run Ubuntu Trivy vulnerability scanner
           uses: aquasecurity/trivy-action@master
           with:
             image-ref: php-${{ env.PHP_VERSION }}
@@ -61,7 +61,7 @@ jobs:
             severity: 'CRITICAL,HIGH'
 
       -   if: contains(github.ref, 'refs/heads/release/')
-          name: Run Alpine Trivy vulnerability scanner and upload to github security tab
+          name: Run Ubuntu Trivy vulnerability scanner and upload to github security tab
           uses: aquasecurity/trivy-action@master
           with:
             image-ref: php-${{ env.PHP_VERSION }}
@@ -69,7 +69,7 @@ jobs:
             output: 'trivy-results.sarif'
 
       -   if: contains(github.ref, 'refs/heads/release/')
-          name: Upload Alpine Trivy scan results to GitHub Security tab
+          name: Upload Ubuntu Trivy scan results to GitHub Security tab
           uses: github/codeql-action/upload-sarif@v2
           with:
             sarif_file: 'trivy-results.sarif'

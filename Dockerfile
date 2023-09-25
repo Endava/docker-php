@@ -1,32 +1,27 @@
-FROM alpine:3.18.3
+FROM ubuntu:jammy-20230816
 
 ARG PHP_VERSION="8.2.10"
-ARG PHP_PACKAGE_BASENAME="php82"
-ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm82"
-ARG UNIT_VERSION="1.30.0"
-ARG APACHE2_VERSION="2.4.57"
-ARG GRPC_EXTENSION_VERSION="1.51.1"
-ARG GRPC_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/testing"
-ARG PCOV_EXTENSION_VERSION="1.0.11"
-ARG PCOV_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/testing"
+ARG PHP_PACKAGE_BASENAME="php8.2"
+ARG PHP_PACKAGE_BASE_VERSION="8.2"
+ARG UNIT_VERSION="1.31.0"
+ARG APACHE2_VERSION="2.4.52"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
-ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
 ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
-ENV GRPC_EXTENSION_VERSION=$GRPC_EXTENSION_VERSION
-ENV GRPC_EXTENSION_REPOSITORY=$GRPC_EXTENSION_REPOSITORY
-ENV PCOV_EXTENSION_VERSION=$PCOV_EXTENSION_VERSION
-ENV PCOV_EXTENSION_REPOSITORY=$PCOV_EXTENSION_REPOSITORY
 
-RUN apk upgrade -U # 2023/01/05 to fix CVE-2022-3996
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apk add --no-cache \
-    libc6-compat \
+RUN apt-get update && apt-get install -y software-properties-common && LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && apt-get remove --purge -y software-properties-common && apt-get autoremove -y
+
+RUN apt-get update && apt-get -y dist-upgrade
+
+RUN apt-get install -y \
+    curl \
     git \
     git-lfs \
-    mysql-client \
-    mariadb-connector-c \
+    default-mysql-client \
+    libmysqlcppconn7v5 \
     vim \
     rsync \
     sshpass \
@@ -38,77 +33,64 @@ RUN apk add --no-cache \
     bash \
     sed
 
-# Ensure we have www-data added with alpine's default uid/gid: 82
-# (e.g. https://git.alpinelinux.org/aports/tree/main/apache2/apache2.pre-install for reference)
-RUN set -eux; \
-	adduser -u 82 -D -S -G www-data www-data
+RUN apt-get install -y ${PHP_PACKAGE_BASENAME}=${PHP_VERSION}-* lib${PHP_PACKAGE_BASENAME}-embed=${PHP_VERSION}-*
 
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}~=${PHP_VERSION} ${PHP_PACKAGE_BASENAME}-embed~=${PHP_VERSION}
+ENV PHP_INI_DIR=/etc/php/${PHP_PACKAGE_BASE_VERSION}/
 
-ENV PHP_INI_DIR=/etc/${PHP_PACKAGE_BASENAME}/
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-bcmath
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-calendar
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-curl
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-ctype
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-gd
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-fileinfo
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-ftp
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-iconv
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-intl
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-ldap
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-mbstring
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-mysqli
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-opcache
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-mysql
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-pgsql
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-sqlite3
+RUN apt-get install -y  php-pear
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-amqp
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-apcu
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-tokenizer
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-igbinary
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-imagick
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-memcached
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-protobuf
 
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-bcmath
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-calendar
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-curl
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-ctype
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-gd
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-fileinfo
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-ftp
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-iconv
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-intl
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-ldap
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-mbstring
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-mysqli
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-opcache
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-openssl
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pcntl
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_pgsql
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pgsql
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-phar
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-posix
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-simplexml
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-soap
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sodium
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sqlite3
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xdebug
-RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
-RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xml
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlwriter
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlreader
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xsl
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-pgsql
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-phar
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-posix
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-redis
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-simplexml
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-soap
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-sockets
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-sqlite3
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-xdebug
+RUN echo "xdebug.mode=off" >> /etc/php/${PHP_PACKAGE_BASE_VERSION}/mods-available/xdebug.ini
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-xml
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-xmlwriter
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-xmlreader
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-xsl
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-zip
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-grpc
 
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
-
-# FIXME: we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
-WORKDIR /usr/bin
-RUN    ln -s php82 php \
-    && ln -s peardev82 peardev \
-    && ln -s pecl82 pecl \
-    && ln -s phpize82 phpize \
-    && ln -s php-config82 php-config \
-    && ln -s phpdbg82 phpdbg \
-    && ln -s lsphp82 lsphp \
-    && ln -s php-cgi82 php-cgi \
-    && ln -s phar.phar82 phar.phar \
-    && ln -s phar82 phar
-
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-pcov
 # add php.ini containing environment variables
-COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
+COPY files/php.ini /etc/php/${PHP_PACKAGE_BASE_VERSION}/php.ini
+
+RUN rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/cli/php.ini \
+  && ln -s /etc/php/${PHP_PACKAGE_BASE_VERSION}/php.ini /etc/php/${PHP_PACKAGE_BASE_VERSION}/cli/php.ini \
+#  && rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php.ini \
+#  && ln -s /etc/php/${PHP_PACKAGE_BASE_VERSION}/php.ini /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php.ini \
+#  && rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/apache2/php.ini \
+#  && ln -s /etc/php/${PHP_PACKAGE_BASE_VERSION}/php.ini /etc/php/${PHP_PACKAGE_BASE_VERSION}/apache2/php.ini \
+  && rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/embed/php.ini \
+  && ln -s /etc/php/${PHP_PACKAGE_BASE_VERSION}/php.ini /etc/php/${PHP_PACKAGE_BASE_VERSION}/embed/php.ini
 
 # add composer
 COPY --from=composer:2.5.1 /usr/bin/composer /usr/bin/composer
@@ -116,51 +98,61 @@ ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
 # install php-fpm
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-fpm~=${PHP_VERSION}
-# the alpine php fpm package, does not deliver php-fpm binary without suffix
-RUN ln -s $PHP_FPM_BINARY_PATH /usr/sbin/php-fpm
+RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-fpm=${PHP_VERSION}-*
 # use user www-data
-RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
+RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # use group www-data
-RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
+RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # listen also externally for the php-fpm process
-RUN sed -i -e 's/listen = 127.0.0.1:9000/listen = 0.0.0.0:9000/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
+RUN sed -i -e 's/listen = 127.0.0.1:9000/listen = 0.0.0.0:9000/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # expose the given environment variables to php
-RUN sed -i -e 's/;clear_env = no/clear_env = no/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
+RUN sed -i -e 's/;clear_env = no/clear_env = no/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # write error_log to /dev/stderr
-RUN sed -i -e 's/;error_log.*/error_log=\/dev\/stderr/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.conf
+RUN sed -i -e 's/;error_log.*/error_log=\/dev\/stderr/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php-fpm.conf
 # expose the worker logs to stdout + stderr
-RUN sed -i -e 's/;catch_workers_output = yes/catch_workers_output = yes/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
+RUN sed -i -e 's/;catch_workers_output = yes/catch_workers_output = yes/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # avoid decoration like 'TIMESTAMP WARNING: [pool www] child 7 said into stderr "' around each log message
-RUN sed -i -e 's/;decorate_workers_output = no/decorate_workers_output = no/g' /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
+RUN sed -i -e 's/;decorate_workers_output = no/decorate_workers_output = no/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # avoid nginx logging when fpm logged something (e.g. "FastCGI sent in stderr")
-RUN echo "php_admin_flag[fastcgi.logging] = off" >> /etc/${PHP_PACKAGE_BASENAME}/php-fpm.d/www.conf
+RUN echo "php_admin_flag[fastcgi.logging] = off" >> /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
+
+RUN rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php.ini \
+  && ln -s /etc/php/${PHP_PACKAGE_BASE_VERSION}/php.ini /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php.ini
+
+
 
 # install nginx unit and the php module for nginx unit
-RUN apk add --no-cache unit~=$UNIT_VERSION unit-${PHP_PACKAGE_BASENAME}~=$UNIT_VERSION
+RUN curl --output /usr/share/keyrings/nginx-keyring.gpg  https://unit.nginx.org/keys/nginx-keyring.gpg
+RUN echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ jammy unit" > /etc/apt/sources.list.d/unit.list
+RUN echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ jammy unit" >> /etc/apt/sources.list.d/unit.list
+RUN apt update && apt-get install -y  unit=$UNIT_VERSION-* unit-php=$UNIT_VERSION-*
 # add default nginx unit json file (listening on port 8080)
 COPY files/unit/unit-default.json /var/lib/unit/conf.json
 # chown the folder for control socket file
-RUN chown www-data:www-data /run/unit/
+RUN mkdir /run/unit && chown www-data:www-data /run/unit/
 
 # install apache2 and the php module for apache2
-RUN apk add --no-cache apache2~=$APACHE2_VERSION ${PHP_PACKAGE_BASENAME}-apache2~=${PHP_VERSION}
+RUN apt-get install -y apache2=$APACHE2_VERSION-* libapache2-mod-${PHP_PACKAGE_BASENAME}=${PHP_VERSION}-*
 # add default apache2 config file
-COPY files/apache2/apache2-default.conf /etc/apache2/conf.d/00_apache2-default.conf
-# activate rewrite module
-RUN sed -i -e 's/#LoadModule rewrite_module/LoadModule rewrite_module/g' /etc/apache2/httpd.conf
+COPY files/apache2/apache2-default.conf /etc/apache2/sites-available/000-default.conf
 # listen port 8080
-RUN sed -i -e 's/Listen 80/Listen 8080/g' /etc/apache2/httpd.conf
-# use user www-data
-RUN sed -i -e 's/User apache/User www-data/g' /etc/apache2/httpd.conf
-# use group www-data
-RUN sed -i -e 's/Group apache/Group www-data/g' /etc/apache2/httpd.conf
+RUN sed -i -e 's/Listen 80/Listen 8080/g' /etc/apache2/ports.conf
 # write ErrorLog to /dev/stderr
-RUN sed -i -e 's/ErrorLog logs\/error.log/ErrorLog \/dev\/stderr/g' /etc/apache2/httpd.conf
+RUN sed -i -e 's/ErrorLog .*/ErrorLog \/dev\/stderr/g' /etc/apache2/apache2.conf
 # write CustomLog to /dev/stdout
-RUN sed -i -e 's/CustomLog logs\/access.log/CustomLog \/dev\/stdout/g' /etc/apache2/httpd.conf
+RUN sed -i -e 's/# a CustomLog.*/CustomLog \/dev\/stdout combined/g' /etc/apache2/apache2.conf
+RUN rm /etc/apache2/conf-enabled/other-vhosts-access-log.conf
+RUN rm /etc/apache2/conf-available/other-vhosts-access-log.conf
 # write make it possible to write pid as www-data user to /run/apache2/httpd.pid
 RUN chown www-data:www-data /run/apache2/
+ENV APACHE_RUN_USER=www-data \
+    APACHE_RUN_GROUP=www-data \
+    APACHE_PID_FILE=/var/run/apache2/apache2.pid \
+    APACHE_RUN_DIR=/var/run/apache2 \ 
+    APACHE_LOCK_DIR=/var/lock/apache2 \
+    APACHE_LOG_DIR=/var/log/apache2
+RUN rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/apache2/php.ini \
+  && ln -s /etc/php/${PHP_PACKAGE_BASE_VERSION}/php.ini /etc/php/${PHP_PACKAGE_BASE_VERSION}/apache2/php.ini
 
 # the start-cron script
 RUN mkfifo -m 0666 /var/log/cron.log
