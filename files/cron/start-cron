@@ -6,6 +6,9 @@ if [ "${CRON_PATH}" ]; then
     ln -s "${CRON_PATH}"/* /etc/cron.d/
 fi
 
+# remove write permission for (g)roup and (o)ther (required by cron)
+chmod -R go-w /etc/cron.d
+
 CRONTAB_USER_OPTIONS=""
 
 if [ "${CRONTAB_USER}" ]; then
@@ -19,6 +22,16 @@ fi
     | sed --regexp-extended 's/\\(.)/\1/g' \
     | crontab ${CRONTAB_USER_OPTIONS} -
 
+# update default values of PAM environment variables (used by CRON scripts)
+env -0 | while read -d $'\0' -r line; do  # read STDIN by line
+    # split LINE by "="
+    IFS="=" read var val <<< ${line}
+    # remove existing definition of environment variable, ignoring exit code
+    sed --in-place "/^${var}[[:blank:]=]/d" /etc/security/pam_env.conf || true
+    # append new default value of environment variable
+    echo "${var} DEFAULT=\"${val}\"" >> /etc/security/pam_env.conf
+done
+
 if [ "${CRONTAB_CONTENT}" ]; then
     echo "CRONTAB_CONTENT provided, setting up crontab"
     echo "PATH=$PATH
@@ -26,10 +39,10 @@ $CRONTAB_CONTENT" | crontab ${CRONTAB_USER_OPTIONS} -
 fi
 
 # start cron
-/usr/sbin/crond
+service cron start
 
 # trap SIGINT and SIGTERM signals and gracefully exit
-trap "kill \$!; exit" SIGINT SIGTERM
+trap "service cron stop; kill \$!; exit" SIGINT SIGTERM
 
 # start "daemon"
 while true

@@ -104,16 +104,12 @@ RUN mkdir /composer && chown www-data:www-data /composer
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-fpm=${PHP_VERSION}-*
 # the ubuntu php fpm package, does not deliver php-fpm binary without suffix
 RUN ln -s $PHP_FPM_BINARY_PATH /usr/sbin/php-fpm
-# use user www-data
-RUN sed -i -e 's/user = nobody/user = www-data/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
-# use group www-data
-RUN sed -i -e 's/group = nobody/group = www-data/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # listen also externally for the php-fpm process
-RUN sed -i -e 's/listen = 127.0.0.1:9000/listen = 0.0.0.0:9000/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
+RUN sed -i -e 's/^listen = .*/listen = 0.0.0.0:9000/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # expose the given environment variables to php
 RUN sed -i -e 's/;clear_env = no/clear_env = no/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # write error_log to /dev/stderr
-RUN sed -i -e 's/;error_log.*/error_log=\/dev\/stderr/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php-fpm.conf
+RUN sed -i -e 's/error_log.*/error_log=\/dev\/stderr/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php-fpm.conf
 # expose the worker logs to stdout + stderr
 RUN sed -i -e 's/;catch_workers_output = yes/catch_workers_output = yes/g' /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/pool.d/www.conf
 # avoid decoration like 'TIMESTAMP WARNING: [pool www] child 7 said into stderr "' around each log message
@@ -159,8 +155,14 @@ ENV APACHE_RUN_USER=www-data \
 RUN rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/apache2/php.ini \
   && ln -s /etc/php/${PHP_PACKAGE_BASE_VERSION}/php.ini /etc/php/${PHP_PACKAGE_BASE_VERSION}/apache2/php.ini
 
+# crontab
+RUN apt-get update && apt-get install --no-install-recommends -y cron \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkfifo --mode 0666 /var/log/cron.log \
+    && sed --regexp-extended --in-place \
+    's/^session\s+required\s+pam_loginuid.so$/session optional pam_loginuid.so/' \
+    /etc/pam.d/cron
 # the start-cron script
-RUN mkfifo -m 0666 /var/log/cron.log
 RUN chown www-data:www-data /var/log/cron.log
 COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
