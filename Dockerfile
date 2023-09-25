@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y software-properties-common gpg-agent --
 RUN apt-get update && apt-get -y dist-upgrade
 
 RUN apt-get install -y --no-install-recommends \
+    wget \
     curl \
     git \
     git-lfs \
