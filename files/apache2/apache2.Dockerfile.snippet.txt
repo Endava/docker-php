@@ -1,5 +1,5 @@
 # start: source at files/apache2/apache2.Dockerfile.snippet.txt
 # graceful STOPSIGNAL is SIGWINCH as of https://httpd.apache.org/docs/2.4/en/stopping.html
 STOPSIGNAL WINCH
-CMD ["httpd", "-DFOREGROUND"]
+CMD ["apache2", "-DFOREGROUND"]
 # end  : source at files/apache2/apache2.Dockerfile.snippet.txt
