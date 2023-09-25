@@ -198,6 +198,8 @@ ENV PHP_DATE_TIMEZONE="UTC" \
     PHP_XDEBUG_IDEKEY='' \
     PHP_EXPOSE_PHP=1
 
+ENV DEBIAN_FRONTEND=
+
 RUN mkdir -p /usr/src/app
 RUN chown -R www-data:www-data /usr/src/app
 WORKDIR /usr/src/app
