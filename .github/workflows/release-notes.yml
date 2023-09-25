@@ -3,7 +3,7 @@ name: Main
 on:
   push:
     tags:
-      - "*.*.*"
+      - "*.*.*-ubuntu"
 
 jobs:
   create-release-notes:
@@ -11,14 +11,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Export UBUNTU_SUFFIX (if ubuntu is enabled)
+        run: echo "UBUNTU_SUFFIX=`echo ${{ github.ref_name }} | grep 'ubuntu' > /dev/null && echo '-ubuntu' || echo ''`" >> $GITHUB_ENV
       - name: "Fetch all existing tags"
-        run: curl -L -s 'https://registry.hub.docker.com/v2/repositories/endava/php/tags?page_size=9999'|jq -r '."results"[]["name"] | select(test( "^[0-9]+.[0-9]+.[0-9]+$"))' > existing_docker_tags.txt
+        run: curl -L -s 'https://registry.hub.docker.com/v2/repositories/endava/php/tags?page_size=9999'|jq -r ".\"results\"[][\"name\"] | select(test( \"^[0-9]+.[0-9]+.[0-9]+${UBUNTU_SUFFIX}\$\"))" > existing_docker_tags.txt
       - name: "Store the current tag"
         run: echo ${{ github.ref_name }} > current_tag.txt
       - name: "Export PREVIOUS_PHP_VERSION environment variable"
         run: echo "PREVIOUS_PHP_VERSION=`cat existing_docker_tags.txt current_tag.txt | sort -n | uniq | grep -Fx -a1 ${{ github.ref_name }} | head -n 1`" >> $GITHUB_ENV
       - name: "Export the php -i of previous php version ${{ env.PREVIOUS_PHP_VERSION }}"
-        run: docker run --rm endava/php:${{ env.PREVIOUS_PHP_VERSION }} php -i | sed '/^Environment$/,$d' > previous-php-i.txt
+        run: docker run --rm ghcr.io/endava/docker-php:${{ env.PREVIOUS_PHP_VERSION }} php -i | sed '/^Environment$/,$d' > previous-php-i.txt
       - name: Generate Changelog
         run: docker run --rm -v `pwd`/previous-php-i.txt:/usr/src/app/previous-php-i.txt -v `pwd`/generate-changelog.php:/usr/src/app/generate-changelog.php ghcr.io/endava/docker-php:${{ github.ref_name }} php /usr/src/app/generate-changelog.php ghcr.io/endava/docker-php:${{ github.ref_name }} > RELEASE_NOTES.txt
       - name: Release
