@@ -96,8 +96,7 @@ jobs:
 
       -   name: "Reload build cache for amd64"
           run: >
-            cp -rf amdcache dockercache
-            ./build_images.sh temporary-build-image linux/amd64
+            cp -rf amdcache dockercache && ./build_images.sh temporary-build-image linux/amd64
             
       -   name: "Smoke test with php -v"
           run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
