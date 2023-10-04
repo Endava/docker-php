@@ -16,7 +16,7 @@ jobs:
     steps:
       -  name: Execute
          run: >
-             docker run --rm alpine:3.18 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+             docker run --pull always --rm alpine:3.18 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
 
   # packages necessary for release/8.1 branch
   packages-not-available-on-alpine-for-relase-8-1:
