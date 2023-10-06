@@ -88,15 +88,21 @@ jobs:
           uses: actions/download-artifact@v3
           with:
             name: amdcache
+            path: amdcache
 
       -   name: Download arm64
           uses: actions/download-artifact@v3
           with:
             name: armcache
+            path: armcache
+
+      -   name: "Create docker cache"
+          run: >
+            cp -rf amdcache dockercache
 
       -   name: "Reload build cache for amd64"
           run: >
-            cp -rf amdcache dockercache && ./build_images.sh temporary-build-image linux/amd64
+            ./build_images.sh temporary-build-image linux/amd64
             
       -   name: "Smoke test with php -v"
           run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
