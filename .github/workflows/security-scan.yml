@@ -33,7 +33,7 @@ jobs:
           run: echo "ZTS_SUFFIX=`echo '${{ matrix.branch-name }}' | grep zts > /dev/null && echo '-zts' || echo ''`" > $GITHUB_ENV
 
       -   name: "PHP_VERSION Env"
-          run: echo "PHP_VERSION=`grep "ARG PHP_VERSION" Dockerfile | cut -f 2 -d '"'`${{ env.ZTS_SUFFIX }}" > $GITHUB_ENV
+          run: echo "PHP_VERSION=`grep "ARG PHP_VERSION" Dockerfile | cut -f 2 -d '"' | tr -d '-'`${{ env.ZTS_SUFFIX }}" > $GITHUB_ENV
 
       -   name: "BRANCH_SHA Env"
           run: echo "BRANCH_SHA=`git rev-parse HEAD`" >> $GITHUB_ENV
