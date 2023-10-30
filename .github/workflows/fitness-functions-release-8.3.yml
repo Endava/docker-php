@@ -1,0 +1,33 @@
+name: php 8.3 Fitness Functions
+  
+on:
+  push:
+    branches:
+      - 'main'
+  schedule:
+    - cron:  '15 10 * * *' # each day at 10:15 UTC
+
+
+jobs:
+  php83-is-not-the-default-php-on-edge:
+    name: "We need to symlink php83 until php 8.3 is the default php"
+    runs-on: ubuntu-latest
+    steps:
+      -  name: Execute
+         run: >
+             ! docker run --rm alpine:edge sh -c 'apk -U add php83 && php -v'
+
+  packages-not-available-on-alpine-for-release-8-3:
+    name: Package not available on alpine for php 8.3 in community, yet
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - php83
+          - php83-pecl-memcached
+          - php83-pecl-grpc
+          - php83-pecl-pcov
+          - php83-pecl-protobuf
+    steps:
+      -   name: Execute
+          run: "! docker run --rm alpine:edge apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
