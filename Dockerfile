@@ -19,9 +19,7 @@ ENV GRPC_EXTENSION_REPOSITORY=$GRPC_EXTENSION_REPOSITORY
 ENV PCOV_EXTENSION_VERSION=$PCOV_EXTENSION_VERSION
 ENV PCOV_EXTENSION_REPOSITORY=$PCOV_EXTENSION_REPOSITORY
 
-RUN apk upgrade -U # 2023/01/05 to fix CVE-2022-3996
-# FIXME: add testing repo (until php83 is available in community/main repository)
-RUN echo https://dl-cdn.alpinelinux.org/alpine/edge/testing/ >> /etc/apk/repositories
+RUN apk upgrade -U # 2023/01/05 to fix CVE-2022-3994
 
 RUN apk add --no-cache \
     libc6-compat \
