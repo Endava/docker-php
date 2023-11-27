@@ -7,8 +7,6 @@ ARG UNIT_VERSION="1.31.1"
 ARG APACHE2_VERSION="2.4.58"
 ARG GRPC_EXTENSION_VERSION="1.51.1"
 ARG GRPC_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/testing"
-ARG PCOV_EXTENSION_VERSION="1.0.11"
-ARG PCOV_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/testing"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
 ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
@@ -16,8 +14,6 @@ ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
 ENV GRPC_EXTENSION_VERSION=$GRPC_EXTENSION_VERSION
 ENV GRPC_EXTENSION_REPOSITORY=$GRPC_EXTENSION_REPOSITORY
-ENV PCOV_EXTENSION_VERSION=$PCOV_EXTENSION_VERSION
-ENV PCOV_EXTENSION_REPOSITORY=$PCOV_EXTENSION_REPOSITORY
 
 RUN apk upgrade -U # 2023/01/05 to fix CVE-2022-3994
 
@@ -81,14 +77,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-msgpack
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
 
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers zlib-dev libmemcached-dev cyrus-sasl-dev libevent-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl83 install -D 'enable-memcached-igbinary="yes" enable-memcached-session="yes" enable-memcached-json="yes" enable-memcached-protocol="yes" enable-memcached-msgpack="yes"' memcached \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/memcached.so \
-    && echo "extension=memcached" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_memcached.ini \
-    && apk del --no-network .build-deps \
-    && apk add --no-cache libmemcached-libs libevent
-
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
@@ -121,7 +110,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
     && echo "extension=grpc" > /etc/$PHP_PACKAGE_BASENAME/conf.d/grpc.ini \
     && apk del --no-network .build-deps
 
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 
 # FIXME: we need this, since php83 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php83/APKBUILD
 WORKDIR /usr/bin
