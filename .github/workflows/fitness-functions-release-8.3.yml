@@ -9,6 +9,16 @@ on:
 
 
 jobs:
+  configured-alpine-is-latest-version:
+    name: "Ensure that Alpine 3.18.* is the latest alpine version"
+    env:
+      LATEST_ALPINE_RELEASE: "3.18."    
+    runs-on: ubuntu-latest
+    steps:
+      -  name: Execute
+         run: >
+             docker run --rm alpine cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+
   php83-is-not-the-default-php-on-edge:
     name: "We need to symlink php83 until php 8.3 is the default php"
     runs-on: ubuntu-latest
@@ -23,11 +33,9 @@ jobs:
     strategy:
       matrix:
         package:
-          - php83
-          - php83-pecl-memcached
           - php83-pecl-grpc
-          - php83-pecl-pcov
           - php83-pecl-protobuf
+          - php83-pecl-imagick
     steps:
       -   name: Execute
           run: "! docker run --rm alpine:edge apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
