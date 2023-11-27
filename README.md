@@ -98,12 +98,12 @@ $docker-compose run php-cli
 ⠿ Network docker-php_default
 ⠿ Container docker-php-php-fpm-1
 ⠿ Container docker-php-nginx-1
-bash-5.1$ php -v
-PHP 8.3.0RC1 (cli) (built: Aug 30 2023 18:16:52) (NTS)
+bash-5.2$ php -v
+PHP 8.3.0 (cli) (built: Nov 22 2023 23:23:59) (NTS)
 Copyright (c) The PHP Group
-Zend Engine v4.3.0RC1, Copyright (c) Zend Technologies
-    with Zend OPcache v8.3.0RC1, Copyright (c), by Zend Technologies
-    with Xdebug v3.3.0-dev, Copyright (c) 2002-2022, by Derick Rethans
+Zend Engine v4.3.0, Copyright (c) Zend Technologies
+    with Zend OPcache v8.3.0, Copyright (c), by Zend Technologies
+    with Xdebug v3.3.0alpha3, Copyright (c) 2002-2023, by Derick Rethans
 ```
 
 and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
@@ -233,10 +233,10 @@ services:
     image: mailhog/mailhog:v1.0.0
     ports:
       - "1025"
-      - "8.35:8.35"
+      - "8025:8025"
 ```
 
-makes a mailhog server at `http://127.0.0.1:8.35` available. If you set 
+makes a mailhog server at `http://127.0.0.1:8025` available. If you set 
 
 ```text
 PHP_SENDMAIL_PATH=/usr/bin/msmtp -t --host=mailhog --port=1025
