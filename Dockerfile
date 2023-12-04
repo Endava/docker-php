@@ -99,12 +99,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlreader
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xsl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl83 install grpc \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/grpc.so \
-    && echo "extension=grpc" > /etc/$PHP_PACKAGE_BASENAME/conf.d/grpc.ini \
-    && apk del --no-network .build-deps
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 
