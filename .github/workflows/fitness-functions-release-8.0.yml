@@ -17,7 +17,7 @@ jobs:
     steps:
       -  name: Execute
          run: >
-             docker run --rm alpine:3.16 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+             docker run --pull always --rm alpine:3.16 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
 
   # packages necessary for release/8.0 branch
   packages-not-available-on-alpine-for-relase-8-0:
@@ -30,4 +30,4 @@ jobs:
           - php8-pecl-grpc
     steps:
       -   name: Execute
-          run: "! docker run --rm alpine:3.16.7 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+          run: "! docker run --pull always --rm alpine:3.16 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
