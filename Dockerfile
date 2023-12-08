@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.19.0
 
 ARG PHP_VERSION="8.3.0"
 ARG PHP_PACKAGE_BASENAME="php83"
