@@ -17,7 +17,7 @@ jobs:
     steps:
       -  name: Execute
          run: >
-             docker run --rm alpine cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+             docker run --rm alpine:3.18 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
 
   configured-go-version-is-required-one:
     name: "Ensure that Go is the version required by frankenphp"
@@ -46,4 +46,4 @@ jobs:
           - phpzts82-pecl-xdebug
     steps:
       -   name: Execute
-          run: "! docker run --rm alpine:3.18.4 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+          run: "! docker run --rm alpine:3.18 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
