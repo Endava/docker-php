@@ -55,11 +55,11 @@ RUN uname -m
 RUN abuild -A
 RUN abuild checksum && abuild -r
 WORKDIR /workspace/aports/community/unit
-# make phpver2 to be phpzts83
-RUN sed -i -e 's/_phpver2=83/_phpver2=zts83/' APKBUILD
+# make phpver3 to be phpzts83
+RUN sed -i -e 's/_phpver3=83/_phpver3=zts83/' APKBUILD
 # make unit-php83 find the lphpzts83.so
 # hadolint ignore=SC2016
-RUN sed -i -e 's/.\/configure php --module=php\$_phpver2/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& .\/configure php --module=php\$_phpver2/g' APKBUILD
+RUN sed -i -e 's/.\/configure php --module=php\$_phpver3/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& .\/configure php --module=php\$_phpver3/g' APKBUILD
 RUN abuild checksum && abuild -r
 
 FROM alpine:3.19.0
