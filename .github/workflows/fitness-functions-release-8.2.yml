@@ -17,7 +17,7 @@ jobs:
     steps:
       -  name: Execute
          run: >
-             docker run --rm alpine cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+             docker run --pull always --rm alpine:3.18 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
 
   php82-is-not-the-default-php-on-edge:
     name: "We need to symlink php82 until php 8.2 is the default php"
@@ -25,7 +25,7 @@ jobs:
     steps:
       -  name: Execute
          run: >
-             ! docker run --rm alpine:3.18.4 sh -c 'apk -U add php82 && php -v'
+             ! docker run --pull always --rm alpine:3.18 sh -c 'apk -U add php82 && php -v'
 
   packages-not-available-on-alpine-for-release-8-2:
     name: Package not available on alpine for php 8.2 in community, yet
@@ -37,4 +37,4 @@ jobs:
           - php82-pecl-pcov
     steps:
       -   name: Execute
-          run: "! docker run --rm alpine:3.18.4 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+          run: "! docker run --pull always --rm alpine:3.18 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
