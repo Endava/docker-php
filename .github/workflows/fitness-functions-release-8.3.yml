@@ -34,7 +34,6 @@ jobs:
       matrix:
         package:
           - php83-pecl-protobuf
-          - php83-pecl-imagick
     steps:
       -   name: Execute
           run: "! docker run --pull always --rm alpine:3.19 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
