@@ -62,14 +62,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
-# FIXME: # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl83 install imagick \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/imagick.so \
-    && echo "extension=imagick" > /etc/$PHP_PACKAGE_BASENAME/conf.d/00_imagick.ini \
-    && apk del --no-network .build-deps \
-    && apk add --no-cache imagemagick imagemagick-libs libgomp
-
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-msgpack
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
 
