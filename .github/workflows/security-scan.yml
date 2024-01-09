@@ -23,6 +23,7 @@ jobs:
           - 'release/8.2'
           - 'release/8.2-zts'
           - 'release/8.3'
+          - 'release/8.3-zts'
     steps:
       -   name: "Checkout code"
           uses: actions/checkout@v3
