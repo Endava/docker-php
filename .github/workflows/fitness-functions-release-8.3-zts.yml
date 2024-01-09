@@ -1,0 +1,49 @@
+name: php 8.3-zts Fitness Functions
+  
+on:
+  push:
+    branches:
+      - 'main'
+  schedule:
+    - cron:  '15 10 * * *' # each day at 10:15 UTC
+
+
+jobs:
+  configured-alpine-is-latest-version:
+    name: "Ensure that Alpine is the latest alpine version"
+    env:
+      LATEST_ALPINE_RELEASE: "3.19.0"    
+    runs-on: ubuntu-latest
+    steps:
+      -  name: Execute
+         run: >
+             docker run --rm alpine:3.19 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+
+  configured-go-version-is-required-one:
+    name: "Ensure that Go is the version required by frankenphp"
+    runs-on: ubuntu-latest
+    steps:
+      -  name: Execute
+         run: >
+             curl -sS https://github.com/dunglas/frankenphp/blob/v1.0.2/go.mod | grep "go 1.21"
+
+  packages-not-available-on-alpine-for-release-8-3-zts:
+    name: Package not available on alpine for php 8.3 zts in edge community, yet
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - phpzts83
+          - phpzts83-pecl-redis
+          - phpzts83-pecl-memcached
+          - phpzts83-pecl-msgpack
+          - phpzts83-pecl-imagick
+          - phpzts83-pecl-apcu
+          - phpzts83-pecl-amqp
+          - phpzts83-pecl-protobuf
+          - phpzts83-pecl-grpc
+          - phpzts83-pecl-pcov
+          - phpzts83-pecl-xdebug
+    steps:
+      -   name: Execute
+          run: "! docker run --rm alpine:3.19 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
