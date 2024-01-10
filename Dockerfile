@@ -19,7 +19,7 @@ ENV GRPC_EXTENSION_REPOSITORY=$GRPC_EXTENSION_REPOSITORY
 ENV PCOV_EXTENSION_VERSION=$PCOV_EXTENSION_VERSION
 ENV PCOV_EXTENSION_REPOSITORY=$PCOV_EXTENSION_REPOSITORY
 
-RUN apk upgrade -U # 2023/09/06 upgrade to get latest extensions
+RUN apk upgrade -U # 2024/01/10 upgrade to get latest extensions
 
 RUN apk add --no-cache \
     libc6-compat \
