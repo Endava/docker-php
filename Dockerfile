@@ -61,8 +61,6 @@ RUN sed -i -e 's/_phpver3=83/_phpver3=zts83/' APKBUILD
 # hadolint ignore=SC2016
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver3/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& .\/configure php --module=php\$_phpver3/g' APKBUILD
 RUN sed -i -e 's/_allow_fail=no/_allow_fail=yes/g' APKBUILD
-RUN sed -i -e 's/unit-//g' APKBUILD
-RUN sed -i -e 's/unit.nginx.org\/download/github.com\/nginx\/unit\/archive\/refs\/tags/g' APKBUILD
 
 RUN abuild checksum && abuild -r
 
