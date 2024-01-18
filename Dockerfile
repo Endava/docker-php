@@ -75,7 +75,7 @@ ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
 ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
 
-RUN apk upgrade -U # 2023/01/05 to fix CVE-2022-3996
+RUN apk upgrade -U # 2024/01/14 to fix CVEs
 
 RUN apk add --no-cache \
     libc6-compat \
