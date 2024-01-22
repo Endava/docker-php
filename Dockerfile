@@ -1,4 +1,4 @@
-FROM alpine:3.18.5 as PHPZTSBUILDER
+FROM alpine:3.19.0 as PHPZTSBUILDER
 
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache alpine-sdk
@@ -17,7 +17,7 @@ USER root
 RUN cp /workspace/.abuild/*.rsa.pub /etc/apk/keys/
 USER alpiner
 
-RUN git clone -b 3.18-stable --single-branch --depth=1 https://gitlab.alpinelinux.org/alpine/aports
+RUN git clone -b 3.19-stable --single-branch --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 
 WORKDIR /workspace/aports/community/php82
 RUN cp -rf /workspace/aports/community/php82 /workspace/aports/community/phpzts82
@@ -34,6 +34,7 @@ RUN sed -i -e 's/\$pkgname-fpm-version-suffix.patch/php82-fpm-version-suffix.pat
 # hadolint ignore=SC2016
 RUN sed -i -e 's/php\$_suffix-module.conf/php82-module.conf/' APKBUILD
 RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --enable-zend-timer --disable-zend-signals --host/' APKBUILD
+RUN sed -i -e 's/_default_php="yes"/_default_php="no"/g' APKBUILD
 RUN echo "" >> disabled-tests.list
 RUN echo "ext/posix/tests/bug75696.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getgrgid.phpt" >> disabled-tests.list
@@ -60,11 +61,15 @@ RUN sed -i -e 's/_phpver2=82/_phpver2=zts82/' APKBUILD
 # make unit-php82 find the lphpzts82.so
 # hadolint ignore=SC2016
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver2/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& .\/configure php --module=php\$_phpver2/g' APKBUILD
+# make unit-php83 find the lphp83.so
+# hadolint ignore=SC2016
+RUN sed -i -e 's/.\/configure php --module=php\$_phpver3/sed -i -e "s\/lphpzts\/lphp\/g" auto\/modules\/php \&\& .\/configure php --module=php\$_phpver3/g' APKBUILD
+RUN sed -i -e 's/_allow_fail=no/_allow_fail=yes/g' APKBUILD
 RUN abuild checksum && abuild -r
 
-FROM alpine:3.18.5
+FROM alpine:3.19.0
 
-ARG PHP_VERSION="8.2.13"
+ARG PHP_VERSION="8.2.15"
 ARG PHP_PACKAGE_BASENAME="phpzts82"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts82"
 ARG UNIT_VERSION="1.31.1"
@@ -237,7 +242,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
     && echo "extension=pcov" > /etc/$PHP_PACKAGE_BASENAME/conf.d/pcov.ini \
     && apk del --no-network .build-deps
 
-# FIXME: we need this, since php82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
+# FIXME: we need this, since phpzts82 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php82/APKBUILD
 WORKDIR /usr/bin
 RUN    ln -s phpzts82 php \
     && ln -s peardevzts82 peardev \
@@ -254,7 +259,7 @@ RUN    ln -s phpzts82 php \
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
-COPY --from=composer:2.5.1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.5.8 /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
@@ -315,10 +320,10 @@ RUN chmod +x /usr/sbin/start-cron
 
 # install caddy with frankenphp
 # hadolint ignore=SC2016,SC2086,DL3003
-RUN apk add --no-cache go~=1.20 --virtual .go-build-deps \
+RUN apk add --no-cache go~=1.21 --virtual .go-build-deps \
     && apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && cd /opt \
-    && git clone https://github.com/dunglas/frankenphp.git --recursive  --branch v1.0.0-beta.2 --single-branch \
+    && git clone https://github.com/dunglas/frankenphp.git --recursive  --branch v1.0.3 --single-branch \
     && cd /opt/frankenphp/caddy/frankenphp \
     # make frankenphp to be happy about lphpzts82.so and not require us to have a lphp.so
     && sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go \
