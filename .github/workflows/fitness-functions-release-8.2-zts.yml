@@ -12,12 +12,12 @@ jobs:
   configured-alpine-is-latest-version:
     name: "Ensure that Alpine is the latest alpine version"
     env:
-      LATEST_ALPINE_RELEASE: "3.18.5"    
+      LATEST_ALPINE_RELEASE: "3.19.0"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
          run: >
-             docker run --rm alpine:3.18 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+             docker run --rm alpine:3.19 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
 
   configured-go-version-is-required-one:
     name: "Ensure that Go is the version required by frankenphp"
@@ -25,7 +25,7 @@ jobs:
     steps:
       -  name: Execute
          run: >
-             curl -sS https://github.com/dunglas/frankenphp/blob/v1.0.0-beta.2/go.mod | grep "go 1.20"
+             curl -sS https://github.com/dunglas/frankenphp/blob/v1.0.3/go.mod | grep "go 1.21"
 
   packages-not-available-on-alpine-for-release-8-2-zts:
     name: Package not available on alpine for php 8.2 zts in edge community, yet
