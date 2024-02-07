@@ -323,7 +323,7 @@ RUN chmod +x /usr/sbin/start-cron
 RUN apk add --no-cache go~=1.21 --virtual .go-build-deps \
     && apk add --no-cache libxml2-dev sqlite-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && cd /opt \
-    && git clone https://github.com/dunglas/frankenphp.git --recursive  --branch v1.0.3 --single-branch \
+    && git clone https://github.com/dunglas/frankenphp.git --recursive  --branch v1.1.0 --single-branch \
     && cd /opt/frankenphp/caddy/frankenphp \
     # make frankenphp to be happy about lphpzts82.so and not require us to have a lphp.so
     && sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go \
