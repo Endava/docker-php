@@ -89,7 +89,8 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
-COPY --from=composer:2.7.0 /usr/bin/composer /usr/bin/composer
+# hadolint ignore=DL4006
+RUN wget https://raw.githubusercontent.com/composer/getcomposer.org/main/web/installer -O - -q | php -- --version 2.7.1 --install-dir=/usr/bin --filename=composer
 ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
