@@ -256,7 +256,7 @@ RUN    ln -s phpzts83 php \
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
-COPY --from=composer:2.5.1 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.7.0 /usr/bin/composer /usr/bin/composer
 ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
