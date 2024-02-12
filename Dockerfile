@@ -75,7 +75,6 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sodium
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sqlite3
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xdebug
-RUN sed -i -e 's/;xdebug.mode/xdebug.mode/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
 RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xml
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlwriter
