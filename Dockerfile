@@ -74,7 +74,6 @@ RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-soap
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-sockets
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-sqlite3
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-xdebug
-RUN echo "xdebug.mode=off" >> /etc/php/${PHP_PACKAGE_BASE_VERSION}/mods-available/xdebug.ini
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-xml
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-xmlwriter
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-xmlreader
