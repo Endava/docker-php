@@ -1,4 +1,4 @@
-# endava/docker-php:8.2.x
+# endava/docker-php:8.2.x-ubuntu
 
 ## Usage
 
@@ -12,7 +12,7 @@ $ echo '<?php phpinfo();' > public/index.php
 2. Run the NGINX Unit Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-unit
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.15-ubuntu-unit
 ```
 
 and open http://localhost:8080 to see phpinfo unit.
@@ -26,7 +26,7 @@ Time per request:       12.144 [ms] (mean)
 3. Run the Apache2 Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.4-apache2
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.2.15-ubuntu-apache2
 ```
 
 and open http://localhost:8080 to see phpinfo on apache2.
@@ -48,7 +48,7 @@ version: "2.1"
 
 services:
   php-cli:
-    image: endava/php:8.2.4
+    image: endava/php:8.2.15-ubuntu
     volumes:
       - ./:/usr/src/app
     user: "${UID-www-data}:${GID-www-data}"
@@ -56,7 +56,7 @@ services:
     depends_on:
       - nginx
   php-fpm:
-    image: endava/php:8.2.4-fpm
+    image: endava/php:8.2.15-ubuntu-fpm
     user: "${UID-www-data}:${GID-www-data}"
     volumes:
       - ./:/usr/src/app
@@ -99,11 +99,12 @@ $docker-compose run php-cli
 ⠿ Container docker-php-php-fpm-1
 ⠿ Container docker-php-nginx-1
 bash-5.1$ php -v
-PHP 8.2.4 (cli) (built: Feb 14 2023 22:58:50) (NTS)
+10:35 $ docker run --rm -it ap:8.2.15-ubuntu php -v
+PHP 8.2.15 (cli) (built: Jan 20 2024 14:17:05) (NTS)
 Copyright (c) The PHP Group
-Zend Engine v4.2.3, Copyright (c) Zend Technologies
-    with Zend OPcache v8.2.4, Copyright (c), by Zend Technologies
-    with Xdebug v3.2.0, Copyright (c) 2002-2022, by Derick Rethans
+Zend Engine v4.2.15, Copyright (c) Zend Technologies
+    with Zend OPcache v8.2.15, Copyright (c), by Zend Technologies
+    with Xdebug v3.3.1, Copyright (c) 2002-2023, by Derick Rethans
 ```
 
 and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
@@ -250,7 +251,7 @@ You can define the crontab's content with an environment variable like this:
 ```yaml
 services:
   import-data-cron:
-    image: endava/php:8.2.4
+    image: endava/php:8.2.15-ubuntu
     command: start-cron
     environment:
       - 'CRONTAB_USER=www-data'
@@ -294,7 +295,7 @@ Usage in your `docker-compose.yml`:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.2.4
+    image: endava/php:8.2.15-ubuntu
     command: start-cron
     volumes:
       - ./:/usr/src/app
@@ -307,7 +308,7 @@ cron location with the `CRON_PATH` environment variable:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.2.4
+    image: endava/php:8.2.15-ubuntu
     command: start-cron
     environment:
       - CRON_PATH=/usr/src/app/crontabs
