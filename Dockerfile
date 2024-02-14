@@ -95,7 +95,7 @@ RUN rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/cli/php.ini \
   && ln -s /etc/php/${PHP_PACKAGE_BASE_VERSION}/php.ini /etc/php/${PHP_PACKAGE_BASE_VERSION}/embed/php.ini
 
 # add composer
-COPY --from=composer:2.5.1 /usr/bin/composer /usr/bin/composer
+RUN wget --quiet --no-verbose https://github.com/composer/composer/releases/download/2.7.1/composer.phar -O /usr/bin/composer && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
