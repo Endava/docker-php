@@ -122,7 +122,7 @@ RUN rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php.ini \
 
 
 # install nginx unit and the php module for nginx unit
-RUN curl --output /usr/share/keyrings/nginx-keyring.gpg  https://unit.nginx.org/keys/nginx-keyring.gpg
+RUN wget --quiet --no-verbose -O /usr/share/keyrings/nginx-keyring.gpg  https://unit.nginx.org/keys/nginx-keyring.gpg
 RUN echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ jammy unit" > /etc/apt/sources.list.d/unit.list
 RUN echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ jammy unit" >> /etc/apt/sources.list.d/unit.list
 RUN apt-get update && apt-get install -y  unit=$UNIT_VERSION-* unit-php=$UNIT_VERSION-* --no-install-recommends
