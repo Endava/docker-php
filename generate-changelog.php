@@ -25,7 +25,7 @@ echo PHP_EOL;
 echo "# tools " . PHP_EOL;
 echo PHP_EOL;
 
-$output = shell_exec('apk info -v | sort -n');
+$output = shell_exec('apt list --installed | sort -n');
 
 $packageNamesToExpose = [
     'apache2',
@@ -35,8 +35,8 @@ $packageNamesToExpose = [
     'git',
     'git-lfs',
     'msmtp',
-    'mysql-client',
-    'openssh-client-default',
+    'default-mysql-client',
+    'openssh-client',
     'rsync',
     'sshpass',
     'unit',
@@ -44,7 +44,7 @@ $packageNamesToExpose = [
     'vim',
 ];
 
-if(preg_match_all("/^(.+)-([^-]+-[^-]+)$/im",$output,$matches)) {
+if(preg_match_all("/^(.+)\/now ([^ ]+) .*$/im",$output,$matches)) {
     foreach ($matches[1] as $pos => $key) {
         if (in_array($key, $packageNamesToExpose)) {
             echo "- $key (" . $matches[2][$pos] . ')' . PHP_EOL;
