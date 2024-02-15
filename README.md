@@ -93,7 +93,7 @@ We figured that our old approach had some disadvantages (it was a php-fpm build 
 
 The new approach has some advantages:
 
-* It uses the latest package distributed by alpine team/community (which is pretty fast when it comes to security updates - 1 or 2 days after release)
+* It uses the latest package distributed by alpine team/community (which is pretty fast when it comes to security updates - 1 or 2 days after release) and official ubuntu packages
 * The precompiled packages (e.g. xdebug) are very fast installed
 * No need for custom scripts like [docker-php-ext-install](https://github.com/docker-library/php/blob/master/docker-php-ext-install)
 * It ships with httpd binary (for apache2), unitd binary (for nginx unit) and php-fpm binary (for php fpm) to execute php web requests
@@ -105,10 +105,9 @@ The new approach has some advantages:
 * The CI/CD pipeline includes tests to validate the image as nginx unit or apache2 delivery
 * The CI/CD pipeline only builds the latest version (if necessary we can git checkout -b 8.1.13 if you really want to fix something in a release)
 
-The new approach has also some disadvantages:
+The new approach has a disadvantage:
 
-* It does not support debian/ubuntu (and thus no glibc support). If we want to do it: we need to do the same approach for debian based on official repositories.
-* We depend on the release of php packages at alpine (e.g. on 2023/01/03 the php82 was not officially packaged on alpine including nginx unit - so we cannot support it. at the same time it is available as docker image on official docker php). If the packaged package version number is not available on alpine anymore - we cannot recreate the docker image (we have a workaround to build older apk's for it - takes more time, but is 100% viable solution!)
+* We depend on the release of php packages at alpine and ubuntu (e.g. on 2023/01/03 the php82 was not officially packaged on alpine including nginx unit - so we cannot support it. at the same time it is available as docker image on official docker php). If the packaged package version number is not available on alpine anymore - we cannot recreate the docker image (we have a workaround to build older apk's for it - takes more time, but is 100% viable solution!)
 
 
 
