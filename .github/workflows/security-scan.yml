@@ -49,7 +49,12 @@ jobs:
 
       -   name: Tag also with php:${{ env.PHP_VERSION }}
           run: docker tag ghcr.io/endava/docker-php:${{ env.PHP_VERSION }} php-${{ env.PHP_VERSION }}
-          
+
+      -   name: "IMAGE_SIZE Env"
+          run: echo "IMAGE_SIZE=`docker inspect php-${{ env.PHP_VERSION }} --format json | jq .[0].Size | numfmt --to=si`" > $GITHUB_ENV
+
+      -   run: wget "https://img.shields.io/static/v1.png?label=size&message=${{ env.IMAGE_SIZE }}&color=blue" -O size-status.png
+
       -   name: Run Alpine Trivy vulnerability scanner
           uses: aquasecurity/trivy-action@master
           with:
@@ -119,3 +124,4 @@ jobs:
             files: |
               vulnerability-report.html
               vulnerability-status.png
+              size-status.png
