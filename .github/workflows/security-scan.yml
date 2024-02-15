@@ -25,6 +25,7 @@ jobs:
           - 'release/8.2-ubuntu'
           - 'release/8.3'
           - 'release/8.3-zts'
+          - 'release/8.3-ubuntu'
     steps:
       -   name: "Checkout code"
           uses: actions/checkout@v3
