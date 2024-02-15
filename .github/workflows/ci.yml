@@ -108,7 +108,7 @@ jobs:
           run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
 
       -   name: "PHP_VERSION Env"
-          run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | head -n 1 | cut -f 2 -d ' '`-ubuntu" >> $GITHUB_ENV
+          run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -r 'echo $_SERVER[\"PHP_VERSION\"];'`-ubuntu" >> $GITHUB_ENV
 
       -   name: Tag also with php:${{ env.PHP_VERSION }}
           run: docker tag temporary-build-image-linux-amd64 php-${{ env.PHP_VERSION }}
