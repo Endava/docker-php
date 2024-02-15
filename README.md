@@ -1,6 +1,6 @@
 # endava/docker-php
 
-This is a docker php image is based on an alpine distribution including some tools and php extensions. You can find more details at the respective release pages on github.
+This is a docker php image is based on an alpine (and ubuntu) distribution including some tools and php extensions. You can find more details at the respective release pages on github.
 
 # Supported Versions
 
