@@ -6,56 +6,63 @@ This is a docker php image is based on an alpine distribution including some too
 
 | Version | Branch | Latest Release | Status | Vulnerability Report | Fitness Functions |
 | --- | --- | --- | --- | --- | --- |
-| **8.3** | [release/8.3](https://github.com/endava/docker-php/tree/release/8.3) | [8.3.2](https://github.com/endava/docker-php/releases/tag/8.3.2) | [![Build Status][github_actions_83_badge]][github_actions_83_link] | [![Security Report][security_report_83_badge]][security_report_83_link] | [![php 8.3 Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3.yml)
-| **8.2** | [release/8.2](https://github.com/endava/docker-php/tree/release/8.2) | [8.2.15](https://github.com/endava/docker-php/releases/tag/8.2.15) | [![Build Status][github_actions_82_badge]][github_actions_82_link] | [![Security Report][security_report_82_badge]][security_report_82_link] | [![php 8.2 Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2.yml)
-| **8.1** | [release/8.1](https://github.com/endava/docker-php/tree/release/8.1) | [8.1.26](https://github.com/endava/docker-php/releases/tag/8.1.26) | [![Build Status][github_actions_81_badge]][github_actions_81_link] | [![Security Report][security_report_81_badge]][security_report_81_link] | [![php 8.1 Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.1.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.1.yml)
+| **8.3** | [release/8.3](https://github.com/endava/docker-php/tree/release/8.3) | [![Size][size_83_badge]](https://github.com/endava/docker-php/releases/tag/8.3.2) | [![Build Status][github_actions_83_badge]][github_actions_83_link] | [![Security Report][security_report_83_badge]][security_report_83_link] | [![php 8.3 Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3.yml)
+| **8.2** | [release/8.2](https://github.com/endava/docker-php/tree/release/8.2) | [![Size][size_82_badge]](https://github.com/endava/docker-php/releases/tag/8.2.15) | [![Build Status][github_actions_82_badge]][github_actions_82_link] | [![Security Report][security_report_82_badge]][security_report_82_link] | [![php 8.2 Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2.yml)
+| **8.1** | [release/8.1](https://github.com/endava/docker-php/tree/release/8.1) | [![Size][size_81_badge]](https://github.com/endava/docker-php/releases/tag/8.1.26) | [![Build Status][github_actions_81_badge]][github_actions_81_link] | [![Security Report][security_report_81_badge]][security_report_81_link] | [![php 8.1 Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.1.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.1.yml)
 
 [github_actions_83_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.3
 [github_actions_83_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3
 [security_report_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.2/vulnerability-status.png
 [security_report_83_link]: https://github.com/endava/docker-php/releases/download/8.3.2/vulnerability-report.html
+[size_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.2/size-status.png
 
 
 [github_actions_82_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.2
 [github_actions_82_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2
 [security_report_82_badge]: https://github.com/endava/docker-php/releases/download/8.2.15/vulnerability-status.png
 [security_report_82_link]: https://github.com/endava/docker-php/releases/download/8.2.15/vulnerability-report.html
+[size_82_badge]: https://github.com/endava/docker-php/releases/download/8.2.15/size-status.png
 
 
 [github_actions_81_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.1
 [github_actions_81_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.1
 [security_report_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.26/vulnerability-status.png
 [security_report_81_link]: https://github.com/endava/docker-php/releases/download/8.1.26/vulnerability-report.html
+[size_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.26/size-status.png
 
 
 # Experimental Versions
 
 | Version | Branch | Latest Release | Status | Vulnerability Report | Fitness Functions |
 | --- | --- | --- | --- | --- | --- |
-| **8.3 (ZTS)** | [release/8.3-zts](https://github.com/endava/docker-php/tree/release/8.3-zts) | [8.3.2-zts](https://github.com/endava/docker-php/releases/tag/8.3.2-zts) | [![Build Status][github_actions_83zts_badge]][github_actions_83zts_link] | [![Security Report][security_report_83zts_badge]][security_report_83zts_link] | [![php 8.3-zts Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-zts.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-zts.yml)
-| **8.2 (ZTS)** | [release/8.2-zts](https://github.com/endava/docker-php/tree/release/8.2-zts) | [8.2.15-zts](https://github.com/endava/docker-php/releases/tag/8.2.15-zts) | [![Build Status][github_actions_82zts_badge]][github_actions_82zts_link] | [![Security Report][security_report_82zts_badge]][security_report_82zts_link] | [![php 8.2-zts Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-zts.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-zts.yml)
-| **8.3 (Ubuntu)** | [release/8.3-ubuntu](https://github.com/endava/docker-php/tree/release/8.3-ubuntu) | [8.3.2-ubuntu](https://github.com/endava/docker-php/releases/tag/8.3.2-ubuntu) | [![Build Status][github_actions_83ubuntu_badge]][github_actions_83ubuntu_link] | [![Security Report][security_report_83ubuntu_badge]][security_report_83ubuntu_link] | [![php 8.3-ubuntu Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-ubuntu.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-ubuntu.yml)
-| **8.2 (Ubuntu)** | [release/8.2-ubuntu](https://github.com/endava/docker-php/tree/release/8.2-ubuntu) | [8.2.15-ubuntu](https://github.com/endava/docker-php/releases/tag/8.2.15-ubuntu) | [![Build Status][github_actions_82ubuntu_badge]][github_actions_82ubuntu_link] | [![Security Report][security_report_82ubuntu_badge]][security_report_82ubuntu_link] | [![php 8.2-ubuntu Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-ubuntu.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-ubuntu.yml)
+| **8.3 (ZTS)** | [release/8.3-zts](https://github.com/endava/docker-php/tree/release/8.3-zts) | [![Size][size_83zts_badge]](https://github.com/endava/docker-php/releases/tag/8.3.2-zts) | [![Build Status][github_actions_83zts_badge]][github_actions_83zts_link] | [![Security Report][security_report_83zts_badge]][security_report_83zts_link] | [![php 8.3-zts Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-zts.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-zts.yml)
+| **8.2 (ZTS)** | [release/8.2-zts](https://github.com/endava/docker-php/tree/release/8.2-zts) | [![Size][size_82zts_badge]](https://github.com/endava/docker-php/releases/tag/8.2.15-zts) | [![Build Status][github_actions_82zts_badge]][github_actions_82zts_link] | [![Security Report][security_report_82zts_badge]][security_report_82zts_link] | [![php 8.2-zts Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-zts.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-zts.yml)
+| **8.3 (Ubuntu)** | [release/8.3-ubuntu](https://github.com/endava/docker-php/tree/release/8.3-ubuntu) | [![Size][size_83ubuntu_badge]](https://github.com/endava/docker-php/releases/tag/8.3.2-ubuntu) | [![Build Status][github_actions_83ubuntu_badge]][github_actions_83ubuntu_link] | [![Security Report][security_report_83ubuntu_badge]][security_report_83ubuntu_link] | [![php 8.3-ubuntu Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-ubuntu.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-ubuntu.yml)
+| **8.2 (Ubuntu)** | [release/8.2-ubuntu](https://github.com/endava/docker-php/tree/release/8.2-ubuntu) | [![Size][size_82ubuntu_badge]](https://github.com/endava/docker-php/releases/tag/8.2.15-ubuntu) | [![Build Status][github_actions_82ubuntu_badge]][github_actions_82ubuntu_link] | [![Security Report][security_report_82ubuntu_badge]][security_report_82ubuntu_link] | [![php 8.2-ubuntu Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-ubuntu.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-ubuntu.yml)
 
 [github_actions_82ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.2-ubuntu
 [github_actions_82ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2-ubuntu
 [security_report_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.15-ubuntu/vulnerability-status.png
 [security_report_82ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.2.15-ubuntu/vulnerability-report.html
+[size_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.15-ubuntu/size-status.png
 
 [github_actions_83ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.3-ubuntu
 [github_actions_83ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3-ubuntu
 [security_report_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.2-ubuntu/vulnerability-status.png
 [security_report_83ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.3.2-ubuntu/vulnerability-report.html
+[size_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.2-ubuntu/size-status.png
 
 [github_actions_82zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.2-zts
 [github_actions_82zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2-zts
 [security_report_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.15-zts/vulnerability-status.png
 [security_report_82zts_link]: https://github.com/endava/docker-php/releases/download/8.2.15-zts/vulnerability-report.html
+[size_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.15-zts/size-status.png
 
 [github_actions_83zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.3-zts
 [github_actions_83zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3-zts
 [security_report_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.2-zts/vulnerability-status.png
 [security_report_83zts_link]: https://github.com/endava/docker-php/releases/download/8.3.2-zts/vulnerability-report.html
+[size_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.2-zts/size-status.png
 
 # Unsupported Versions
 
