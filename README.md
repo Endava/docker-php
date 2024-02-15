@@ -99,7 +99,6 @@ $docker-compose run php-cli
 ⠿ Container docker-php-php-fpm-1
 ⠿ Container docker-php-nginx-1
 bash-5.1$ php -v
-10:35 $ docker run --rm -it ap:8.2.15-ubuntu php -v
 PHP 8.2.15 (cli) (built: Jan 20 2024 14:17:05) (NTS)
 Copyright (c) The PHP Group
 Zend Engine v4.2.15, Copyright (c) Zend Technologies
