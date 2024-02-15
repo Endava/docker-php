@@ -70,12 +70,13 @@ Unsupported as of php's eol list at https://www.php.net/eol.php
 
 | Version | Branch | Latest Release | Status | Vulnerability Report |
 | --- | --- | --- | --- | --- |
-| **8.0** | [release/8.0](https://github.com/endava/docker-php/tree/release/8.0) | [8.0.30](https://github.com/endava/docker-php/releases/tag/8.0.30) | [![Build Status][github_actions_80_badge]][github_actions_80_link] | [![Security Report][security_report_80_badge]][security_report_80_link]
+| **8.0** | [release/8.0](https://github.com/endava/docker-php/tree/release/8.0) | [![Size][size_80_badge]](https://github.com/endava/docker-php/releases/tag/8.0.30) | [![Build Status][github_actions_80_badge]][github_actions_80_link] | [![Security Report][security_report_80_badge]][security_report_80_link]
 
 [github_actions_80_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.0
 [github_actions_80_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.0
 [security_report_80_badge]: https://github.com/endava/docker-php/releases/download/8.0.30/vulnerability-status.png
 [security_report_80_link]: https://github.com/endava/docker-php/releases/download/8.0.30/vulnerability-report.html
+[size_80_badge]: https://github.com/endava/docker-php/releases/download/8.0.30/size-status.png
 
 # Overview
 
