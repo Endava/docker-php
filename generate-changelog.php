@@ -32,6 +32,7 @@ $packageNamesToExpose = [
     'bash',
     'bzip2',
     'composer',
+    'curl',
     'git',
     'git-lfs',
     'msmtp',
@@ -42,6 +43,7 @@ $packageNamesToExpose = [
     'unit',
     'unzip',
     'vim',
+    'wget',
 ];
 
 if(preg_match_all("/^(.+)-([^-]+-[^-]+)$/im",$output,$matches)) {
