@@ -36,6 +36,7 @@ RUN apk add --no-cache \
     openssh-client \
     bash \
     sed \
+    wget \
     curl
 
 # Ensure we have www-data added with alpine's default uid/gid: 82
