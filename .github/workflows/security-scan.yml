@@ -20,6 +20,7 @@ jobs:
         branch-name:
           - 'release/8.0'
           - 'release/8.1'
+          - 'release/8.1-ubuntu'
           - 'release/8.2'
           - 'release/8.2-zts'
           - 'release/8.2-ubuntu'
