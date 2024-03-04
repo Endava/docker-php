@@ -1,0 +1,20 @@
+name: php 8.1-ubuntu Fitness Functions
+  
+on:
+  push:
+    branches:
+      - 'main'
+  schedule:
+    - cron:  '15 10 * * *' # each day at 10:15 UTC
+
+
+jobs:
+  configured-ubuntu-is-latest-version:
+    name: "Ensure that Ubuntu is the latest supported version"
+    env:
+      LATEST_UBUNTU_RELEASE: "22.04"    
+    runs-on: ubuntu-latest
+    steps:
+      -  name: Execute
+         run: >
+             docker run --pull always --rm ubuntu:latest cat /etc/os-release | grep $LATEST_UBUNTU_RELEASE
