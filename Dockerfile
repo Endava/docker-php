@@ -11,7 +11,7 @@ ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
 ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
 
-RUN apk upgrade -U # 2024/01/10 upgrade to get latest extensions
+RUN apk upgrade -U # 2024-03-23
 
 RUN apk add --no-cache \
     libc6-compat \
