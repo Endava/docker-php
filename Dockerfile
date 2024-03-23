@@ -16,7 +16,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y software-properties-common gpg-agent --no-install-recommends && LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && apt-get remove --purge -y software-properties-common && apt-get autoremove -y
 
-RUN apt-get update && apt-get -y dist-upgrade
+RUN apt-get update && apt-get -y dist-upgrade # 2024-03-23
 
 RUN apt-get install -y --no-install-recommends \
     wget \
