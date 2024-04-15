@@ -66,7 +66,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine:3.19.1
 
-ARG PHP_VERSION="8.3.3"
+ARG PHP_VERSION="8.3.6"
 ARG PHP_PACKAGE_BASENAME="phpzts83"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts83"
 ARG UNIT_VERSION="1.32.1"
@@ -107,7 +107,7 @@ RUN apk add --no-cache abuild && \
      abuild-keygen -a -n && \
      rm /opt/custom-packages/*/APKINDEX.tar.gz && \
      cd /opt/custom-packages/*/ && \
-     apk index -vU -o APKINDEX.tar.gz *.apk --no-warnings --rewrite-arch $(abuild -A) && \
+     apk index -vU --allow-untrusted -o APKINDEX.tar.gz *.apk --no-warnings --rewrite-arch $(abuild -A) && \
      abuild-sign -k ~/.abuild/*.rsa /opt/custom-packages/*/APKINDEX.tar.gz && \
      cp ~/.abuild/*.rsa.pub /etc/apk/keys/ && \
      apk del abuild
