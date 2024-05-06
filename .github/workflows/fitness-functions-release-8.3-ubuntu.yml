@@ -12,7 +12,7 @@ jobs:
   configured-ubuntu-is-latest-version:
     name: "Ensure that Ubuntu is the latest supported version"
     env:
-      LATEST_UBUNTU_RELEASE: "22.04"    
+      LATEST_UBUNTU_RELEASE: "24.04"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
