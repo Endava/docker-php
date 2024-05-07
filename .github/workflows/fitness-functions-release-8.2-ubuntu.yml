@@ -18,3 +18,10 @@ jobs:
       -  name: Execute
          run: >
              docker run --pull always --rm ubuntu:latest cat /etc/os-release | grep $LATEST_UBUNTU_RELEASE
+
+  noble-is-not-available-for-nginx-unit-yet:
+    name: "Ensure we cannot get a noble package from nginx unit"
+    runs-on: ubuntu-latest
+    steps:
+      -  name: Execute
+         run: "! curl -Ss https://packages.nginx.org/unit/ubuntu/dists/ | grep noble"
