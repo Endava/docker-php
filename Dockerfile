@@ -66,7 +66,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine:3.19.1
 
-ARG PHP_VERSION="8.3.6"
+ARG PHP_VERSION="8.3.3"
 ARG PHP_PACKAGE_BASENAME="phpzts83"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts83"
 ARG UNIT_VERSION="1.32.1"
