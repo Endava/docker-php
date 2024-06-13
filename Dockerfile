@@ -99,7 +99,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSIO
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
-RUN wget --quiet --no-verbose https://github.com/composer/composer/releases/download/2.7.1/composer.phar -O /usr/bin/composer && chmod +x /usr/bin/composer
+RUN wget --quiet --no-verbose https://github.com/composer/composer/releases/download/2.7.7/composer.phar -O /usr/bin/composer && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
