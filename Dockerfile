@@ -1,11 +1,11 @@
-FROM alpine:3.18.6
+FROM alpine:3.18.7
 
 ARG PHP_VERSION="8.1.27"
 ARG PHP_PACKAGE_BASENAME="php81"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm81"
 ARG UNIT_VERSION="1.31.1"
 ARG APACHE2_VERSION="2.4.58"
-ARG GRPC_EXTENSION_VERSION="1.62.0"
+ARG GRPC_EXTENSION_VERSION="1.64.1"
 ARG GRPC_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/community"
 ARG PCOV_EXTENSION_VERSION="1.0.11"
 ARG PCOV_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/community"
@@ -99,7 +99,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSIO
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
-RUN wget --quiet --no-verbose https://github.com/composer/composer/releases/download/2.7.1/composer.phar -O /usr/bin/composer && chmod +x /usr/bin/composer
+RUN wget --quiet --no-verbose https://github.com/composer/composer/releases/download/2.7.7/composer.phar -O /usr/bin/composer && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
