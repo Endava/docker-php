@@ -1,6 +1,6 @@
 FROM alpine:3.19.1
 
-ARG PHP_VERSION="8.2.19"
+ARG PHP_VERSION="8.2.20"
 ARG PHP_PACKAGE_BASENAME="php82"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm82"
 ARG UNIT_VERSION="1.32.1"
@@ -88,7 +88,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
 
 # add composer
-RUN wget --quiet --no-verbose https://github.com/composer/composer/releases/download/2.7.1/composer.phar -O /usr/bin/composer && chmod +x /usr/bin/composer
+RUN wget --quiet --no-verbose https://github.com/composer/composer/releases/download/2.7.7/composer.phar -O /usr/bin/composer && chmod +x /usr/bin/composer
 ENV COMPOSER_HOME=/composer
 RUN mkdir /composer && chown www-data:www-data /composer
 
