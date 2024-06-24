@@ -1,4 +1,4 @@
-FROM ubuntu:noble-20240429
+FROM ubuntu:noble-20240605
 
 ARG PHP_VERSION="8.3.7"
 ARG PHP_PACKAGE_BASENAME="php8.3"
