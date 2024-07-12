@@ -1,10 +1,10 @@
-FROM alpine:3.19.2
+FROM alpine:3.20.1
 
-ARG PHP_VERSION="8.3.8"
+ARG PHP_VERSION="8.3.9"
 ARG PHP_PACKAGE_BASENAME="php83"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm83"
 ARG UNIT_VERSION="1.32.1"
-ARG APACHE2_VERSION="2.4.59"
+ARG APACHE2_VERSION="2.4.61"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
 ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
@@ -97,16 +97,6 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 
 # FIXME: we need this, since php83 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php83/APKBUILD
 WORKDIR /usr/bin
-RUN    ln -s php83 php \
-    && ln -s peardev83 peardev \
-    && ln -s pecl83 pecl \
-    && ln -s phpize83 phpize \
-    && ln -s php-config83 php-config \
-    && ln -s phpdbg83 phpdbg \
-    && ln -s lsphp83 lsphp \
-    && ln -s php-cgi83 php-cgi \
-    && ln -s phar.phar83 phar.phar \
-    && ln -s phar83 phar
 
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
@@ -141,6 +131,8 @@ RUN echo "php_admin_flag[fastcgi.logging] = off" >> /etc/${PHP_PACKAGE_BASENAME}
 RUN apk add --no-cache unit~=$UNIT_VERSION unit-${PHP_PACKAGE_BASENAME}~=$UNIT_VERSION
 # add default nginx unit json file (listening on port 8080)
 COPY files/unit/unit-default.json /var/lib/unit/conf.json
+# create folder for socket (necessary since alpine 3.20)
+RUN mkdir /run/unit/
 # chown the folder for control socket file
 RUN chown www-data:www-data /run/unit/
 
