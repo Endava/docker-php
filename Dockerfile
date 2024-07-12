@@ -97,16 +97,6 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 
 # FIXME: we need this, since php83 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php83/APKBUILD
 WORKDIR /usr/bin
-RUN    ln -s php83 php \
-    && ln -s peardev83 peardev \
-    && ln -s pecl83 pecl \
-    && ln -s phpize83 phpize \
-    && ln -s php-config83 php-config \
-    && ln -s phpdbg83 phpdbg \
-    && ln -s lsphp83 lsphp \
-    && ln -s php-cgi83 php-cgi \
-    && ln -s phar.phar83 phar.phar \
-    && ln -s phar83 phar
 
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
