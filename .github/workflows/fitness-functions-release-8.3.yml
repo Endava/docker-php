@@ -10,22 +10,14 @@ on:
 
 jobs:
   configured-alpine-is-latest-version:
-    name: "Ensure that Alpine 3.19 is the latest alpine version"
+    name: "Ensure that Alpine 3.20 is the latest alpine version"
     env:
-      LATEST_ALPINE_RELEASE: "3.19.1"    
+      LATEST_ALPINE_RELEASE: "3.20.1"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
          run: >
-             docker run --pull always --rm alpine:3.19 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
-
-  php83-is-not-the-default-php-on-edge:
-    name: "We need to symlink php83 until php 8.3 is the default php"
-    runs-on: ubuntu-latest
-    steps:
-      -  name: Execute
-         run: >
-             ! docker run --pull always --rm alpine:3.19 sh -c 'apk -U add php83 && php -v'
+             docker run --pull always --rm alpine:3.20 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
 
   packages-not-available-on-alpine-for-release-8-3:
     name: Package not available on alpine for php 8.3 in community, yet
@@ -36,4 +28,4 @@ jobs:
           - php83-pecl-protobuf
     steps:
       -   name: Execute
-          run: "! docker run --pull always --rm alpine:3.19 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+          run: "! docker run --pull always --rm alpine:3.20 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
