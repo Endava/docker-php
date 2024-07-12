@@ -18,14 +18,3 @@ jobs:
       -  name: Execute
          run: >
              docker run --pull always --rm alpine:3.20 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
-
-  packages-not-available-on-alpine-for-release-8-3:
-    name: Package not available on alpine for php 8.3 in community, yet
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - php83-pecl-protobuf
-    steps:
-      -   name: Execute
-          run: "! docker run --pull always --rm alpine:3.20 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
