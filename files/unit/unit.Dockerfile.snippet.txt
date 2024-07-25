@@ -1,5 +1,5 @@
 # start: source at files/unit/unit.Dockerfile.snippet.txt
 # graceful STOPSIGNAL is SIGQUIT as of https://github.com/nginx/unit/blob/f67a01b88fd7c7057767e18a3dd06c24e94c8aa8/src/nxt_main_process.c#L66
 STOPSIGNAL QUIT
-CMD ["unitd", "--no-daemon", "--user", "www-data", "--group", "www-data", "--log", "/dev/stdout", "--control", "unix:/run/unit/control.unit.sock", "--pid", "/run/unit/unit.pid"]]
+CMD ["unitd", "--no-daemon", "--user", "www-data", "--group", "www-data", "--log", "/dev/stdout", "--control", "unix:/run/unit/control.unit.sock", "--pid", "/run/unit/unit.pid"]
 # end  : source at files/unit/unit.Dockerfile.snippet.txt
