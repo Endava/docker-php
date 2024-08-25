@@ -11,7 +11,7 @@ jobs:
   configured-release-8-1-alpine-is-latest-version:
     name: "Ensure that Alpine is the latest alpine version for release 8.1"
     env:
-      LATEST_ALPINE_RELEASE: "3.18.6"    
+      LATEST_ALPINE_RELEASE: "3.18.8"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
