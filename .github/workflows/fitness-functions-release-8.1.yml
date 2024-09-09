@@ -11,22 +11,9 @@ jobs:
   configured-release-8-1-alpine-is-latest-version:
     name: "Ensure that Alpine is the latest alpine version for release 8.1"
     env:
-      LATEST_ALPINE_RELEASE: "3.18.8"    
+      LATEST_ALPINE_RELEASE: "3.19.4"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
          run: >
-             docker run --pull always --rm alpine:3.18 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
-
-  # packages necessary for release/8.1 branch
-  packages-not-available-on-alpine-for-relase-8-1:
-    name: Package not available on alpine for php 8.1 in community, yet
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - php81-pecl-pcov
-          - php81-pecl-grpc
-    steps:
-      -   name: Execute
-          run: "! docker run --pull always --rm alpine:3.18 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+             docker run --pull always --rm alpine:3.19 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
