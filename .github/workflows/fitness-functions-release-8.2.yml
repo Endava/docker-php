@@ -12,9 +12,9 @@ jobs:
   configured-alpine-is-latest-version:
     name: "Ensure that Alpine 3.19 is the latest alpine version"
     env:
-      LATEST_ALPINE_RELEASE: "3.19.1"    
+      LATEST_ALPINE_RELEASE: "3.20.3"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
          run: >
-             docker run --pull always --rm alpine:3.19 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+             docker run --pull always --rm alpine:3.20 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
