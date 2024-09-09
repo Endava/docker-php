@@ -1,23 +1,15 @@
-FROM alpine:3.18.8
+FROM alpine:3.19.4
 
-ARG PHP_VERSION="8.1.27"
+ARG PHP_VERSION="8.1.29"
 ARG PHP_PACKAGE_BASENAME="php81"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm81"
-ARG UNIT_VERSION="1.31.1"
+ARG UNIT_VERSION="1.32.1"
 ARG APACHE2_VERSION="2.4.62"
-ARG GRPC_EXTENSION_VERSION="1.62.0"
-ARG GRPC_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/community"
-ARG PCOV_EXTENSION_VERSION="1.0.11"
-ARG PCOV_EXTENSION_REPOSITORY="http://dl-cdn.alpinelinux.org/alpine/edge/community"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
 ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
 ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
-ENV GRPC_EXTENSION_VERSION=$GRPC_EXTENSION_VERSION
-ENV GRPC_EXTENSION_REPOSITORY=$GRPC_EXTENSION_REPOSITORY
-ENV PCOV_EXTENSION_VERSION=$PCOV_EXTENSION_VERSION
-ENV PCOV_EXTENSION_REPOSITORY=$PCOV_EXTENSION_REPOSITORY
 
 RUN apk upgrade -U # 2024-03-23
 
@@ -92,8 +84,21 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlreader
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xsl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-zip
 
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
+
+# FIXME: we need this, since php81 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php81/APKBUILD
+WORKDIR /usr/bin
+RUN    ln -s php81 php \
+    && ln -s peardev81 peardev \
+    && ln -s pecl81 pecl \
+    && ln -s phpize81 phpize \
+    && ln -s php-config81 php-config \
+    && ln -s phpdbg81 phpdbg \
+    && ln -s lsphp81 lsphp \
+    && ln -s php-cgi81 php-cgi \
+    && ln -s phar.phar81 phar.phar \
+    && ln -s phar81 phar
 
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
@@ -199,5 +204,7 @@ ENV PHP_DATE_TIMEZONE="" \
 RUN mkdir -p /usr/src/app
 RUN chown -R www-data:www-data /usr/src/app
 WORKDIR /usr/src/app
+
+
 
 USER www-data
