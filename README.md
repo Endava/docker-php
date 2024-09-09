@@ -26,9 +26,9 @@ This is a docker php image is based on an alpine (and ubuntu) distribution inclu
 
 [github_actions_81_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.1
 [github_actions_81_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.1
-[security_report_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.27/vulnerability-status.png
-[security_report_81_link]: https://github.com/endava/docker-php/releases/download/8.1.27/vulnerability-report.html
-[size_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.27/size-status.png
+[security_report_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.29/vulnerability-status.png
+[security_report_81_link]: https://github.com/endava/docker-php/releases/download/8.1.29/vulnerability-report.html
+[size_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.29/size-status.png
 
 
 # Experimental Versions
