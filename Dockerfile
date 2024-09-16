@@ -1,6 +1,6 @@
 FROM ubuntu:noble-20240605
 
-ARG PHP_VERSION="8.2.21"
+ARG PHP_VERSION="8.2.22"
 ARG PHP_PACKAGE_BASENAME="php8.2"
 ARG PHP_PACKAGE_BASE_VERSION="8.2"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm8.2"
@@ -165,6 +165,14 @@ RUN apt-get update && apt-get install --no-install-recommends -y cron \
 RUN chown www-data:www-data /var/log/cron.log
 COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
+
+# install symfony cli
+RUN wget --quiet --no-verbose 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' -O /tmp/setup-symfony-cli.deb.sh \
+   && bash -o pipefail /tmp/setup-symfony-cli.deb.sh \
+   && rm /tmp/setup-symfony-cli.deb.sh
+
+# give www-data it's home directory
+RUN chown www-data:www-data /var/www
 
 CMD ["php", "-a"]
 
