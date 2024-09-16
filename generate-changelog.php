@@ -32,6 +32,7 @@ $packageNamesToExpose = [
     'bash',
     'bzip2',
     'composer',
+    'curl',
     'git',
     'git-lfs',
     'msmtp',
@@ -39,9 +40,11 @@ $packageNamesToExpose = [
     'openssh-client',
     'rsync',
     'sshpass',
+    'symfony-cli',
     'unit',
     'unzip',
     'vim',
+    'wget',
 ];
 
 if(preg_match_all("/^(.+)\/now ([^ ]+) .*$/im",$output,$matches)) {
