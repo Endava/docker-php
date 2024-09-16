@@ -1,6 +1,6 @@
 FROM ubuntu:noble-20240605
 
-ARG PHP_VERSION="8.3.9"
+ARG PHP_VERSION="8.3.11"
 ARG PHP_PACKAGE_BASENAME="php8.3"
 ARG PHP_PACKAGE_BASE_VERSION="8.3"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm8.3"
@@ -165,6 +165,10 @@ RUN apt-get update && apt-get install --no-install-recommends -y cron \
 RUN chown www-data:www-data /var/log/cron.log
 COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
+
+# install symfony cli
+RUN curl -1sLf 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' | bash && apt install symfony-cli
+RUN chown www-data:www-data /var/www
 
 CMD ["php", "-a"]
 
