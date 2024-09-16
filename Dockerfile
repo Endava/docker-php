@@ -167,7 +167,11 @@ COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 # install symfony cli
-RUN wget 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' -O - | bash && apt install symfony-cli
+RUN wget --quiet --no-verbose 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' -O /tmp/setup-symfony-cli.deb.sh \
+   && bash -o pipefail /tmp/setup-symfony-cli.deb.sh \
+   && rm /tmp/setup-symfony-cli.deb.sh
+
+# give www-data it's home directory
 RUN chown www-data:www-data /var/www
 
 CMD ["php", "-a"]
