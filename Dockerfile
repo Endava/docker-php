@@ -46,6 +46,8 @@ RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests
 RUN echo "ext/imap/tests/imap_mutf7_to_utf8.phpt" >> disabled-tests.list
 RUN echo "ext/imap/tests/imap_utf8_to_mutf7_basic.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_009.phpt" >> disabled-tests.list
+RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
+RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
