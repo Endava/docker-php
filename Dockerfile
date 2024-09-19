@@ -71,11 +71,13 @@ FROM alpine-distro as php-zts-base
 
 ARG PHP_VERSION="8.3.8"
 ARG PHP_PACKAGE_BASENAME="phpzts83"
+ARG PHP_PACKAGE_INCLUDE="/usr/include/php83"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts83"
 ARG UNIT_VERSION="1.32.1"
 ARG APACHE2_VERSION="2.4.59"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
+ENV PHP_PACKAGE_INCLUDE=$PHP_PACKAGE_INCLUDE
 ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
 ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
@@ -192,6 +194,12 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
 
 FROM php-zts-base as PECL-BUILDER-MEMCACHED
 
+COPY --from=PECL-BUILDER-IGBINARY /usr/lib/$PHP_PACKAGE_BASENAME/modules/igbinary.so /usr/lib/$PHP_PACKAGE_BASENAME/modules/igbinary.so
+COPY --from=PECL-BUILDER-IGBINARY /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.ini /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.ini
+COPY --from=PECL-BUILDER-IGBINARY $PHP_PACKAGE_INCLUDE/ext/igbinary $PHP_PACKAGE_INCLUDE/ext/igbinary
+COPY --from=PECL-BUILDER-MSGPACK /usr/lib/$PHP_PACKAGE_BASENAME/modules/msgpack.so /usr/lib/$PHP_PACKAGE_BASENAME/modules/msgpack.so
+COPY --from=PECL-BUILDER-MSGPACK /etc/$PHP_PACKAGE_BASENAME/conf.d/10_msgpack.ini /etc/$PHP_PACKAGE_BASENAME/conf.d/10_msgpack.ini
+COPY --from=PECL-BUILDER-MSGPACK $PHP_PACKAGE_INCLUDE/ext/msgpack $PHP_PACKAGE_INCLUDE/ext/msgpack
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers zlib-dev libmemcached-dev cyrus-sasl-dev libevent-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && MAKEFLAGS="-j $(nproc)" peclzts83 install -D 'enable-memcached-igbinary="yes" enable-memcached-session="yes" enable-memcached-json="yes" enable-memcached-protocol="yes" enable-memcached-msgpack="yes"' memcached \
@@ -211,6 +219,9 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
 
 FROM php-zts-base as PECL-BUILDER-REDIS
 
+COPY --from=PECL-BUILDER-IGBINARY /usr/lib/$PHP_PACKAGE_BASENAME/modules/igbinary.so /usr/lib/$PHP_PACKAGE_BASENAME/modules/igbinary.so
+COPY --from=PECL-BUILDER-IGBINARY /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.ini /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.ini
+COPY --from=PECL-BUILDER-IGBINARY $PHP_PACKAGE_INCLUDE/ext/igbinary $PHP_PACKAGE_INCLUDE/ext/igbinary
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers lz4-dev zstd-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && MAKEFLAGS="-j $(nproc)" peclzts83 install -D 'enable-redis-igbinary="yes" enable-redis-lz4="yes" with-liblz4="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' redis \
@@ -276,9 +287,11 @@ RUN apk add --no-cache rabbitmq-c
 
 COPY --from=PECL-BUILDER-APCU /usr/lib/$PHP_PACKAGE_BASENAME/modules/apcu.so /usr/lib/$PHP_PACKAGE_BASENAME/modules/apcu.so
 COPY --from=PECL-BUILDER-APCU /etc/$PHP_PACKAGE_BASENAME/conf.d/apcu.ini /etc/$PHP_PACKAGE_BASENAME/conf.d/apcu.ini
+COPY --from=PECL-BUILDER-APCU $PHP_PACKAGE_INCLUDE/ext/apcu $PHP_PACKAGE_INCLUDE/ext/apcu
 
 COPY --from=PECL-BUILDER-IGBINARY /usr/lib/$PHP_PACKAGE_BASENAME/modules/igbinary.so /usr/lib/$PHP_PACKAGE_BASENAME/modules/igbinary.so
 COPY --from=PECL-BUILDER-IGBINARY /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.ini /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.ini
+COPY --from=PECL-BUILDER-IGBINARY $PHP_PACKAGE_INCLUDE/ext/igbinary $PHP_PACKAGE_INCLUDE/ext/igbinary
 
 COPY --from=PECL-BUILDER-IMAGICK /usr/lib/$PHP_PACKAGE_BASENAME/modules/imagick.so /usr/lib/$PHP_PACKAGE_BASENAME/modules/imagick.so
 COPY --from=PECL-BUILDER-IMAGICK /etc/$PHP_PACKAGE_BASENAME/conf.d/00_imagick.ini /etc/$PHP_PACKAGE_BASENAME/conf.d/00_imagick.ini
@@ -286,6 +299,7 @@ RUN apk add --no-cache imagemagick imagemagick-libs libgomp
 
 COPY --from=PECL-BUILDER-MSGPACK /usr/lib/$PHP_PACKAGE_BASENAME/modules/msgpack.so /usr/lib/$PHP_PACKAGE_BASENAME/modules/msgpack.so
 COPY --from=PECL-BUILDER-MSGPACK /etc/$PHP_PACKAGE_BASENAME/conf.d/10_msgpack.ini /etc/$PHP_PACKAGE_BASENAME/conf.d/10_msgpack.ini
+COPY --from=PECL-BUILDER-MSGPACK $PHP_PACKAGE_INCLUDE/ext/msgpack $PHP_PACKAGE_INCLUDE/ext/msgpack
 
 COPY --from=PECL-BUILDER-MEMCACHED /usr/lib/$PHP_PACKAGE_BASENAME/modules/memcached.so /usr/lib/$PHP_PACKAGE_BASENAME/modules/memcached.so
 COPY --from=PECL-BUILDER-MEMCACHED /etc/$PHP_PACKAGE_BASENAME/conf.d/20_memcached.ini /etc/$PHP_PACKAGE_BASENAME/conf.d/20_memcached.ini
