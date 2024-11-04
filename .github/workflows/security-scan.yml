@@ -58,6 +58,8 @@ jobs:
 
       -   name: Run Alpine Trivy vulnerability scanner
           uses: aquasecurity/trivy-action@0.28.0
+          env:
+            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'table'
@@ -68,6 +70,8 @@ jobs:
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file
           uses: aquasecurity/trivy-action@0.28.0
+          env:
+            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'template'
@@ -76,6 +80,8 @@ jobs:
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file
           uses: aquasecurity/trivy-action@0.28.0
+          env:
+            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'json'
@@ -93,6 +99,8 @@ jobs:
 
       -   name: Run Alpine Trivy vulnerability scanner and upload to github security tab
           uses: aquasecurity/trivy-action@0.28.0
+          env:
+            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'sarif'
