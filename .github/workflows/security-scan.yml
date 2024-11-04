@@ -57,7 +57,7 @@ jobs:
       -   run: wget "https://img.shields.io/static/v1.png?label=${{ env.PHP_VERSION }}&message=${{ env.IMAGE_SIZE }}&color=blue" -O size-status.png
 
       -   name: Run Alpine Trivy vulnerability scanner
-          uses: aquasecurity/trivy-action@master
+          uses: aquasecurity/trivy-action@0.28.0
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'table'
@@ -67,7 +67,7 @@ jobs:
             severity: 'CRITICAL,HIGH'
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file
-          uses: aquasecurity/trivy-action@master
+          uses: aquasecurity/trivy-action@0.28.0
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'template'
@@ -75,7 +75,7 @@ jobs:
             output: 'vulnerability-report.html'
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file
-          uses: aquasecurity/trivy-action@master
+          uses: aquasecurity/trivy-action@0.28.0
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'json'
@@ -92,7 +92,7 @@ jobs:
           run: wget "https://img.shields.io/static/v1.png?label=vulnerabilites&message=${{ env.FIXED_VULNERABILITIES }}&color=red" -O vulnerability-status.png
 
       -   name: Run Alpine Trivy vulnerability scanner and upload to github security tab
-          uses: aquasecurity/trivy-action@master
+          uses: aquasecurity/trivy-action@0.28.0
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'sarif'
