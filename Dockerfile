@@ -11,7 +11,9 @@ ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
 ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
 
-RUN apk upgrade -U # 2024-03-23
+RUN apk upgrade -U # 2024-11-03
+# FIXME: add testing repo (until php84 is available in community/main repository)
+RUN echo https://dl-cdn.alpinelinux.org/alpine/edge/testing/ >> /etc/apk/repositories
 
 RUN apk add --no-cache \
     libc6-compat \
