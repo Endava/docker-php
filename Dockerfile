@@ -1,4 +1,4 @@
-FROM alpine:edge
+FROM alpine:3.21.0
 
 ARG PHP_VERSION="8.4.1"
 ARG PHP_PACKAGE_BASENAME="php84"
@@ -11,9 +11,7 @@ ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
 ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
 
-RUN apk upgrade -U # 2024-11-03
-# FIXME: add testing repo (until php84 is available in community/main repository)
-RUN echo https://dl-cdn.alpinelinux.org/alpine/edge/testing/ >> /etc/apk/repositories
+RUN apk upgrade -U # 2024-12-08
 
 RUN apk add --no-cache \
     libc6-compat \
