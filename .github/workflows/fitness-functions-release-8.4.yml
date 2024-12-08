@@ -9,13 +9,23 @@ on:
 
 
 jobs:
+  configured-alpine-is-latest-version:
+    name: "Ensure that Alpine 3.21 is the latest alpine version"
+    env:
+      LATEST_ALPINE_RELEASE: "3.21.0"    
+    runs-on: ubuntu-latest
+    steps:
+      -  name: Execute
+         run: >
+             docker run --pull always --rm alpine:3.21 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+
   php83-is-not-the-default-php-on-edge:
     name: "We need to symlink php84 until php 8.4 is the default php"
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
          run: >
-             ! docker run --rm alpine:edge sh -c 'apk add -U php84 --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing/ && php -v'
+             ! docker run --rm alpine:3.21 sh -c 'apk add -U php84 && php -v'
 
   packages-not-available-on-alpine-for-community-release-8-4:
     name: Package not available on alpine for php 8.4 in community, yet
@@ -23,14 +33,13 @@ jobs:
     strategy:
       matrix:
         package:
-          - php84
           - php84-pecl-amqp
     steps:
       -   name: Execute
-          run: "! docker run --rm alpine:edge apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+          run: "! docker run --rm alpine:3.21 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
 
   packages-not-available-on-alpine-testing-for-release-8-4:
-    name: Package not available on alpine for php 8.4 in testing, yet
+    name: Package not available on alpine 3.21 for php 8.4, yet
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -38,4 +47,4 @@ jobs:
           - php84-pecl-amqp
     steps:
       -   name: Execute
-          run: "! docker run --rm alpine:edge apk --no-cache search --repository https://dl-cdn.alpinelinux.org/alpine/edge/testing/ ${{ matrix.package }}  | grep ${{ matrix.package }}"
+          run: "! docker run --rm alpine:3.21 apk --no-cache search ${{ matrix.package }}  | grep ${{ matrix.package }}"
