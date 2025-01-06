@@ -1,6 +1,6 @@
 FROM alpine:3.19.4
 
-ARG PHP_VERSION="8.1.30"
+ARG PHP_VERSION="8.1.31"
 ARG PHP_PACKAGE_BASENAME="php81"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm81"
 ARG UNIT_VERSION="1.32.1"
@@ -24,6 +24,7 @@ RUN apk add --no-cache \
     bzip2 \
     msmtp \
     unzip \
+    icu-data-full \
     make \
     openssh-client \
     bash \
