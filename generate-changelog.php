@@ -43,6 +43,7 @@ $packageNamesToExpose = [
     'unit',
     'unzip',
     'vim',
+    'curl',
     'wget',
 ];
 
