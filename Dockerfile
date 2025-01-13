@@ -60,15 +60,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_pgsql
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
-
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl84 install amqp \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
-    && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/40_amqp.ini \
-    && apk del --no-network .build-deps \
-    && apk add --no-cache rabbitmq-c
-
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
