@@ -12,7 +12,7 @@ jobs:
   configured-alpine-is-latest-version:
     name: "Ensure that Alpine 3.21 is the latest alpine version"
     env:
-      LATEST_ALPINE_RELEASE: "3.21.0"    
+      LATEST_ALPINE_RELEASE: "3.21.2"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
@@ -26,25 +26,3 @@ jobs:
       -  name: Execute
          run: >
              ! docker run --rm alpine:3.21 sh -c 'apk add -U php84 && php -v'
-
-  packages-not-available-on-alpine-for-community-release-8-4:
-    name: Package not available on alpine for php 8.4 in community, yet
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - php84-pecl-amqp
-    steps:
-      -   name: Execute
-          run: "! docker run --rm alpine:3.21 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
-
-  packages-not-available-on-alpine-testing-for-release-8-4:
-    name: Package not available on alpine 3.21 for php 8.4, yet
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - php84-pecl-amqp
-    steps:
-      -   name: Execute
-          run: "! docker run --rm alpine:3.21 apk --no-cache search ${{ matrix.package }}  | grep ${{ matrix.package }}"
