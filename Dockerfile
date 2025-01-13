@@ -29,7 +29,8 @@ RUN apk add --no-cache \
     openssh-client \
     icu-data-full \
     bash \
-    sed
+    sed \
+    curl
 
 # Ensure we have www-data added with alpine's default uid/gid: 82
 # (e.g. https://git.alpinelinux.org/aports/tree/main/apache2/apache2.pre-install for reference)
