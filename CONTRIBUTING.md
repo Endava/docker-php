@@ -53,6 +53,49 @@ We use [Hadolint](https://github.com/hadolint/hadolint) for Dockerfile linting.
 And also please consider to:
 - run a ```hadolint Dockerfile``` to check for code quality violations
 
+## Snippets for Special Case: Build pecl package manually and fitness function check for availability
+
+If you need to build (e.g. pecl amqp) manually, because the package does not exist yet in packages, you have to do two things:
+
+1. add the fitness function at e.g. [.github/workflows/fitness-functions-release-8.4.yml](.github/workflows/fitness-functions-release-8.4.yml) a section for this (the example is for alpine:3.21 and the package php84-pecl-amqp)
+
+```yaml
+  packages-not-available-on-alpine-for-community-release-8-4:
+    name: Package not available on alpine for php 8.4 in community, yet
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - php84-pecl-amqp
+    steps:
+      -   name: Execute
+          run: "! docker run --rm alpine:3.21 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
+  packages-not-available-on-alpine-testing-for-release-8-4:
+    name: Package not available on alpine 3.21 for php 8.4, yet
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        package:
+          - php84-pecl-amqp
+    steps:
+      -   name: Execute
+          run: "! docker run --rm alpine:3.21 apk --no-cache search ${{ matrix.package }}  | grep ${{ matrix.package }}"
+```
+
+2. add the package like this in the Dockerfile at the respective part:
+
+```Dockerfile
+# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
+RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && MAKEFLAGS="-j $(nproc)" pecl84 install amqp \
+    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
+    && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/40_amqp.ini \
+    && apk del --no-network .build-deps \
+    && apk add --no-cache rabbitmq-c
+```
+
+And as soon as the fitness function fails - remove the "FIXME: " and remove the manual apk add command. That's it!
+
 ## License
 By contributing, you agree that your contributions will be licensed under Apache 2.0 License.
 
