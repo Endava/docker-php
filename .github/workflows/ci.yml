@@ -41,8 +41,8 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - linux/amd64
           - linux/arm64
+          - linux/amd64
         exclude:
           - platform: none
     steps:
@@ -85,8 +85,8 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - linux/amd64
           - linux/arm64
+          - linux/amd64
         exclude:
           - platform: none
         module:
@@ -143,8 +143,8 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - linux/amd64
           - linux/arm64
+          - linux/amd64
         exclude:
           - platform: none
     steps:
@@ -213,8 +213,8 @@ jobs:
       fail-fast: false
       matrix:
         platform:
-          - linux/amd64
           - linux/arm64
+          - linux/amd64
         exclude:
           - platform: none
     steps:
