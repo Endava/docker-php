@@ -291,7 +291,7 @@ FROM php-zts-base AS FRANKENPHPBUILDER
 # Install e-dant/watcher (necessary for file watching)
 RUN mkdir -p /usr/local/src/watcher
 WORKDIR /usr/local/src/watcher
-RUN apk add --no-cache binutils build-base cmake automake libtool linux-headers --virtual .watcher-build-deps \
+RUN apk add --no-cache binutils build-base libstdc++ cmake automake libtool linux-headers --virtual .watcher-build-deps \
        && wget --quiet --no-verbose https://github.com/e-dant/watcher/archive/refs/tags/0.13.2.tar.gz -O /tmp/watcher.tar.gz \
         && tar xz --strip-component=1 -xf /tmp/watcher.tar.gz \
         && cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
@@ -302,15 +302,14 @@ RUN apk add --no-cache binutils build-base cmake automake libtool linux-headers 
 # install caddy with frankenphp
 # hadolint ignore=SC2016,SC2086,DL3003
 RUN apk add --no-cache go~=1.23 --virtual .go-build-deps \
-    && apk add --no-cache libxml2-dev sqlite-dev brotli-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
+    && apk add --no-cache libxml2-dev sqlite-dev argon2-dev brotli-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && cd /opt \
+    && find / | grep php | grep .so \
     && git clone https://github.com/dunglas/frankenphp.git --recursive  --branch v1.4.0 --single-branch \
     && cd /opt/frankenphp/caddy/frankenphp \
-    # make frankenphp to be happy about lphpzts84.so and not require us to have a lphp.so
-    && sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go \
     && export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
     && export PHP_CPPFLAGS="$PHP_CFLAGS" \
-    && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags` `php-config --libs`" \
+    && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags` `php-config --libs` -L/usr/lib/${PHP_PACKAGE_BASENAME}" \
     && export CGO_LDFLAGS="$PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
     && go build \
     && rm -rf /root/.cache /root/go \
@@ -441,6 +440,8 @@ COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 COPY --from=FRANKENPHPBUILDER /usr/sbin/frankenphp /usr/sbin/frankenphp
+COPY --from=FRANKENPHPBUILDER /usr/local/lib/libwatcher* /usr/local/lib/
+RUN apk add --no-cache libstdc++ && ldconfig /usr/local/lib
 
 COPY files/frankenphp/Caddyfile /etc/Caddyfile
 # FIXME: start with /usr/sbin/frankenphp run --config /etc/Caddyfile
