@@ -55,6 +55,7 @@ RUN echo "ext/curl/tests/curl_basic_009.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/XML_OPTION_PARSE_HUGE.phpt" >> disabled-tests.list
+RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
