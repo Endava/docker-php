@@ -150,6 +150,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_sqlite
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pear
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-session
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
 
 # FIXME: we need this, since phpzts84 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php84/APKBUILD
 WORKDIR /usr/bin
@@ -288,10 +289,10 @@ FROM php-zts-base AS FRANKENPHPBUILDER
 
 # install caddy with frankenphp
 # hadolint ignore=SC2016,SC2086,DL3003
-RUN apk add --no-cache go~=1.22 --virtual .go-build-deps \
+RUN apk add --no-cache go~=1.23 --virtual .go-build-deps \
     && apk add --no-cache libxml2-dev sqlite-dev brotli-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && cd /opt \
-    && git clone https://github.com/dunglas/frankenphp.git --recursive  --branch v1.2.5 --single-branch \
+    && git clone https://github.com/dunglas/frankenphp.git --recursive  --branch v1.4.0 --single-branch \
     && cd /opt/frankenphp/caddy/frankenphp \
     # make frankenphp to be happy about lphpzts84.so and not require us to have a lphp.so
     && sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go \
@@ -344,7 +345,6 @@ COPY --from=PECL-BUILDER-REDIS /etc/$PHP_PACKAGE_BASENAME/conf.d/20_redis.ini /e
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-simplexml
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-soap
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sodium
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sqlite3
 
