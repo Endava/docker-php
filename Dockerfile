@@ -196,10 +196,11 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
 FROM php-zts-base AS PECL-BUILDER-IMAGICK
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
-# FIXME: we do this because of https://github.com/Imagick/imagick/issues/643
+# FIXME: we do this because of https://github.com/Imagick/imagick/issues/689
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && wget --quiet --no-verbose https://github.com/Imagick/imagick/archive/7088edc353f53c4bc644573a79cdcd67a726ae16.tar.gz -O /tmp/imagick.tar.gz \
+    && wget --quiet --no-verbose https://github.com/Imagick/imagick/archive/refs/heads/3.7.0.tar.gz -O /tmp/imagick.tar.gz \
     && tar --strip-components=1 -xf /tmp/imagick.tar.gz \
+    && sed -i -e 's/php_strtolower/zend_str_tolower/' imagick.c \
     && phpizezts84 \
     && ./configure \
     && MAKEFLAGS="-j $(nproc)" make \
