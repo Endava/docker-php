@@ -42,6 +42,8 @@ $packageNamesToExpose = [
     'unit',
     'unzip',
     'vim',
+    'curl',
+    'wget'
 ];
 
 if(preg_match_all("/^(.+)\/now ([^ ]+) .*$/im",$output,$matches)) {
