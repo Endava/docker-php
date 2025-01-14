@@ -3,3 +3,4 @@ ignored:
 - DL3059 # info: Multiple consecutive `RUN` instructions. Consider consolidation.
 - SC2086 # info: Double quote to prevent globbing and word splitting.
 - SC2016 # info: Expressions don't expand in single quotes, use double quotes for that.
+- DL4006 # warning: Set the SHELL option -o pipefail before RUN with a pipe in it. If you are using /bin/sh in an alpine image or if your shell is symlinked to busybox then consider explicitly setting your SHELL to /bin/ash, or disable this check
