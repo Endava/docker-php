@@ -64,12 +64,14 @@ RUN arch
 RUN uname -m
 RUN abuild -A
 RUN abuild checksum && abuild -r
-WORKDIR /workspace/aports/community/unit-php84
+WORKDIR /workspace/aports/community/unit
 # make phpver3 to be phpzts84
-RUN sed -i -e 's/_phpver=84/_phpver=zts84/' APKBUILD
+RUN sed -i -e 's/_phpver4=84/_phpver4=zts84/' APKBUILD
+RUN sed -i -e 's/.\/configure php --module=php\$_phpver2 --config=php-config\$_phpver2//' APKBUILD
+RUN sed -i -e 's/.\/configure php --module=php\$_phpver3 --config=php-config\$_phpver3//' APKBUILD
 # make unit-php84 find the lphpzts84.so
 # hadolint ignore=SC2016
-RUN sed -i -e 's/.\/configure php --module=php\$_phpver/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& .\/configure php --module=php\$_phpver/g' APKBUILD
+#RUN sed -i -e 's/.\/configure php --module=php\$_phpver4/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& cat auto\/modules\/php \&\& .\/configure php --module=php\$_phpver4/g' APKBUILD
 RUN sed -i -e 's/_allow_fail=no/_allow_fail=yes/g' APKBUILD
 
 RUN abuild checksum && abuild -r
