@@ -6,182 +6,351 @@ on:
       - 'release/**'
   pull_request:
 
+env:
+  GITHUB_REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  RELEASE_REF_FILTER: 'refs/heads/release/'
+  EXCLUDED_PLATFORM: "none" # change to linux/arm64
+  # and thos blocks from:
+  #   exclude:
+  #   - platform: none
+  # to:
+  #   exclude:
+  #   - platform: linux/arm64
+
 jobs:
-  build-amd64:
-    name: Build PHP Image amd64
-
+  lint:
     runs-on: ubuntu-latest
-
-    continue-on-error: false
-
+    strategy:
+      fail-fast: false
     steps:
-      -   name: "Checkout code"
-          uses: actions/checkout@v3
-
-      -   name: Lint Dockerfile
-          uses: hadolint/hadolint-action@v3.0.0
-          with:
-            dockerfile: "Dockerfile"
-            format: "tty"
-            no-color: "true"
-            output-file: "/dev/stdout"
-
-      -   name: "Build Alpine"
-          run: >
-            ./build_images.sh temporary-build-image linux/amd64
-      -   name: "Export image"
-          run: mv dockercache amdcache
-      -   name: 'Upload Artifact'
-          uses: actions/upload-artifact@v3
-          with:
-            name: amdcache
-            path: amdcache
-            retention-days: 1
-            
-  build-arm64:
-    name: Build PHP Image arm64
-
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.0.0
+        with:
+          dockerfile: "Dockerfile"
+          format: "tty"
+          no-color: "true"
+          output-file: "/dev/stdout"
+  build-base:
     runs-on: ARM64
-
-    continue-on-error: false
-
+    needs:
+      - lint
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+        exclude:
+          - platform: none
     steps:
-      -   name: "Checkout code"
-          uses: actions/checkout@v3
-
-      -   name: Lint Dockerfile
-          uses: hadolint/hadolint-action@v3.0.0
-          with:
-            dockerfile: "Dockerfile"
-            format: "tty"
-            no-color: "true"
-            output-file: "/dev/stdout"
-
-      -   name: "Build Alpine"
-          run: >
-            ./build_images.sh temporary-build-image linux/arm64/v8
-      -   name: "Export image"
-          run: mv dockercache armcache
-      -   name: 'Upload Artifact'
-          uses: actions/upload-artifact@v3
-          with:
-            name: armcache
-            path: armcache
-            retention-days: 1
-            
-  upload:
-    name: Upload PHP Image
-
+      -
+        name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV    
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          tags: temporary-build-image-${{ env.PLATFORM_PAIR }}
+          target: php-zts-base
+          cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}-base
+          outputs: type=docker,dest=/tmp/${{ env.PLATFORM_PAIR }}-base.tar
+      - name: Load image
+        run: |
+          docker load --input /tmp/${{ env.PLATFORM_PAIR }}-base.tar
+          docker image ls -a
+      - name: Test
+        run: |
+          docker run --platform ${{ matrix.platform }} --rm temporary-build-image-${{ env.PLATFORM_PAIR }} sh -c 'uname -a && php -v'
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PLATFORM_PAIR }}-base.tar
+          path: /tmp/${{ env.PLATFORM_PAIR }}-base.tar
+  build-pecl-modules:
+    runs-on: ARM64
+    needs: build-base
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+        exclude:
+          - platform: none
+        module:
+          - pecl-builder-amqp
+          - pecl-builder-apcu
+          - pecl-builder-igbinary
+          - pecl-builder-imagick
+          - pecl-builder-msgpack
+          - pecl-builder-memcached
+          - pecl-builder-protobuf
+          - pecl-builder-redis
+          - pecl-builder-xdebug
+          - pecl-builder-grpc
+          - pecl-builder-pcov
+          - FRANKENPHPBUILDER
+    steps:
+      -
+        name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV    
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          tags: temporary-build-image-${{ env.PLATFORM_PAIR }}
+          target: ${{ matrix.module }}
+          cache-from: type=gha,scope=${{ env.PLATFORM_PAIR }}-base
+          cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}-${{ matrix.module }}
+          outputs: type=docker,dest=/tmp/${{ env.PLATFORM_PAIR }}-${{ matrix.module }}.tar
+      - name: Load image
+        run: |
+          docker load --input /tmp/${{ env.PLATFORM_PAIR }}-${{ matrix.module }}.tar
+          docker image ls -a
+      - name: Test
+        run: |
+          docker run --platform ${{ matrix.platform }} --rm temporary-build-image-${{ env.PLATFORM_PAIR }} sh -c 'uname -a && php -v'
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PLATFORM_PAIR }}-${{ matrix.module }}.tar
+          path: /tmp/${{ env.PLATFORM_PAIR }}-${{ matrix.module }}.tar   
+  build-all:
     runs-on: ubuntu-latest
-    
-    needs: 
-      - build-arm64
-      - build-amd64
-
-    continue-on-error: false
-
+    needs: build-pecl-modules
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+        exclude:
+          - platform: none
     steps:
-      -   name: "Checkout code"
-          uses: actions/checkout@v3
-
-      -   name: Download amd64
-          uses: actions/download-artifact@v3
+      -
+        name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV    
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - if: contains(github.ref, env.RELEASE_REF_FILTER)
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - if: contains(github.ref, env.RELEASE_REF_FILTER)
+        name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.GITHUB_REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: ${{ matrix.platform }}
+          tags: temporary-build-image-${{ env.PLATFORM_PAIR }}
+          cache-from: |
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-base
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-amqp
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-apcu
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-igbinary
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-imagick
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-msgpack
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-memcached
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-protobuf
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-redis
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-xdebug
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-grpc
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-pcov
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-FRANKENPHPBUILDER
+          cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}
+          outputs: type=docker,dest=/tmp/${{ env.PLATFORM_PAIR }}.tar
+      - name: Load image
+        run: |
+          docker load --input /tmp/${{ env.PLATFORM_PAIR }}.tar
+          docker image ls -a
+      - name: Test
+        run: |
+          docker run --platform ${{ matrix.platform }} --rm temporary-build-image-${{ env.PLATFORM_PAIR }} sh -c 'uname -a && php -v'
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.PLATFORM_PAIR }}.tar
+          path: /tmp/${{ env.PLATFORM_PAIR }}.tar          
+  test:
+    runs-on: ubuntu-latest
+    needs: build-all
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - linux/amd64
+          - linux/arm64
+        exclude:
+          - platform: none
+    steps:
+      -
+        name: Prepare
+        run: |
+          platform=${{ matrix.platform }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV   
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Download ${{ matrix.platform }} artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.PLATFORM_PAIR }}.tar
+          path: /tmp
+      - name: Load image
+        run: |
+          docker load --input /tmp/${{ env.PLATFORM_PAIR }}.tar
+          docker image ls -a
+      - name: Test
+        run: |
+          docker run --platform ${{ matrix.platform }} --rm temporary-build-image-${{ env.PLATFORM_PAIR }} sh -c 'uname -a && php -v'
+  use:
+      runs-on: ubuntu-latest
+      needs: build-all
+      strategy:
+        fail-fast: false
+        matrix:
+          suffix:
+            - unsuffixed
+            - fpm
+            - apache2
+            - unit
+            - frankenphp
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+        - name: Set up QEMU
+          uses: docker/setup-qemu-action@v3    
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v3
+        - name: Download amd64 artifact
+          uses: actions/download-artifact@v4
           with:
-            name: amdcache
-            path: amdcache
-
-      -   name: Download arm64
-          uses: actions/download-artifact@v3
+            name: linux-amd64.tar
+            path: /tmp
+        - name: Download arm64 artifact
+          if: env.EXCLUDED_PLATFORM != 'linux/arm64'
+          uses: actions/download-artifact@v4
           with:
-            name: armcache
-            path: armcache
-
-      -   name: "Create docker cache"
-          run: >
-            cp -rf amdcache dockercache
-
-      -   name: "Reload build cache for amd64"
-          run: >
-            ./build_images.sh temporary-build-image linux/amd64
-            
-      -   name: "Smoke test with php -v"
-          run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
-
-      -   name: "PHP_VERSION Env"
+            name: linux-arm64.tar
+            path: /tmp
+        - name: Load arm64 image
+          if: env.EXCLUDED_PLATFORM != 'linux/arm64'
+          run: |
+            docker load --input /tmp/linux-arm64.tar
+            docker image ls -a          
+        - name: Load amd64 image
+          run: |
+            docker load --input /tmp/linux-amd64.tar
+            docker image ls -a          
+        - name: Test amd64
+          run: |
+            docker run --platform linux/amd64 --rm temporary-build-image-linux-amd64 sh -c 'uname -a && php -v'
+        - name: Test arm64
+          if: env.EXCLUDED_PLATFORM != 'linux/arm64'
+          run: |
+            docker run --platform linux/arm64 --rm temporary-build-image-linux-arm64 sh -c 'uname -a && php -v'
+        - name: "PHP_VERSION Env"
           run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | head -n 1 | cut -f 2 -d ' '``docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | grep 'ZTS' >/dev/null && echo '-zts' || echo ''`" >> $GITHUB_ENV
-
-      -   name: Tag also with php:${{ env.PHP_VERSION }}
-          run: docker tag temporary-build-image-linux-amd64 php-${{ env.PHP_VERSION }}
-
-      -   name: "Check Alpine -i"
-          run: docker run --pull=never --rm -t php-${{ env.PHP_VERSION }} php -i
-
-      -   name: "Check Alpine -v"
-          run: docker run --pull=never --rm -t php-${{ env.PHP_VERSION }} php -v
-
-      -   name: "Run Tests"
-          run: tests/run_tests.sh
-          env:
-            DOCKER_REGISTRY_IMAGE: "temporary-build-image-linux-amd64"
-
-      -   name: Run Alpine Trivy vulnerability scanner
-          uses: aquasecurity/trivy-action@master
+        - name: Log into registry ${{ env.GITHUB_REGISTRY }}
+          if: github.event_name != 'pull_request'
+          uses: docker/login-action@v3.0.0
           with:
-            image-ref: php-${{ env.PHP_VERSION }}
-            format: 'table'
-            exit-code: '0' # we don't break the build if vulnerabilities are included!
-            ignore-unfixed: true
-            vuln-type: 'os,library'
-            severity: 'CRITICAL,HIGH'
-
-      -   if: contains(github.ref, 'refs/heads/release/')
-          name: Run Alpine Trivy vulnerability scanner and upload to github security tab
-          uses: aquasecurity/trivy-action@master
-          with:
-            image-ref: php-${{ env.PHP_VERSION }}
-            format: 'sarif'
-            output: 'trivy-results.sarif'
-
-      -   if: contains(github.ref, 'refs/heads/release/')
-          name: Upload Alpine Trivy scan results to GitHub Security tab
-          uses: github/codeql-action/upload-sarif@v2
-          with:
-            sarif_file: 'trivy-results.sarif'
-#
-      -   if: contains(github.ref, 'refs/heads/release/')
-          name: Run Trivy in GitHub SBOM mode and submit results to Dependency Snapshots
-          uses: aquasecurity/trivy-action@master
-          with:
-            format: 'github'
-            output: 'dependency-results.sbom.json'
-            image-ref: 'temporary-build-image-linux-amd64'
-            github-pat: ${{ secrets.PAT }}
-      -   if: contains(github.ref, 'refs/heads/release/')
-          name: Login to DockerHub
-          uses: docker/login-action@v2
-          with:
-            username: ${{ secrets.DOCKER_USERNAME }}
-            password: ${{ secrets.DOCKER_PASSWORD }}
-
-      -   if: contains(github.ref, 'refs/heads/release/')
-          name: Login to Quay.io
-          uses: docker/login-action@v2
-          with:
-            registry: quay.io
-            username: ${{ secrets.QUAY_USERNAME }}
-            password: ${{ secrets.QUAY_PASSWORD }}
-
-      -   if: contains(github.ref, 'refs/heads/release/')
-          name: Login to ghcr.io
-          uses: docker/login-action@v2
-          with:
-            registry: ghcr.io
+            registry: ${{ env.GITHUB_REGISTRY }}
             username: ${{ github.actor }}
             password: ${{ secrets.GITHUB_TOKEN }}
+        - name: Extract Dockerfile metadata
+          id: metaUnsuffixed
+          uses: docker/metadata-action@v5.5.1
+          with:
+            tags: |
+               type=raw,value=${{ env.PHP_VERSION }}
+            images: ${{ env.GITHUB_REGISTRY }}/${{ env.IMAGE_NAME }}
+        - name: Set platforms
+          id: set-platforms
+          run: |
+            if [ "${{ env.EXCLUDED_PLATFORM }}" = "linux/arm64" ]; then
+              echo "PLATFORMS=linux/amd64" >> $GITHUB_ENV
+            else
+              echo "PLATFORMS=linux/amd64,linux/arm64" >> $GITHUB_ENV
+            fi
+        - if: contains(matrix.suffix, 'unsuffixed')
+          name: Build and push Docker image
+          uses: docker/build-push-action@v5.3.0
+          with:
+            context: .
+            platforms: ${{ env.PLATFORMS }}
+            provenance: false
+            cache-from: |
+              type=gha,scope=unsuffixed
+              type=gha,scope=linux-amd64
+              type=gha,scope=linux-arm64          
+            cache-to: type=gha,mode=max,scope=unsuffixed
+            push: ${{ github.event_name != 'pull_request' }}
+            tags: ${{ steps.metaUnsuffixed.outputs.tags }}
+            labels: ${{ steps.metaUnsuffixed.outputs.labels }}
+        - if: ${{ !contains(matrix.suffix, 'unsuffixed') }}
+          name: Create Dockerfile-${{ matrix.suffix }}
+          run: |
+            cp Dockerfile Dockerfile-${{ matrix.suffix }}
+            cat files/${{ matrix.suffix }}/${{ matrix.suffix }}.Dockerfile.snippet.txt >> Dockerfile-${{ matrix.suffix }}
+        - if: ${{ !contains(matrix.suffix, 'unsuffixed') }}
+          name: Extract Dockerfile-${{ matrix.suffix }} metadata
+          id: meta
+          uses: docker/metadata-action@v5.5.1
+          with:
+            tags: |
+               type=raw,value=${{ env.PHP_VERSION }}-${{ matrix.suffix }}
+            images: ${{ env.GITHUB_REGISTRY }}/${{ env.IMAGE_NAME }}
+        - if: ${{ !contains(matrix.suffix, 'unsuffixed') }}
+          name: Build and push Dockerfile-${{ matrix.suffix }}
+          uses: docker/build-push-action@v5.3.0
+          with:
+            context: .
+            file: Dockerfile-${{ matrix.suffix }}
+            platforms: ${{ env.PLATFORMS }}
+            provenance: false
+            cache-from: |
+              type=gha,scope=unsuffixed
+              type=gha,scope=linux-amd64
+              type=gha,scope=linux-arm64
+            cache-to: type=gha,mode=max,scope=${{ matrix.suffix }}
+            push: ${{ github.event_name != 'pull_request' }}
+            tags: ${{ steps.meta.outputs.tags }}
+            labels: ${{ steps.meta.outputs.labels }}
 
-      -   if: contains(github.ref, 'refs/heads/release/')
-          name: "Build and Push Multi Arch PHP"
-          env:
-            GHCR_DOCKER_IMAGE_NAME: ghcr.io/endava/docker-php:${{ env.PHP_VERSION }}
-            QUAY_DOCKER_IMAGE_NAME: quay.io/endava/php:${{ env.PHP_VERSION }}
-          run: ./build_and_push_multi_arch_images.sh endava/php:${{ env.PHP_VERSION }}
+
+
