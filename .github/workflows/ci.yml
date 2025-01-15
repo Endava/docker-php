@@ -34,15 +34,17 @@ jobs:
           no-color: "true"
           output-file: "/dev/stdout"
   build-base:
-    runs-on: ${{ matrix.platform == 'linux/arm64' ? 'ARM64' : 'ubuntu-latest' }}
+    runs-on: ${{ matrix.runs_on }}
     needs:
       - lint
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/arm64
-          - linux/amd64
+        include:
+          - platform: linux/arm64
+            runs_on: ARM64
+          - platform: linux/amd64
+            runs_on: 'ubuntu-latest'
         exclude:
           - platform: none
     steps:
@@ -79,14 +81,16 @@ jobs:
           name: ${{ env.PLATFORM_PAIR }}-base.tar
           path: /tmp/${{ env.PLATFORM_PAIR }}-base.tar
   build-pecl-modules:
-    runs-on: ${{ matrix.platform == 'linux/arm64' ? 'ARM64' : 'ubuntu-latest' }}
+    runs-on: ${{ matrix.runs_on }}
     needs: build-base
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/arm64
-          - linux/amd64
+        include:
+          - platform: linux/arm64
+            runs_on: ARM64
+          - platform: linux/amd64
+            runs_on: 'ubuntu-latest'
         exclude:
           - platform: none
         module:
@@ -137,14 +141,16 @@ jobs:
           name: ${{ env.PLATFORM_PAIR }}-${{ matrix.module }}.tar
           path: /tmp/${{ env.PLATFORM_PAIR }}-${{ matrix.module }}.tar   
   build-all:
-    runs-on: ${{ matrix.platform == 'linux/arm64' ? 'ARM64' : 'ubuntu-latest' }}
+    runs-on: ${{ matrix.runs_on }}
     needs: build-pecl-modules
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/arm64
-          - linux/amd64
+        include:
+          - platform: linux/arm64
+            runs_on: ARM64
+          - platform: linux/amd64
+            runs_on: 'ubuntu-latest'
         exclude:
           - platform: none
     steps:
@@ -207,14 +213,16 @@ jobs:
           name: ${{ env.PLATFORM_PAIR }}.tar
           path: /tmp/${{ env.PLATFORM_PAIR }}.tar          
   test:
-    runs-on: ${{ matrix.platform == 'linux/arm64' ? 'ARM64' : 'ubuntu-latest' }}
+    runs-on: ${{ matrix.runs_on }}
     needs: build-all
     strategy:
       fail-fast: false
       matrix:
-        platform:
-          - linux/arm64
-          - linux/amd64
+        include:
+          - platform: linux/arm64
+            runs_on: ARM64
+          - platform: linux/amd64
+            runs_on: 'ubuntu-latest'
         exclude:
           - platform: none
     steps:
