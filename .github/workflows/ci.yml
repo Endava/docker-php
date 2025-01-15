@@ -45,8 +45,8 @@ jobs:
             runs_on: ARM64
           - platform: linux/amd64
             runs_on: 'ubuntu-latest'
-        exclude:
-          - platform: none
+       # exclude:
+       #  - platform: none
     steps:
       -
         name: Prepare
@@ -151,8 +151,8 @@ jobs:
             runs_on: ARM64
           - platform: linux/amd64
             runs_on: 'ubuntu-latest'
-        exclude:
-          - platform: none
+        #exclude:
+        #  - platform: none
     steps:
       -
         name: Prepare
@@ -223,8 +223,8 @@ jobs:
             runs_on: ARM64
           - platform: linux/amd64
             runs_on: 'ubuntu-latest'
-        exclude:
-          - platform: none
+        #exclude:
+        #  - platform: none
     steps:
       -
         name: Prepare
