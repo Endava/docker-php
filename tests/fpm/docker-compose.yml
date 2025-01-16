@@ -19,8 +19,7 @@ services:
     volumes:
       - ./:/usr/src/app/
   nginx:
-    image: nginx:1.11.10
-    platform: linux/amd64
+    image: nginx:1.27.3-alpine3.20
     depends_on:
       - php-fpm
     ports:
