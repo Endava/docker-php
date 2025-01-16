@@ -298,9 +298,6 @@ jobs:
         - name: "PHP_VERSION Env amd64"
           if: env.EXCLUDED_PLATFORM != 'linux/amd64'
           run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | head -n 1 | cut -f 2 -d ' '``docker run --pull=never --rm -t temporary-build-image-linux-amd64 php --version | grep 'ZTS' >/dev/null && echo '-zts' || echo ''`" >> $GITHUB_ENV
-        - name: "PHP_VERSION Env arm64"
-          if: env.EXCLUDED_PLATFORM != 'linux/arm64'
-          run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-arm64 php --version | head -n 1 | cut -f 2 -d ' '``docker run --pull=never --rm -t temporary-build-image-linux-arm64 php --version | grep 'ZTS' >/dev/null && echo '-zts' || echo ''`" >> $GITHUB_ENV
         - name: "Run Tests amd64"
           if: env.EXCLUDED_PLATFORM != 'linux/amd64'
           run: tests/run_tests.sh
