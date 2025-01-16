@@ -368,8 +368,8 @@ jobs:
             tags: |
                type=raw,value=${{ env.PHP_VERSION }}
             images: |
-               ${{ env.IMAGE_NAME }
-               quay.io/${{ env.IMAGE_NAME }
+               ${{ env.IMAGE_NAME }}
+               quay.io/${{ env.IMAGE_NAME }}
                ${{ env.GITHUB_REGISTRY }}/${{ env.GITHUB_IMAGE_NAME }}
         - name: Set platforms
           id: set-platforms
@@ -411,8 +411,8 @@ jobs:
             tags: |
                type=raw,value=${{ env.PHP_VERSION }}-${{ matrix.suffix }}
             images: |
-              ${{ env.IMAGE_NAME }
-              quay.io/${{ env.IMAGE_NAME }
+              ${{ env.IMAGE_NAME }}
+              quay.io/${{ env.IMAGE_NAME }}
               ${{ env.GITHUB_REGISTRY }}/${{ env.GITHUB_IMAGE_NAME }}
         - if: ${{ !contains(matrix.suffix, 'unsuffixed') }}
           name: Build and push Dockerfile-${{ matrix.suffix }}
