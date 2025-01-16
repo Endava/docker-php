@@ -95,6 +95,9 @@ jobs:
             runs_on: 'ubuntu-latest'
         #exclude:
         #  - platform: none
+        platform: 
+          - linux/arm64
+          - linux/amd64
         module:
           - pecl-builder-amqp
           - pecl-builder-apcu
