@@ -67,7 +67,8 @@ jobs:
           platforms: ${{ matrix.platform }}
           tags: temporary-build-image-${{ env.PLATFORM_PAIR }}
           target: php-zts-base
-          cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}-base
+          cache-from: type=gha,scope=${{ env.PLATFORM_PAIR }}-8-4-base
+          cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}-8-4-base
           outputs: type=docker,dest=/tmp/${{ env.PLATFORM_PAIR }}-base.tar
       - name: Load image
         run: |
@@ -126,7 +127,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           tags: temporary-build-image-${{ env.PLATFORM_PAIR }}
           target: ${{ matrix.module }}
-          cache-from: type=gha,scope=${{ env.PLATFORM_PAIR }}-base
+          cache-from: type=gha,scope=${{ env.PLATFORM_PAIR }}-8-4-base
           cache-to: type=gha,mode=max,scope=${{ env.PLATFORM_PAIR }}-${{ matrix.module }}
           outputs: type=docker,dest=/tmp/${{ env.PLATFORM_PAIR }}-${{ matrix.module }}.tar
       - name: Load image
@@ -186,7 +187,7 @@ jobs:
           platforms: ${{ matrix.platform }}
           tags: temporary-build-image-${{ env.PLATFORM_PAIR }}
           cache-from: |
-            type=gha,scope=${{ env.PLATFORM_PAIR }}-base
+            type=gha,scope=${{ env.PLATFORM_PAIR }}-8-4-base
             type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-amqp
             type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-apcu
             type=gha,scope=${{ env.PLATFORM_PAIR }}-pecl-builder-igbinary
