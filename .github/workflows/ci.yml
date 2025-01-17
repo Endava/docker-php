@@ -309,6 +309,8 @@ jobs:
           run: tests/run_tests.sh
           env:
             DOCKER_REGISTRY_IMAGE: "temporary-build-image-linux-amd64"
+        - name: Tag also with php-${{ env.PHP_VERSION }}
+          run: docker tag temporary-build-image-linux-amd64 php-${{ env.PHP_VERSION }}
         - if: ${{ contains(matrix.suffix, 'unsuffixed') && contains(github.ref, 'refs/heads/release/') }}
           uses: aquasecurity/trivy-action@master
           with:
