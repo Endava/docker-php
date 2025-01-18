@@ -2,14 +2,14 @@
 
 ## Usage
 
-1. Create a folder public with an index.php
+Create a folder public with an index.php
 
 ```shell
 $ mkdir public
 $ echo '<?php phpinfo();' > public/index.php
 ```
 
-2. Run the NGINX Unit Version with:
+### Run the NGINX Unit Version
 
 ```shell
 $ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.4.2-zts-unit
@@ -19,11 +19,11 @@ and open http://localhost:8080 to see phpinfo unit.
 
 ```shell
 $ ab -n 1000 -c 20 http://localhost:8080/
-Requests per second:    1646.91 [#/sec] (mean)
-Time per request:       12.144 [ms] (mean)
+Requests per second:    861.79 [#/sec] (mean)
+Time per request:       23.207 [ms] (mean)
 ```
 
-3. Run the Apache2 Version with:
+### Run the Apache2 Version
 
 ```shell
 $ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.4.2-zts-apache2
@@ -35,11 +35,11 @@ Short benchmark:
 
 ```shell
 $ ab -n 1000 -c 20 http://localhost:8080/
-Requests per second:    2844.56 [#/sec] (mean)
-Time per request:       7.031 [ms] (mean)
+Requests per second:    908.16 [#/sec] (mean)
+Time per request:       22.023 [ms] (mean)
 ```
 
-4. Run the php fpm version with (e.g. docker-compose.yml)
+### Run the php fpm version (e.g. docker-compose.yml)
 
 Create a `docker-compose.yml`:
 
@@ -108,7 +108,7 @@ Zend Engine v4.4.2, Copyright (c) Zend Technologies
 
 and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
 
-5. Run the frankenphp Version
+### Run the frankenphp https Version
 
 ```shell
 $ docker run --rm -p 8443:443 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.4.2-zts-frankenphp
@@ -120,14 +120,30 @@ Short benchmark:
 
 ```shell
 $ ab -n 1000 -c 20 https://localhost/
-Requests per second:    318.70 [#/sec] (mean)
-Time per request:       62.755 [ms] (mean)
+Requests per second:    912.41 [#/sec] (mean)
+Time per request:       21.920 [ms] (mean)
 ```
 
-6. Run the frankenphp http worker Version
+### Run the frankenphp http Version
 
 ```shell
-$ docker run --rm  -e FRANKENPHP_CONFIG="worker ./public/index.php" -e SERVER_NAME=http://localhost:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.4.2-zts-frankenphp
+$ docker run --rm -e SERVER_NAME=http://:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it endava/php:8.4.2-zts-frankenphp
+```
+
+and open https://localhost:8443/ to see phpinfo with frankenphp as server api.
+
+Short benchmark:
+
+```shell
+$ ab -n 1000 -c 20 https://localhost/
+Requests per second:    912.41 [#/sec] (mean)
+Time per request:       21.920 [ms] (mean)
+```
+
+### Run the frankenphp http worker Version
+
+```shell
+$ docker run --rm  -e FRANKENPHP_CONFIG="worker ./public/index.php" -e SERVER_NAME=http://:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it endava/php:8.4.2-zts-frankenphp
 ```
 
 and index.php like this:
@@ -153,8 +169,8 @@ Short benchmark:
 
 ```shell
 $ ab -n 1000 -c 20 http://localhost:8080/
-Requests per second:    3666.40 [#/sec] (mean)
-Time per request:       5.455 [ms] (mean)
+Requests per second:    865.91 [#/sec] (mean)
+Time per request:       23.097 [ms] (mean)
 ```
 
 # Best Practices
