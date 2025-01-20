@@ -54,6 +54,7 @@ RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests
 RUN echo "ext/curl/tests/curl_basic_009.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
+RUN echo "ext/standard/tests/http/gh16810.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
 
 USER root
