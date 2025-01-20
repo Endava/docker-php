@@ -1,6 +1,6 @@
-FROM alpine:3.20.3
+FROM alpine:3.21.0
 
-ARG PHP_VERSION="8.3.15"
+ARG PHP_VERSION="8.3.16"
 ARG PHP_PACKAGE_BASENAME="php83"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm83"
 ARG UNIT_VERSION="1.32.1"
@@ -92,7 +92,6 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 
-# FIXME: we need this, since php83 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php83/APKBUILD
 WORKDIR /usr/bin
 
 # add php.ini containing environment variables
