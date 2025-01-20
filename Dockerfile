@@ -68,11 +68,11 @@ WORKDIR /workspace/aports/community/unit
 # make phpver3 to be phpzts83
 RUN sed -i -e 's/_phpver3=83/_phpver3=zts83/' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver2 --config=php-config\$_phpver2//' APKBUILD
-RUN sed -i -e 's/.\/configure php --module=php\$_phpver3 --config=php-config\$_phpver4//' APKBUILD
+RUN sed -i -e 's/.\/configure php --module=php\$_phpver4 --config=php-config\$_phpver4 .*//' APKBUILD
 RUN sed -i -e 's/perl php\$_phpver2 php\$_phpver3 php\$_phpver4/perl php\$_phpver3 /' APKBUILD
 # make unit-php83 find the lphpzts83.so
 # hadolint ignore=SC2016
-#RUN sed -i -e 's/.\/configure php --module=php\$_phpver3/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& cat auto\/modules\/php \&\& .\/configure php --module=php\$_phpver3/g' APKBUILD
+RUN sed -i -e 's/.\/configure php --module=php\$_phpver3/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& cat auto\/modules\/php \&\& .\/configure php --module=php\$_phpver3/g' APKBUILD
 RUN sed -i -e 's/_allow_fail=no/_allow_fail=yes/g' APKBUILD
 
 RUN abuild checksum && abuild -r
