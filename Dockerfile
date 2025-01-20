@@ -308,9 +308,10 @@ RUN apk add --no-cache go~=1.23 --virtual .go-build-deps \
     && find / | grep php | grep .so \
     && git clone https://github.com/dunglas/frankenphp.git --recursive  --branch v1.4.0 --single-branch \
     && cd /opt/frankenphp/caddy/frankenphp \
+    && sed -i -e "s/lphp/l${PHP_PACKAGE_BASENAME}/g" ../../frankenphp.go \
     && export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
     && export PHP_CPPFLAGS="$PHP_CFLAGS" \
-    && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags` `php-config --libs` -Wl,-rpath,/usr/lib/${PHP_PACKAGE_BASENAME} -L/usr/lib/${PHP_PACKAGE_BASENAME}" \
+    && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags`" \
     && export CGO_LDFLAGS="$PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
     && go build \
     && rm -rf /root/.cache /root/go \
