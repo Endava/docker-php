@@ -5,7 +5,7 @@ RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache alpine-sdk
 RUN apk add --no-cache git git-lfs bash vim vimdiff curl
 
-RUN apk upgrade -U # 2024/01/14 to fix CVEs
+RUN apk upgrade -U # 2025/01/20 to fix CVEs and pull latest clone
 
 RUN adduser -h /workspace -s /bin/bash -S -D -u 501 -G dialout alpiner
 RUN addgroup alpiner abuild
