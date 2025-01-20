@@ -23,20 +23,20 @@ USER alpiner
 
 RUN git clone -b 3.21-stable --single-branch --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 
-WORKDIR /workspace/aports/community/php84
-RUN cp -rf /workspace/aports/community/php84 /workspace/aports/community/phpzts84
-WORKDIR /workspace/aports/community/phpzts84
-RUN sed -i -e 's/pkgname=php84/pkgname=phpzts84/' APKBUILD
+WORKDIR /workspace/aports/community/php83
+RUN cp -rf /workspace/aports/community/php83 /workspace/aports/community/phpzts83
+WORKDIR /workspace/aports/community/phpzts83
+RUN sed -i -e 's/pkgname=php83/pkgname=phpzts83/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/\$pkgname-fpm.initd/php84-fpm.initd/' APKBUILD
+RUN sed -i -e 's/\$pkgname-fpm.initd/php83-fpm.initd/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/\$pkgname-fpm.logrotate/php84-fpm.logrotate/' APKBUILD
+RUN sed -i -e 's/\$pkgname-fpm.logrotate/php83-fpm.logrotate/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/\$pkgname-module.conf/php84-module.conf/' APKBUILD
+RUN sed -i -e 's/\$pkgname-module.conf/php83-module.conf/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/\$pkgname-fpm-version-suffix.patch/php84-fpm-version-suffix.patch/' APKBUILD
+RUN sed -i -e 's/\$pkgname-fpm-version-suffix.patch/php83-fpm-version-suffix.patch/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/php\$_suffix-module.conf/php84-module.conf/' APKBUILD
+RUN sed -i -e 's/php\$_suffix-module.conf/php83-module.conf/' APKBUILD
 RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --enable-zend-timer --disable-zend-signals --host/' APKBUILD
 RUN sed -i -e 's/--with-openssl-argon2//' APKBUILD
 #RUN sed -i -e 's/--with-password-argon2//' APKBUILD
@@ -54,7 +54,6 @@ RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests
 RUN echo "ext/curl/tests/curl_basic_009.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
-RUN echo "ext/xml/tests/XML_OPTION_PARSE_HUGE.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
 
 USER root
@@ -65,24 +64,24 @@ RUN uname -m
 RUN abuild -A
 RUN abuild checksum && abuild -r
 WORKDIR /workspace/aports/community/unit
-# make phpver3 to be phpzts84
-RUN sed -i -e 's/_phpver4=84/_phpver4=zts84/' APKBUILD
+# make phpver3 to be phpzts83
+RUN sed -i -e 's/_phpver3=83/_phpver3=zts83/' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver2 --config=php-config\$_phpver2//' APKBUILD
-RUN sed -i -e 's/.\/configure php --module=php\$_phpver3 --config=php-config\$_phpver3//' APKBUILD
-RUN sed -i -e 's/perl php\$_phpver2 php\$_phpver3 php\$_phpver4/perl php\$_phpver4 /' APKBUILD
-# make unit-php84 find the lphpzts84.so
+RUN sed -i -e 's/.\/configure php --module=php\$_phpver3 --config=php-config\$_phpver4//' APKBUILD
+RUN sed -i -e 's/perl php\$_phpver2 php\$_phpver3 php\$_phpver4/perl php\$_phpver3 /' APKBUILD
+# make unit-php83 find the lphpzts83.so
 # hadolint ignore=SC2016
-#RUN sed -i -e 's/.\/configure php --module=php\$_phpver4/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& cat auto\/modules\/php \&\& .\/configure php --module=php\$_phpver4/g' APKBUILD
+#RUN sed -i -e 's/.\/configure php --module=php\$_phpver3/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& cat auto\/modules\/php \&\& .\/configure php --module=php\$_phpver3/g' APKBUILD
 RUN sed -i -e 's/_allow_fail=no/_allow_fail=yes/g' APKBUILD
 
 RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.4.3"
-ARG PHP_PACKAGE_BASENAME="phpzts84"
-ARG PHP_PACKAGE_INCLUDE="/usr/include/php84"
-ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts84"
+ARG PHP_VERSION="8.3.16"
+ARG PHP_PACKAGE_BASENAME="phpzts83"
+ARG PHP_PACKAGE_INCLUDE="/usr/include/php83"
+ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts83"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
 ENV PHP_PACKAGE_INCLUDE=$PHP_PACKAGE_INCLUDE
@@ -153,24 +152,24 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-session
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
 
-# FIXME: we need this, since phpzts84 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php84/APKBUILD
+# FIXME: we need this, since phpzts83 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php83/APKBUILD
 WORKDIR /usr/bin
-RUN    ln -s phpzts84 php \
-    && ln -s peardevzts84 peardev \
-    && ln -s peclzts84 pecl \
-    && ln -s phpizezts84 phpize \
-    && ln -s php-configzts84 php-config \
-    && ln -s phpdbgzts84 phpdbg \
-    && ln -s lsphpzts84 lsphp \
-    && ln -s php-cgizts84 php-cgi \
-    && ln -s phar.pharzts84 phar.phar \
-    && ln -s pharzts84 phar
+RUN    ln -s phpzts83 php \
+    && ln -s peardevzts83 peardev \
+    && ln -s peclzts83 pecl \
+    && ln -s phpizezts83 phpize \
+    && ln -s php-configzts83 php-config \
+    && ln -s phpdbgzts83 phpdbg \
+    && ln -s lsphpzts83 lsphp \
+    && ln -s php-cgizts83 php-cgi \
+    && ln -s phar.pharzts83 phar.phar \
+    && ln -s pharzts83 phar
 
 FROM php-zts-base AS PECL-BUILDER-AMQP
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install amqp \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install amqp \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
     && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/40_amqp.ini \
     && apk del --no-network .build-deps \
@@ -180,7 +179,7 @@ FROM php-zts-base AS PECL-BUILDER-APCU
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install apcu \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install apcu \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/apcu.so \
     && echo "extension=apcu" > /etc/$PHP_PACKAGE_BASENAME/conf.d/apcu.ini \
     && apk del --no-network .build-deps
@@ -189,7 +188,7 @@ FROM php-zts-base AS PECL-BUILDER-IGBINARY
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install igbinary \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install igbinary \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/igbinary.so \
     && echo "extension=igbinary" > /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.ini \
     && apk del --no-network .build-deps
@@ -202,7 +201,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
     && wget --quiet --no-verbose https://github.com/Imagick/imagick/archive/refs/heads/3.7.0.tar.gz -O /tmp/imagick.tar.gz \
     && tar --strip-components=1 -xf /tmp/imagick.tar.gz \
     && sed -i -e 's/php_strtolower/zend_str_tolower/' imagick.c \
-    && phpizezts84 \
+    && phpizezts83 \
     && ./configure \
     && MAKEFLAGS="-j $(nproc)" make \
     && MAKEFLAGS="-j $(nproc)" make install \
@@ -216,7 +215,7 @@ FROM php-zts-base AS PECL-BUILDER-MSGPACK
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-msgpack
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install msgpack \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install msgpack \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/msgpack.so \
     && echo "extension=msgpack" > /etc/$PHP_PACKAGE_BASENAME/conf.d/10_msgpack.ini \
     && apk del --no-network .build-deps
@@ -231,7 +230,7 @@ COPY --from=PECL-BUILDER-MSGPACK /etc/$PHP_PACKAGE_BASENAME/conf.d/10_msgpack.in
 COPY --from=PECL-BUILDER-MSGPACK $PHP_PACKAGE_INCLUDE/ext/msgpack $PHP_PACKAGE_INCLUDE/ext/msgpack
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers zlib-dev libmemcached-dev cyrus-sasl-dev libevent-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install -D 'enable-memcached-igbinary="yes" enable-memcached-session="yes" enable-memcached-json="yes" enable-memcached-protocol="yes" enable-memcached-msgpack="yes"' memcached \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install -D 'enable-memcached-igbinary="yes" enable-memcached-session="yes" enable-memcached-json="yes" enable-memcached-protocol="yes" enable-memcached-msgpack="yes"' memcached \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/memcached.so \
     && echo "extension=memcached" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_memcached.ini \
     && apk del --no-network .build-deps \
@@ -241,7 +240,7 @@ FROM php-zts-base AS PECL-BUILDER-PROTOBUF
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install protobuf \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install protobuf \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/protobuf.so \
     && echo "extension=protobuf" > /etc/$PHP_PACKAGE_BASENAME/conf.d/protobuf.ini \
     && apk del --no-network .build-deps
@@ -253,7 +252,7 @@ COPY --from=PECL-BUILDER-IGBINARY /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.
 COPY --from=PECL-BUILDER-IGBINARY $PHP_PACKAGE_INCLUDE/ext/igbinary $PHP_PACKAGE_INCLUDE/ext/igbinary
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers lz4-dev zstd-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install -D 'enable-redis-igbinary="yes" enable-redis-lz4="yes" with-liblz4="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' redis \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install -D 'enable-redis-igbinary="yes" enable-redis-lz4="yes" with-liblz4="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' redis \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/redis.so \
     && echo "extension=redis" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_redis.ini \
     && apk del --no-network .build-deps
@@ -262,7 +261,7 @@ FROM php-zts-base AS PECL-BUILDER-XDEBUG
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xdebug
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install xdebug \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install xdebug \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/xdebug.so \
     && echo ";zend_extension=xdebug.so" > /etc/$PHP_PACKAGE_BASENAME/conf.d/50_xdebug.ini \
     && echo ";xdebug.mode=off" >> /etc/$PHP_PACKAGE_BASENAME/conf.d/50_xdebug.ini \
@@ -273,7 +272,7 @@ FROM php-zts-base AS PECL-BUILDER-GRPC
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install grpc \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install grpc \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/grpc.so \
     && echo "extension=grpc" > /etc/$PHP_PACKAGE_BASENAME/conf.d/grpc.ini \
     && apk del --no-network .build-deps
@@ -282,7 +281,7 @@ FROM php-zts-base AS PECL-BUILDER-PCOV
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install pcov \
+    && MAKEFLAGS="-j $(nproc)" peclzts83 install pcov \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/pcov.so \
     && echo "extension=pcov" > /etc/$PHP_PACKAGE_BASENAME/conf.d/pcov.ini \
     && apk del --no-network .build-deps
@@ -418,8 +417,8 @@ RUN chown www-data:www-data /run/unit/
 RUN apk add --no-cache apache2 ${PHP_PACKAGE_BASENAME}-apache2~=${PHP_VERSION}
 # add default apache2 config file
 COPY files/apache2/apache2-default.conf /etc/apache2/conf.d/00_apache2-default.conf
-# fix that the mod_php84.so is not properly renamed in the conf
-RUN sed -i -e 's/mod_php84/mod_phpzts84/g' /etc/apache2/conf.d/php84-module.conf
+# fix that the mod_php83.so is not properly renamed in the conf
+RUN sed -i -e 's/mod_php83/mod_phpzts83/g' /etc/apache2/conf.d/php83-module.conf
 # activate rewrite module
 RUN sed -i -e 's/#LoadModule rewrite_module/LoadModule rewrite_module/g' /etc/apache2/httpd.conf
 # listen port 8080
