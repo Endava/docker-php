@@ -41,6 +41,8 @@ $packageNamesToExpose = [
     'sshpass',
     'unit',
     'unzip',
+    'curl',
+    'wget',
     'vim',
 ];
 
