@@ -16,6 +16,7 @@ jobs:
     continue-on-error: false
 
     strategy:
+      fail-fast: false
       matrix:
         branch-name:
           - 'release/8.0'
