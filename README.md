@@ -83,10 +83,10 @@ This is a docker php image is based on an alpine (and ubuntu) distribution inclu
 
 [github_actions_82zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.2-zts
 [github_actions_82zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2-zts
-[release_82zts_link]: https://github.com/endava/docker-php/releases/tag/8.2.16-zts
-[security_report_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.16-zts/vulnerability-status.png
-[security_report_82zts_link]: https://github.com/endava/docker-php/releases/download/8.2.16-zts/vulnerability-report.html
-[size_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.16-zts/size-status.png
+[release_82zts_link]: https://github.com/endava/docker-php/releases/tag/8.2.27-zts
+[security_report_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.27-zts/vulnerability-status.png
+[security_report_82zts_link]: https://github.com/endava/docker-php/releases/download/8.2.27-zts/vulnerability-report.html
+[size_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.27-zts/size-status.png
 
 [github_actions_83zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.3-zts
 [github_actions_83zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3-zts
