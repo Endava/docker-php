@@ -69,17 +69,17 @@ This is a docker php image is based on an alpine (and ubuntu) distribution inclu
 
 [github_actions_83ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.3-ubuntu
 [github_actions_83ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3-ubuntu
-[release_83ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.3.16-ubuntu
-[security_report_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.16-ubuntu/vulnerability-status.png
-[security_report_83ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.3.16-ubuntu/vulnerability-report.html
-[size_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.16-ubuntu/size-status.png
+[release_83ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.3.17-ubuntu
+[security_report_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.17-ubuntu/vulnerability-status.png
+[security_report_83ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.3.17-ubuntu/vulnerability-report.html
+[size_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.17-ubuntu/size-status.png
 
 [github_actions_84ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.4-ubuntu
 [github_actions_84ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.4-ubuntu
-[release_84ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.4.3-ubuntu
-[security_report_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.3-ubuntu/vulnerability-status.png
-[security_report_84ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.4.3-ubuntu/vulnerability-report.html
-[size_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.3-ubuntu/size-status.png
+[release_84ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.4.4-ubuntu
+[security_report_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.4-ubuntu/vulnerability-status.png
+[security_report_84ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.4.4-ubuntu/vulnerability-report.html
+[size_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.4-ubuntu/size-status.png
 
 [github_actions_82zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.2-zts
 [github_actions_82zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2-zts
