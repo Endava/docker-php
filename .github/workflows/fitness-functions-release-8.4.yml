@@ -12,7 +12,7 @@ jobs:
   configured-alpine-is-latest-version:
     name: "Ensure that Alpine 3.21 is the latest alpine version"
     env:
-      LATEST_ALPINE_RELEASE: "3.21.2"    
+      LATEST_ALPINE_RELEASE: "3.21.3"    
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
