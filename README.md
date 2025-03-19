@@ -13,17 +13,17 @@ This is a docker php image is based on an alpine (and ubuntu) distribution inclu
 
 [github_actions_84_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.4
 [github_actions_84_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.4
-[release_84_link]: https://github.com/endava/docker-php/releases/tag/8.4.4
-[security_report_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.4/vulnerability-status.png
-[security_report_84_link]: https://github.com/endava/docker-php/releases/download/8.4.4/vulnerability-report.html
-[size_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.4/size-status.png
+[release_84_link]: https://github.com/endava/docker-php/releases/tag/8.4.5
+[security_report_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.5/vulnerability-status.png
+[security_report_84_link]: https://github.com/endava/docker-php/releases/download/8.4.5/vulnerability-report.html
+[size_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.5/size-status.png
 
 [github_actions_83_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.3
 [github_actions_83_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3
-[release_83_link]: https://github.com/endava/docker-php/releases/tag/8.3.17
-[security_report_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.17/vulnerability-status.png
-[security_report_83_link]: https://github.com/endava/docker-php/releases/download/8.3.17/vulnerability-report.html
-[size_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.17/size-status.png
+[release_83_link]: https://github.com/endava/docker-php/releases/tag/8.3.18
+[security_report_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.18/vulnerability-status.png
+[security_report_83_link]: https://github.com/endava/docker-php/releases/download/8.3.18/vulnerability-report.html
+[size_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.18/size-status.png
 
 [github_actions_82_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.2
 [github_actions_82_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2
@@ -34,10 +34,10 @@ This is a docker php image is based on an alpine (and ubuntu) distribution inclu
 
 [github_actions_81_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.1
 [github_actions_81_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.1
-[release_81_link]: https://github.com/endava/docker-php/releases/tag/8.1.31
-[security_report_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.31/vulnerability-status.png
-[security_report_81_link]: https://github.com/endava/docker-php/releases/download/8.1.31/vulnerability-report.html
-[size_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.31/size-status.png
+[release_81_link]: https://github.com/endava/docker-php/releases/tag/8.1.32
+[security_report_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.32/vulnerability-status.png
+[security_report_81_link]: https://github.com/endava/docker-php/releases/download/8.1.32/vulnerability-report.html
+[size_81_badge]: https://github.com/endava/docker-php/releases/download/8.1.32/size-status.png
 
 
 # Experimental Versions
