@@ -1,4 +1,4 @@
-FROM alpine:3.21.0 AS alpine-distro
+FROM alpine:3.23 AS alpine-distro
 FROM alpine-distro AS php-zts-builder
 
 RUN apk add --no-cache libc6-compat
@@ -21,22 +21,22 @@ RUN cp /workspace/.abuild/*.rsa.pub /etc/apk/keys/
 USER alpiner
 
 
-RUN git clone -b 3.21-stable --single-branch --depth=1 https://gitlab.alpinelinux.org/alpine/aports
+RUN git clone -b 3.23-stable --single-branch --depth=1 https://gitlab.alpinelinux.org/alpine/aports
 
-WORKDIR /workspace/aports/community/php84
-RUN cp -rf /workspace/aports/community/php84 /workspace/aports/community/phpzts84
-WORKDIR /workspace/aports/community/phpzts84
-RUN sed -i -e 's/pkgname=php84/pkgname=phpzts84/' APKBUILD
+WORKDIR /workspace/aports/community/php85
+RUN cp -rf /workspace/aports/community/php85 /workspace/aports/community/phpzts85
+WORKDIR /workspace/aports/community/phpzts85
+RUN sed -i -e 's/pkgname=php85/pkgname=phpzts85/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/\$pkgname-fpm.initd/php84-fpm.initd/' APKBUILD
+RUN sed -i -e 's/\$pkgname-fpm.initd/php85-fpm.initd/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/\$pkgname-fpm.logrotate/php84-fpm.logrotate/' APKBUILD
+RUN sed -i -e 's/\$pkgname-fpm.logrotate/php85-fpm.logrotate/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/\$pkgname-module.conf/php84-module.conf/' APKBUILD
+RUN sed -i -e 's/\$pkgname-module.conf/php85-module.conf/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/\$pkgname-fpm-version-suffix.patch/php84-fpm-version-suffix.patch/' APKBUILD
+RUN sed -i -e 's/\$pkgname-fpm-version-suffix.patch/php85-fpm-version-suffix.patch/' APKBUILD
 # hadolint ignore=SC2016
-RUN sed -i -e 's/php\$_suffix-module.conf/php84-module.conf/' APKBUILD
+RUN sed -i -e 's/php\$_suffix-module.conf/php85-module.conf/' APKBUILD
 RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --enable-zend-timer --disable-zend-signals --host/' APKBUILD
 RUN sed -i -e 's/--with-openssl-argon2//' APKBUILD
 #RUN sed -i -e 's/--with-password-argon2//' APKBUILD
@@ -65,12 +65,12 @@ RUN uname -m
 RUN abuild -A
 RUN abuild checksum && abuild -r
 WORKDIR /workspace/aports/community/unit
-# make phpver3 to be phpzts84
-RUN sed -i -e 's/_phpver4=84/_phpver4=zts84/' APKBUILD
+# make phpver3 to be phpzts85
+RUN sed -i -e 's/_phpver4=85/_phpver4=zts85/' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver2 --config=php-config\$_phpver2//' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver3 --config=php-config\$_phpver3//' APKBUILD
 RUN sed -i -e 's/perl php\$_phpver2 php\$_phpver3 php\$_phpver4/perl php\$_phpver4 /' APKBUILD
-# make unit-php84 find the lphpzts84.so
+# make unit-php85 find the lphpzts85.so
 # hadolint ignore=SC2016
 #RUN sed -i -e 's/.\/configure php --module=php\$_phpver4/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& cat auto\/modules\/php \&\& .\/configure php --module=php\$_phpver4/g' APKBUILD
 RUN sed -i -e 's/_allow_fail=no/_allow_fail=yes/g' APKBUILD
@@ -79,10 +79,10 @@ RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.4.4"
-ARG PHP_PACKAGE_BASENAME="phpzts84"
-ARG PHP_PACKAGE_INCLUDE="/usr/include/php84"
-ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts84"
+ARG PHP_VERSION="8.5.1"
+ARG PHP_PACKAGE_BASENAME="phpzts85"
+ARG PHP_PACKAGE_INCLUDE="/usr/include/php85"
+ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts85"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
 ENV PHP_PACKAGE_INCLUDE=$PHP_PACKAGE_INCLUDE
@@ -153,18 +153,18 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-session
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
 
-# FIXME: we need this, since phpzts84 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php84/APKBUILD
+# FIXME: we need this, since phpzts85 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php85/APKBUILD
 WORKDIR /usr/bin
-RUN    ln -s phpzts84 php \
-    && ln -s peardevzts84 peardev \
-    && ln -s peclzts84 pecl \
-    && ln -s phpizezts84 phpize \
-    && ln -s php-configzts84 php-config \
-    && ln -s phpdbgzts84 phpdbg \
-    && ln -s lsphpzts84 lsphp \
-    && ln -s php-cgizts84 php-cgi \
-    && ln -s phar.pharzts84 phar.phar \
-    && ln -s pharzts84 phar
+RUN    ln -s phpzts85 php \
+    && ln -s peardevzts85 peardev \
+    && ln -s peclzts85 pecl \
+    && ln -s phpizezts85 phpize \
+    && ln -s php-configzts85 php-config \
+    && ln -s phpdbgzts85 phpdbg \
+    && ln -s lsphpzts85 lsphp \
+    && ln -s php-cgizts85 php-cgi \
+    && ln -s phar.pharzts85 phar.phar \
+    && ln -s pharzts85 phar
 
 FROM php-zts-base AS PECL-BUILDER-AMQP
 
@@ -418,8 +418,8 @@ RUN chown www-data:www-data /run/unit/
 RUN apk add --no-cache apache2 ${PHP_PACKAGE_BASENAME}-apache2~=${PHP_VERSION}
 # add default apache2 config file
 COPY files/apache2/apache2-default.conf /etc/apache2/conf.d/00_apache2-default.conf
-# fix that the mod_php84.so is not properly renamed in the conf
-RUN sed -i -e 's/mod_php84/mod_phpzts84/g' /etc/apache2/conf.d/php84-module.conf
+# fix that the mod_php85.so is not properly renamed in the conf
+RUN sed -i -e 's/mod_php85/mod_phpzts85/g' /etc/apache2/conf.d/php85-module.conf
 # activate rewrite module
 RUN sed -i -e 's/#LoadModule rewrite_module/LoadModule rewrite_module/g' /etc/apache2/httpd.conf
 # listen port 8080
