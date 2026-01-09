@@ -1,8 +1,8 @@
-FROM alpine:3.21.3
+FROM alpine:3.23
 
-ARG PHP_VERSION="8.4.5"
-ARG PHP_PACKAGE_BASENAME="php84"
-ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm84"
+ARG PHP_VERSION="8.5.1"
+ARG PHP_PACKAGE_BASENAME="php85"
+ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm85"
 ARG UNIT_VERSION="1.34.1"
 ARG APACHE2_VERSION="2.4.62"
 ENV PHP_VERSION=$PHP_VERSION
@@ -92,18 +92,18 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 
-# FIXME: we need this, since php84 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php84/APKBUILD
+# We need this, since php85 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php85/APKBUILD
 WORKDIR /usr/bin
-RUN    ln -s php84 php \
-    && ln -s peardev84 peardev \
-    && ln -s pecl84 pecl \
-    && ln -s phpize84 phpize \
-    && ln -s php-config84 php-config \
-    && ln -s phpdbg84 phpdbg \
-    && ln -s lsphp84 lsphp \
-    && ln -s php-cgi84 php-cgi \
-    && ln -s phar.phar84 phar.phar \
-    && ln -s phar84 phar
+RUN    ln -s php85 php \
+    && ln -s peardev85 peardev \
+    && ln -s pecl85 pecl \
+    && ln -s phpize85 phpize \
+    && ln -s php-config85 php-config \
+    && ln -s phpdbg85 phpdbg \
+    && ln -s lsphp85 lsphp \
+    && ln -s php-cgi85 php-cgi \
+    && ln -s phar.phar85 phar.phar \
+    && ln -s phar85 phar
 
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
