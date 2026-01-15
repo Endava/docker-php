@@ -4,7 +4,7 @@ ARG PHP_VERSION="8.5.1"
 ARG PHP_PACKAGE_BASENAME="php8.5"
 ARG PHP_PACKAGE_BASE_VERSION="8.5"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm8.5"
-ARG UNIT_VERSION="1.31.0"
+ARG UNIT_VERSION="1.34.2"
 ARG APACHE2_VERSION="2.4.58"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
@@ -52,7 +52,7 @@ RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-intl
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-ldap
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-mbstring
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-mysqli
-RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-opcache
+# NOTE: opcache is now built into php8.5 core, no separate package needed
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-mysql
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-pgsql
 RUN apt-get install -y  ${PHP_PACKAGE_BASENAME}-sqlite3
@@ -123,8 +123,8 @@ RUN rm /etc/php/${PHP_PACKAGE_BASE_VERSION}/fpm/php.ini \
 
 # install nginx unit and the php module for nginx unit
 RUN wget --quiet --no-verbose -O /usr/share/keyrings/nginx-keyring.gpg  https://unit.nginx.org/keys/nginx-keyring.gpg
-RUN echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ jammy unit" > /etc/apt/sources.list.d/unit.list
-RUN echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ jammy unit" >> /etc/apt/sources.list.d/unit.list
+RUN echo "deb [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ noble unit" > /etc/apt/sources.list.d/unit.list
+RUN echo "deb-src [signed-by=/usr/share/keyrings/nginx-keyring.gpg] https://packages.nginx.org/unit/ubuntu/ noble unit" >> /etc/apt/sources.list.d/unit.list
 RUN apt-get update && apt-get install -y  unit=$UNIT_VERSION-* unit-php=$UNIT_VERSION-* --no-install-recommends
 # add default nginx unit json file (listening on port 8080)
 COPY files/unit/unit-default.json /var/lib/unit/conf.json
