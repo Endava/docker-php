@@ -3,8 +3,8 @@ FROM alpine:3.23
 ARG PHP_VERSION="8.5.1"
 ARG PHP_PACKAGE_BASENAME="php85"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm85"
-ARG UNIT_VERSION="1.34.1"
-ARG APACHE2_VERSION="2.4.62"
+ARG UNIT_VERSION="1.35.0"
+ARG APACHE2_VERSION="2.4.66"
 ENV PHP_VERSION=$PHP_VERSION
 ENV PHP_PACKAGE_BASENAME=$PHP_PACKAGE_BASENAME
 ENV PHP_FPM_BINARY_PATH=$PHP_FPM_BINARY_PATH
@@ -53,7 +53,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-intl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-ldap
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-mbstring
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-mysqli
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-opcache
+# NOTE: opcache is now built into php85 core, no separate package needed
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-openssl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pcntl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
@@ -66,7 +66,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-tokenizer
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-msgpack
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-redis
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
 
@@ -80,7 +80,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-soap
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sockets
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sodium
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-sqlite3
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xdebug
+RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-xdebug
 RUN sed -i -e 's/;zend/zend/g' /etc/${PHP_PACKAGE_BASENAME}/conf.d/50_xdebug.ini
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xml
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xmlwriter
