@@ -241,7 +241,7 @@ The `-apache2` tagged docker image (because it has attached this snippet at [fil
 
 ## fpm
 
-The `/etc/php82/php-fpm.d/www.conf` is adjusted:
+The `/etc/php85/php-fpm.d/www.conf` is adjusted:
 
 * `user` + `group` is set to `www-data` to ensure it's running www-data as user/group
 * `listen` is set to `0.0.0.0:9000` to be accessible by other docker hosts
@@ -250,7 +250,7 @@ The `/etc/php82/php-fpm.d/www.conf` is adjusted:
 * `decorate_workers_output` is set to `no` to remove the decorator like `TIMESTAMP WARNING: [pool www] child 7 said into stderr "` around each message
 * `php_admin_flag[fastcgi.logging]` is set to `off` to avoid that the fastcgi consumer (e.g. nginx) duplicates the fpm messages and prefixes it like this `FastCGI sent in stderr`
 
-The `/etc/php82/php-fpm.conf` is adjusted:
+The `/etc/php85/php-fpm.conf` is adjusted:
 
 * `error_log` is set to `/dev/stderr` to log error to the stderr
 

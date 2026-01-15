@@ -142,7 +142,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-intl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-ldap
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-mbstring
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-mysqli
-RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-opcache
+# NOTE: opcache is now built into phpzts85 core, no separate package needed
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-openssl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pcntl
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pdo_mysql
@@ -170,7 +170,7 @@ FROM php-zts-base AS PECL-BUILDER-AMQP
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install amqp \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install amqp \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
     && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/40_amqp.ini \
     && apk del --no-network .build-deps \
@@ -180,7 +180,7 @@ FROM php-zts-base AS PECL-BUILDER-APCU
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-apcu
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install apcu \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install apcu \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/apcu.so \
     && echo "extension=apcu" > /etc/$PHP_PACKAGE_BASENAME/conf.d/apcu.ini \
     && apk del --no-network .build-deps
@@ -189,7 +189,7 @@ FROM php-zts-base AS PECL-BUILDER-IGBINARY
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-igbinary
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install igbinary \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install igbinary \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/igbinary.so \
     && echo "extension=igbinary" > /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.ini \
     && apk del --no-network .build-deps
@@ -202,7 +202,7 @@ RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automa
     && wget --quiet --no-verbose https://github.com/Imagick/imagick/archive/refs/heads/3.7.0.tar.gz -O /tmp/imagick.tar.gz \
     && tar --strip-components=1 -xf /tmp/imagick.tar.gz \
     && sed -i -e 's/php_strtolower/zend_str_tolower/' imagick.c \
-    && phpizezts84 \
+    && phpizezts85 \
     && ./configure \
     && MAKEFLAGS="-j $(nproc)" make \
     && MAKEFLAGS="-j $(nproc)" make install \
@@ -216,7 +216,7 @@ FROM php-zts-base AS PECL-BUILDER-MSGPACK
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-msgpack
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install msgpack \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install msgpack \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/msgpack.so \
     && echo "extension=msgpack" > /etc/$PHP_PACKAGE_BASENAME/conf.d/10_msgpack.ini \
     && apk del --no-network .build-deps
@@ -231,7 +231,7 @@ COPY --from=PECL-BUILDER-MSGPACK /etc/$PHP_PACKAGE_BASENAME/conf.d/10_msgpack.in
 COPY --from=PECL-BUILDER-MSGPACK $PHP_PACKAGE_INCLUDE/ext/msgpack $PHP_PACKAGE_INCLUDE/ext/msgpack
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-memcached
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers zlib-dev libmemcached-dev cyrus-sasl-dev libevent-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install -D 'enable-memcached-igbinary="yes" enable-memcached-session="yes" enable-memcached-json="yes" enable-memcached-protocol="yes" enable-memcached-msgpack="yes"' memcached \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install -D 'enable-memcached-igbinary="yes" enable-memcached-session="yes" enable-memcached-json="yes" enable-memcached-protocol="yes" enable-memcached-msgpack="yes"' memcached \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/memcached.so \
     && echo "extension=memcached" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_memcached.ini \
     && apk del --no-network .build-deps \
@@ -241,7 +241,7 @@ FROM php-zts-base AS PECL-BUILDER-PROTOBUF
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-protobuf
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install protobuf \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install protobuf \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/protobuf.so \
     && echo "extension=protobuf" > /etc/$PHP_PACKAGE_BASENAME/conf.d/protobuf.ini \
     && apk del --no-network .build-deps
@@ -253,7 +253,7 @@ COPY --from=PECL-BUILDER-IGBINARY /etc/$PHP_PACKAGE_BASENAME/conf.d/10_igbinary.
 COPY --from=PECL-BUILDER-IGBINARY $PHP_PACKAGE_INCLUDE/ext/igbinary $PHP_PACKAGE_INCLUDE/ext/igbinary
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-redis
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers lz4-dev zstd-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install -D 'enable-redis-igbinary="yes" enable-redis-lz4="yes" with-liblz4="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' redis \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install -D 'enable-redis-igbinary="yes" enable-redis-lz4="yes" with-liblz4="yes" enable-redis-lzf="yes" enable-redis-zstd="yes"' redis \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/redis.so \
     && echo "extension=redis" > /etc/$PHP_PACKAGE_BASENAME/conf.d/20_redis.ini \
     && apk del --no-network .build-deps
@@ -262,7 +262,7 @@ FROM php-zts-base AS PECL-BUILDER-XDEBUG
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-xdebug
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install xdebug \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install xdebug \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/xdebug.so \
     && echo ";zend_extension=xdebug.so" > /etc/$PHP_PACKAGE_BASENAME/conf.d/50_xdebug.ini \
     && echo ";xdebug.mode=off" >> /etc/$PHP_PACKAGE_BASENAME/conf.d/50_xdebug.ini \
@@ -273,7 +273,7 @@ FROM php-zts-base AS PECL-BUILDER-GRPC
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install grpc \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install grpc \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/grpc.so \
     && echo "extension=grpc" > /etc/$PHP_PACKAGE_BASENAME/conf.d/grpc.ini \
     && apk del --no-network .build-deps
@@ -282,7 +282,7 @@ FROM php-zts-base AS PECL-BUILDER-PCOV
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov~=$PCOV_EXTENSION_VERSION --repository $PCOV_EXTENSION_REPOSITORY
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts84 install pcov \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install pcov \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/pcov.so \
     && echo "extension=pcov" > /etc/$PHP_PACKAGE_BASENAME/conf.d/pcov.ini \
     && apk del --no-network .build-deps
