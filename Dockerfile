@@ -64,12 +64,10 @@ RUN arch
 RUN uname -m
 RUN abuild -A
 RUN abuild checksum && abuild -r
-WORKDIR /workspace/aports/community/unit
-# make phpver3 to be phpzts85
-RUN sed -i -e 's/_phpver4=85/_phpver4=zts85/' APKBUILD
-RUN sed -i -e 's/.\/configure php --module=php\$_phpver2 --config=php-config\$_phpver2//' APKBUILD
-RUN sed -i -e 's/.\/configure php --module=php\$_phpver3 --config=php-config\$_phpver3//' APKBUILD
-RUN sed -i -e 's/perl php\$_phpver2 php\$_phpver3 php\$_phpver4/perl php\$_phpver4 /' APKBUILD
+WORKDIR /workspace/aports/community/unit-php85
+# rename package and change PHP version for ZTS build
+RUN sed -i -e 's/pkgname=unit-php85/pkgname=unit-phpzts85/' APKBUILD
+RUN sed -i -e 's/_phpver=85/_phpver=zts85/' APKBUILD
 # make unit-php85 find the lphpzts85.so
 # hadolint ignore=SC2016
 #RUN sed -i -e 's/.\/configure php --module=php\$_phpver4/sed -i -e "s\/lphp\/lphpzts\/g" auto\/modules\/php \&\& cat auto\/modules\/php \&\& .\/configure php --module=php\$_phpver4/g' APKBUILD
@@ -199,9 +197,8 @@ FROM php-zts-base AS PECL-BUILDER-IMAGICK
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-imagick
 # FIXME: we do this because of https://github.com/Imagick/imagick/issues/689
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers imagemagick imagemagick-dev imagemagick-libs ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && wget --quiet --no-verbose https://github.com/Imagick/imagick/archive/refs/heads/3.7.0.tar.gz -O /tmp/imagick.tar.gz \
+    && wget --quiet --no-verbose https://github.com/Imagick/imagick/archive/refs/tags/3.8.1.tar.gz -O /tmp/imagick.tar.gz \
     && tar --strip-components=1 -xf /tmp/imagick.tar.gz \
-    && sed -i -e 's/php_strtolower/zend_str_tolower/' imagick.c \
     && phpizezts85 \
     && ./configure \
     && MAKEFLAGS="-j $(nproc)" make \
@@ -273,7 +270,7 @@ FROM php-zts-base AS PECL-BUILDER-GRPC
 
 # FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc~=$GRPC_EXTENSION_VERSION --repository $GRPC_EXTENSION_REPOSITORY
 RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" peclzts85 install grpc \
+    && MAKEFLAGS="-j $(nproc)" peclzts85 install grpc-1.78.0RC2 \
     && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/grpc.so \
     && echo "extension=grpc" > /etc/$PHP_PACKAGE_BASENAME/conf.d/grpc.ini \
     && apk del --no-network .build-deps
@@ -302,13 +299,13 @@ RUN apk add --no-cache binutils build-base libstdc++ cmake automake libtool linu
 
 # install caddy with frankenphp
 # hadolint ignore=SC2016,SC2086,DL3003
-RUN apk add --no-cache go~=1.23 --virtual .go-build-deps \
+RUN apk add --no-cache go~=1.25 --virtual .go-build-deps \
     && apk add --no-cache libxml2-dev sqlite-dev argon2-dev brotli-dev build-base openssl-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
     && cd /opt \
     && find / | grep php | grep .so \
-    && git clone https://github.com/dunglas/frankenphp.git --recursive  --branch v1.4.0 --single-branch \
+    && git clone https://github.com/php/frankenphp.git --recursive  --branch v1.11.1 --single-branch \
     && cd /opt/frankenphp/caddy/frankenphp \
-    && export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 `php-config --includes`" \
+    && export PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -Wno-error=attributes `php-config --includes`" \
     && export PHP_CPPFLAGS="$PHP_CFLAGS" \
     && export PHP_LDFLAGS="-Wl,-O1 -pie `php-config --ldflags` `php-config --libs` -Wl,-rpath,/usr/lib/${PHP_PACKAGE_BASENAME} -L/usr/lib/${PHP_PACKAGE_BASENAME}" \
     && export CGO_LDFLAGS="$PHP_LDFLAGS" CGO_CFLAGS=$PHP_CFLAGS CGO_CPPFLAGS=$PHP_CPPFLAGS \
