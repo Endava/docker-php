@@ -41,7 +41,7 @@ jobs:
   build-arm64:
     name: Build PHP Image arm64
 
-    runs-on: ARM64
+    runs-on: ubuntu-24.04-arm
 
     continue-on-error: false
 
