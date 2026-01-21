@@ -12,7 +12,7 @@ $ echo '<?php phpinfo();' > public/index.php
 2. Run the NGINX Unit Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.5.1-unit
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:-unit
 ```
 
 and open http://localhost:8080 to see phpinfo unit.
@@ -26,7 +26,7 @@ Time per request:       12.144 [ms] (mean)
 3. Run the Apache2 Version with:
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.5.1-apache2
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:-apache2
 ```
 
 and open http://localhost:8080 to see phpinfo on apache2.
@@ -48,7 +48,7 @@ version: "2.1"
 
 services:
   php-cli:
-    image: endava/php:8.5.1
+    image: endava/php:
     volumes:
       - ./:/usr/src/app
     user: "${UID-www-data}:${GID-www-data}"
@@ -56,7 +56,7 @@ services:
     depends_on:
       - nginx
   php-fpm:
-    image: endava/php:8.5.1-fpm
+    image: endava/php:-fpm
     user: "${UID-www-data}:${GID-www-data}"
     volumes:
       - ./:/usr/src/app
@@ -252,7 +252,7 @@ You can define the crontab's content with an environment variable like this:
 ```yaml
 services:
   import-data-cron:
-    image: endava/php:8.5.1
+    image: endava/php:
     command: start-cron
     environment:
       - 'CRONTAB_USER=www-data'
@@ -296,7 +296,7 @@ Usage in your `docker-compose.yml`:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.5.1
+    image: endava/php:
     command: start-cron
     volumes:
       - ./:/usr/src/app
@@ -309,7 +309,7 @@ cron location with the `CRON_PATH` environment variable:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.5.1
+    image: endava/php:
     command: start-cron
     environment:
       - CRON_PATH=/usr/src/app/crontabs
