@@ -1,4 +1,4 @@
-# endava/docker-php:8.4.x-zts
+# endava/docker-php:8.5.x-zts
 
 ## Usage
 
@@ -12,7 +12,7 @@ $ echo '<?php phpinfo();' > public/index.php
 ### Run the NGINX Unit Version
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.4.2-zts-unit
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.5.1-zts-unit
 ```
 
 and open http://localhost:8080 to see phpinfo unit.
@@ -26,7 +26,7 @@ Time per request:       23.207 [ms] (mean)
 ### Run the Apache2 Version
 
 ```shell
-$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.4.2-zts-apache2
+$ docker run --rm -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.5.1-zts-apache2
 ```
 
 and open http://localhost:8080 to see phpinfo on apache2.
@@ -48,7 +48,7 @@ version: "2.1"
 
 services:
   php-cli:
-    image: endava/php:8.4.2-zts
+    image: endava/php:8.5.1-zts
     volumes:
       - ./:/usr/src/app
     user: "${UID-www-data}:${GID-www-data}"
@@ -56,7 +56,7 @@ services:
     depends_on:
       - nginx
   php-fpm:
-    image: endava/php:8.4.2-zts-fpm
+    image: endava/php:8.5.1-zts-fpm
     user: "${UID-www-data}:${GID-www-data}"
     volumes:
       - ./:/usr/src/app
@@ -99,11 +99,11 @@ $docker-compose run php-cli
 ⠿ Container docker-php-php-fpm-1
 ⠿ Container docker-php-nginx-1
 bash-5.1$ php -v
-PHP 8.4.2 (cli) (built: Jan 15 2025 22:38:51) (ZTS)
+PHP 8.5.1 (cli) (built: Jan 9 2026 22:38:51) (ZTS)
 Copyright (c) The PHP Group
-Zend Engine v4.4.2, Copyright (c) Zend Technologies
-    with Zend OPcache v8.4.2, Copyright (c), by Zend Technologies
-    with Xdebug v3.4.1, Copyright (c) 2002-2025, by Derick Rethans
+Zend Engine v4.5.1, Copyright (c) Zend Technologies
+    with Zend OPcache v8.5.1, Copyright (c), by Zend Technologies
+    with Xdebug v3.5.0, Copyright (c) 2002-2026, by Derick Rethans
 ```
 
 and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
@@ -111,7 +111,7 @@ and open http://localhost:8080/ to see phpinfo with FPM/FastCGI as server api.
 ### Run the frankenphp https Version
 
 ```shell
-$ docker run --rm -p 8443:443 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.4.2-zts-frankenphp
+$ docker run --rm -p 8443:443 -v `pwd`/public:/usr/src/app/public -it  endava/php:8.5.1-zts-frankenphp
 ```
 
 and open https://localhost:8443/ to see phpinfo with frankenphp as server api.
@@ -127,7 +127,7 @@ Time per request:       21.920 [ms] (mean)
 ### Run the frankenphp http Version
 
 ```shell
-$ docker run --rm -e SERVER_NAME=http://:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it endava/php:8.4.2-zts-frankenphp
+$ docker run --rm -e SERVER_NAME=http://:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it endava/php:8.5.1-zts-frankenphp
 ```
 
 and open https://localhost:8443/ to see phpinfo with frankenphp as server api.
@@ -143,7 +143,7 @@ Time per request:       21.920 [ms] (mean)
 ### Run the frankenphp http worker Version
 
 ```shell
-$ docker run --rm  -e FRANKENPHP_CONFIG="worker ./public/index.php" -e SERVER_NAME=http://:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it endava/php:8.4.2-zts-frankenphp
+$ docker run --rm  -e FRANKENPHP_CONFIG="worker ./public/index.php" -e SERVER_NAME=http://:8080 -p 8080:8080 -v `pwd`/public:/usr/src/app/public -it endava/php:8.5.1-zts-frankenphp
 ```
 
 and index.php like this:
@@ -241,7 +241,7 @@ The `-apache2` tagged docker image (because it has attached this snippet at [fil
 
 ## fpm
 
-The `/etc/php82/php-fpm.d/www.conf` is adjusted:
+The `/etc/php85/php-fpm.d/www.conf` is adjusted:
 
 * `user` + `group` is set to `www-data` to ensure it's running www-data as user/group
 * `listen` is set to `0.0.0.0:9000` to be accessible by other docker hosts
@@ -250,7 +250,7 @@ The `/etc/php82/php-fpm.d/www.conf` is adjusted:
 * `decorate_workers_output` is set to `no` to remove the decorator like `TIMESTAMP WARNING: [pool www] child 7 said into stderr "` around each message
 * `php_admin_flag[fastcgi.logging]` is set to `off` to avoid that the fastcgi consumer (e.g. nginx) duplicates the fpm messages and prefixes it like this `FastCGI sent in stderr`
 
-The `/etc/php82/php-fpm.conf` is adjusted:
+The `/etc/php85/php-fpm.conf` is adjusted:
 
 * `error_log` is set to `/dev/stderr` to log error to the stderr
 
@@ -317,7 +317,7 @@ You can define the crontab's content with an environment variable like this:
 ```yaml
 services:
   import-data-cron:
-    image: endava/php:8.4.2-zts
+    image: endava/php:8.5.1-zts
     command: start-cron
     environment:
       - 'CRONTAB_USER=www-data'
@@ -361,7 +361,7 @@ Usage in your `docker-compose.yml`:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.4.2-zts
+    image: endava/php:8.5.1-zts
     command: start-cron
     volumes:
       - ./:/usr/src/app
@@ -374,7 +374,7 @@ cron location with the `CRON_PATH` environment variable:
 ```yaml
 services:
   crontab:
-    image: endava/php:8.4.2-zts
+    image: endava/php:8.5.1-zts
     command: start-cron
     environment:
       - CRON_PATH=/usr/src/app/crontabs
