@@ -41,7 +41,7 @@ jobs:
   build-arm64:
     name: Build PHP Image arm64
 
-    runs-on: ARM64
+    runs-on: ubuntu-24.04-arm
 
     continue-on-error: false
 
@@ -108,7 +108,7 @@ jobs:
           run: docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -v
 
       -   name: "PHP_VERSION Env"
-          run: echo "PHP_VERSION=`docker run --pull=never --rm -t temporary-build-image-linux-amd64 php -r 'echo $_SERVER[\"PHP_VERSION\"];'`-ubuntu" >> $GITHUB_ENV
+          run: echo "PHP_VERSION=$(docker run --pull=never --rm temporary-build-image-linux-amd64 printenv PHP_VERSION)-ubuntu" >> $GITHUB_ENV
 
       -   name: Tag also with php:${{ env.PHP_VERSION }}
           run: docker tag temporary-build-image-linux-amd64 php-${{ env.PHP_VERSION }}
