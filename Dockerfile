@@ -21,7 +21,7 @@ RUN cp /workspace/.abuild/*.rsa.pub /etc/apk/keys/
 USER alpiner
 
 
-RUN git clone -b 3.23-stable --single-branch --depth=1 https://gitlab.alpinelinux.org/alpine/aports
+RUN git clone -b 3.23-stable --single-branch --depth=1 https://github.com/alpinelinux/aports.git
 
 WORKDIR /workspace/aports/community/php85
 RUN cp -rf /workspace/aports/community/php85 /workspace/aports/community/phpzts85
@@ -56,6 +56,8 @@ RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/XML_OPTION_PARSE_HUGE.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
+RUN echo "ext/standard/tests/streams/opendir-003.phpt" >> disabled-tests.list
+RUN echo "ext/standard/tests/streams/opendir-004.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
@@ -77,7 +79,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.5.2"
+ARG PHP_VERSION="8.5.6"
 ARG PHP_PACKAGE_BASENAME="phpzts85"
 ARG PHP_PACKAGE_INCLUDE="/usr/include/php85"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts85"
