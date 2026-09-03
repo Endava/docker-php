@@ -43,7 +43,7 @@ jobs:
       matrix:
         include:
           - platform: linux/arm64
-            runs_on: ARM64
+            runs_on: ubuntu-24.04-arm
           - platform: linux/amd64
             runs_on: 'ubuntu-latest'
        # exclude:
@@ -90,7 +90,7 @@ jobs:
       matrix:
         include:
           - platform: linux/arm64
-            runs_on: ARM64
+            runs_on: ubuntu-24.04-arm
           - platform: linux/amd64
             runs_on: 'ubuntu-latest'
         #exclude:
@@ -153,7 +153,7 @@ jobs:
       matrix:
         include:
           - platform: linux/arm64
-            runs_on: ARM64
+            runs_on: ubuntu-24.04-arm
           - platform: linux/amd64
             runs_on: 'ubuntu-latest'
         #exclude:
@@ -225,7 +225,7 @@ jobs:
       matrix:
         include:
           - platform: linux/arm64
-            runs_on: ARM64
+            runs_on: ubuntu-24.04-arm
           - platform: linux/amd64
             runs_on: 'ubuntu-latest'
         #exclude:
@@ -431,5 +431,4 @@ jobs:
             push: ${{ github.repository == 'Endava/docker-php' && github.event_name != 'pull_request' }}
             tags: ${{ steps.meta.outputs.tags }}
             labels: ${{ steps.meta.outputs.labels }}
-
 
