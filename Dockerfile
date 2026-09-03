@@ -1,6 +1,6 @@
 FROM ubuntu:noble-20240605
 
-ARG PHP_VERSION="8.2.28"
+ARG PHP_VERSION="8.2.33"
 ARG PHP_PACKAGE_BASENAME="php8.2"
 ARG PHP_PACKAGE_BASE_VERSION="8.2"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm8.2"
@@ -167,9 +167,9 @@ COPY files/cron/start-cron /usr/sbin/start-cron
 RUN chmod +x /usr/sbin/start-cron
 
 # install symfony cli
-RUN wget --quiet --no-verbose 'https://dl.cloudsmith.io/public/symfony/stable/setup.deb.sh' -O /tmp/setup-symfony-cli.deb.sh \
-   && bash -o pipefail /tmp/setup-symfony-cli.deb.sh \
-   && rm /tmp/setup-symfony-cli.deb.sh
+RUN wget --quiet --no-verbose 'https://get.symfony.com/cli/installer' -O /tmp/symfony-cli-installer \
+   && bash /tmp/symfony-cli-installer --install-dir=/usr/local/bin \
+   && rm /tmp/symfony-cli-installer
 
 # give www-data it's home directory
 RUN chown www-data:www-data /var/www
