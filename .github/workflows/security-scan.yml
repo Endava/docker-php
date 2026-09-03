@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+  workflow_dispatch:
   schedule:
     - cron:  '15 10 * * *' # each day at 10:15 UTC
 
