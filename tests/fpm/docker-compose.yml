@@ -1,5 +1,3 @@
-version: "2.1"
-
 services:
   php-cli:
     image: $DOCKER_REGISTRY_IMAGE
