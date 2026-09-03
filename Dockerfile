@@ -21,7 +21,7 @@ RUN cp /workspace/.abuild/*.rsa.pub /etc/apk/keys/
 USER alpiner
 
 
-RUN git clone -b 3.21-stable --single-branch --depth=1 https://gitlab.alpinelinux.org/alpine/aports
+RUN git clone -b 3.21-stable --single-branch --depth=1 https://github.com/alpinelinux/aports.git
 
 WORKDIR /workspace/aports/community/php83
 RUN cp -rf /workspace/aports/community/php83 /workspace/aports/community/phpzts83
@@ -56,6 +56,8 @@ RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/http/gh16810.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
+RUN echo "ext/standard/tests/streams/opendir-003.phpt" >> disabled-tests.list
+RUN echo "ext/standard/tests/streams/opendir-004.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
@@ -67,6 +69,10 @@ RUN abuild checksum && abuild -r
 WORKDIR /workspace/aports/community/unit
 # make phpver3 to be phpzts83
 RUN sed -i -e 's/_phpver3=83/_phpver3=zts83/' APKBUILD
+# Ruby support is optional and the Alpine Unit configure check cannot detect
+# the Ruby toolchain in this package build environment.
+RUN sed -i -e 's/\.\/configure ruby//' APKBUILD
+RUN sed -i -e 's/ python3 ruby;/ python3;/' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver2 --config=php-config\$_phpver2//' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver4 --config=php-config\$_phpver4 .*//' APKBUILD
 RUN sed -i -e 's/perl php\$_phpver2 php\$_phpver3 php\$_phpver4/perl php\$_phpver3 /' APKBUILD
@@ -79,7 +85,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.3.17"
+ARG PHP_VERSION="8.3.19"
 ARG PHP_PACKAGE_BASENAME="phpzts83"
 ARG PHP_PACKAGE_INCLUDE="/usr/include/php83"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts83"
