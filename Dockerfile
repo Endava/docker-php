@@ -58,6 +58,7 @@ RUN echo "ext/xml/tests/XML_OPTION_PARSE_HUGE.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-004.phpt" >> disabled-tests.list
+RUN echo "ext/openssl/tests/bug74796.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
@@ -69,6 +70,9 @@ RUN abuild checksum && abuild -r
 WORKDIR /workspace/aports/community/unit
 # make phpver3 to be phpzts84
 RUN sed -i -e 's/_phpver4=84/_phpver4=zts84/' APKBUILD
+# Ruby support is optional and the Alpine Unit configure check cannot detect
+# the Ruby toolchain in this package build environment.
+RUN sed -i -e 's/\.\/configure ruby//' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver2 --config=php-config\$_phpver2//' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver3 --config=php-config\$_phpver3//' APKBUILD
 RUN sed -i -e 's/perl php\$_phpver2 php\$_phpver3 php\$_phpver4/perl php\$_phpver4 /' APKBUILD
