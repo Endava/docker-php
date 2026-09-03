@@ -157,9 +157,29 @@ The new approach has a disadvantage:
 
 
 
+# Release Branch Maintenance
+
+Each `release/X.Y` branch is an independent image line. Its PHP point version
+is pinned in that branch's `Dockerfile`; changes to `main` do not update release
+branches automatically.
+
+For a release update:
+
+1. Fork the repository and create a branch from the matching `release/X.Y`
+   branch.
+2. Update the branch's Dockerfile and workflow configuration as required.
+3. Open a pull request from the fork to the matching Endava release branch.
+4. Wait for the amd64, ARM64, test, scan, and upload checks to pass.
+5. After review and merge, create the semver release tag through the normal
+   Endava release flow.
+
+ARM64 jobs run on GitHub-hosted `ubuntu-24.04-arm` runners. Update the release
+tables and artifact badges only after the release tag, vulnerability report,
+and image-size artifacts exist; unreleased versions should not be linked from
+this README.
+
 # Contributing
 Please refer to [CONTRIBUTING.md](CONTRIBUTING.md). 
 
 # License
 Please refer to [LICENSE](LICENSE). 
-
