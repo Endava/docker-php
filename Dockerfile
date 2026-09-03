@@ -77,7 +77,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.5.2"
+ARG PHP_VERSION="8.5.6"
 ARG PHP_PACKAGE_BASENAME="phpzts85"
 ARG PHP_PACKAGE_INCLUDE="/usr/include/php85"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts85"
