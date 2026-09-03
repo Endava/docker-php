@@ -63,7 +63,7 @@ jobs:
       -   name: "Export image"
           run: mv dockercache armcache
       -   name: 'Upload Artifact'
-          uses: actions/upload-artifact@v3
+          uses: actions/upload-artifact@v4
           with:
             name: armcache
             path: armcache
@@ -91,7 +91,7 @@ jobs:
             path: amdcache
 
       -   name: Download arm64
-          uses: actions/download-artifact@v3
+          uses: actions/download-artifact@v4
           with:
             name: armcache
             path: armcache
