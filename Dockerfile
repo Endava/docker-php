@@ -21,7 +21,7 @@ RUN cp /workspace/.abuild/*.rsa.pub /etc/apk/keys/
 USER alpiner
 
 
-RUN git clone -b 3.21-stable --single-branch --depth=1 https://gitlab.alpinelinux.org/alpine/aports
+RUN git clone -b 3.21-stable --single-branch --depth=1 https://github.com/alpinelinux/aports.git
 
 WORKDIR /workspace/aports/community/php84
 RUN cp -rf /workspace/aports/community/php84 /workspace/aports/community/phpzts84
