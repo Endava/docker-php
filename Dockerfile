@@ -37,6 +37,7 @@ RUN apt-get install -y --no-install-recommends \
     sed
 
 RUN apt-get install -y ${PHP_PACKAGE_BASENAME}=${PHP_VERSION}-* lib${PHP_PACKAGE_BASENAME}-embed=${PHP_VERSION}-*
+RUN rm -f /etc/php/${PHP_PACKAGE_BASE_VERSION}/cli/conf.d/20-pcntl.ini
 
 ENV PHP_INI_DIR=/etc/php/${PHP_PACKAGE_BASE_VERSION}/
 
