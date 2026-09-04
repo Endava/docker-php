@@ -83,7 +83,7 @@ jobs:
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'template'
-            template: '@/contrib/html.tpl'
+            template: '@$HOME/.local/bin/trivy-bin/contrib/html.tpl'
             output: 'vulnerability-report.html'
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file
