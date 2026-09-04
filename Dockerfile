@@ -94,7 +94,7 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 
 # We need this, since php85 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php85/APKBUILD
 WORKDIR /usr/bin
-RUN    ln -s php85 php \
+RUN    ln -sf php85 php \
     && ln -s peardev85 peardev \
     && ln -s pecl85 pecl \
     && ln -s phpize85 phpize \
