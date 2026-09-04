@@ -36,7 +36,7 @@ jobs:
           - 'release/8.5-zts'
     steps:
       -   name: "Checkout code"
-          uses: actions/checkout@v3
+          uses: actions/checkout@v6
           with:
             ref: ${{ matrix.branch-name }}
 
@@ -118,14 +118,14 @@ jobs:
 
       -   if: contains(github.ref, 'refs/heads/main')
           name: Upload Alpine Trivy scan results to GitHub Security tab
-          uses: github/codeql-action/upload-sarif@v2
+          uses: github/codeql-action/upload-sarif@v4
           with:
             ref: refs/heads/${{ matrix.branch-name }}
             sha: ${{ env.BRANCH_SHA }}
             sarif_file: 'trivy-results.sarif'
       -   if: contains(github.ref, 'refs/heads/main')
           name: Run Snyk to check Docker images for vulnerabilities
-          uses: snyk/actions/docker@master
+          uses: snyk/actions/docker@v1.0.0
           continue-on-error: true
           env:
              SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
@@ -135,7 +135,7 @@ jobs:
             command: monitor
       -   if: contains(github.ref, 'refs/heads/main')
           name: Upload vulnerability Report to Github Release Artifacts
-          uses: softprops/action-gh-release@v1
+          uses: softprops/action-gh-release@v3
           with:
             tag_name: ${{ env.PHP_VERSION }}
             append_body: true
