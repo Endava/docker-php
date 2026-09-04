@@ -60,6 +60,10 @@ jobs:
       -   name: "Build Ubuntu"
           run: >
             ./build_images.sh temporary-build-image linux/arm64/v8
+      -   name: "Check PCNTL on arm64"
+          run: tests/test_pcntl.sh
+          env:
+            DOCKER_REGISTRY_IMAGE: "temporary-build-image-linux-arm64-v8"
       -   name: "Export image"
           run: mv dockercache armcache
       -   name: 'Upload Artifact'
