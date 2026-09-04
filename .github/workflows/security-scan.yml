@@ -24,7 +24,6 @@ jobs:
           - 'release/8.1'
           - 'release/8.1-ubuntu'
           - 'release/8.2'
-          - 'release/8.2-zts'
           - 'release/8.2-ubuntu'
           - 'release/8.3'
           - 'release/8.3-zts'
@@ -76,6 +75,9 @@ jobs:
             vuln-type: 'os,library'
             severity: 'CRITICAL,HIGH'
 
+      -   name: Download Trivy HTML template
+          run: wget --quiet --show-progress --location https://raw.githubusercontent.com/aquasecurity/trivy/v0.70.0/contrib/html.tpl -O trivy-html.tpl
+
       -   name: Run Alpine Trivy vulnerability scanner and create html file
           uses: aquasecurity/trivy-action@v0.36.0
           env:
@@ -83,7 +85,7 @@ jobs:
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'template'
-            template: '@$HOME/.local/bin/trivy-bin/contrib/html.tpl'
+            template: '@trivy-html.tpl'
             output: 'vulnerability-report.html'
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file

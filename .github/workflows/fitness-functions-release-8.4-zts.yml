@@ -25,7 +25,7 @@ jobs:
     steps:
       -  name: Execute
          run: >
-             curl -sS https://github.com/dunglas/frankenphp/blob/main/go.mod | grep "go1.23"
+             curl -fsSL https://raw.githubusercontent.com/dunglas/frankenphp/v1.4.0/go.mod | grep -E '^toolchain go1\.23(\.|$)'
 
   packages-not-available-on-alpine-for-release-8-4-zts:
     name: Package not available on alpine for php 8.4 zts 3.21 community, yet
