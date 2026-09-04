@@ -76,7 +76,7 @@ jobs:
             severity: 'CRITICAL,HIGH'
 
       -   name: Download Trivy HTML template
-          run: wget --quiet --show-progress --location https://raw.githubusercontent.com/aquasecurity/trivy/v0.70.0/contrib/html.tpl -O trivy-html.tpl
+          run: curl --fail --silent --show-error --location https://raw.githubusercontent.com/aquasecurity/trivy/v0.70.0/contrib/html.tpl --output trivy-html.tpl
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file
           uses: aquasecurity/trivy-action@v0.36.0
