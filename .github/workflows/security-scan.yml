@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'main'
+  workflow_dispatch:
   schedule:
     - cron:  '15 10 * * *' # each day at 10:15 UTC
 
@@ -23,7 +24,6 @@ jobs:
           - 'release/8.1'
           - 'release/8.1-ubuntu'
           - 'release/8.2'
-          - 'release/8.2-zts'
           - 'release/8.2-ubuntu'
           - 'release/8.3'
           - 'release/8.3-zts'
@@ -31,6 +31,9 @@ jobs:
           - 'release/8.4'
           - 'release/8.4-ubuntu'
           - 'release/8.4-zts'
+          - 'release/8.5'
+          - 'release/8.5-ubuntu'
+          - 'release/8.5-zts'
     steps:
       -   name: "Checkout code"
           uses: actions/checkout@v3
@@ -61,7 +64,7 @@ jobs:
       -   run: wget "https://img.shields.io/static/v1.png?label=${{ env.PHP_VERSION }}&message=${{ env.IMAGE_SIZE }}&color=blue" -O size-status.png
 
       -   name: Run Alpine Trivy vulnerability scanner
-          uses: aquasecurity/trivy-action@0.24.0
+          uses: aquasecurity/trivy-action@v0.36.0
           env:
             TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
@@ -72,18 +75,21 @@ jobs:
             vuln-type: 'os,library'
             severity: 'CRITICAL,HIGH'
 
+      -   name: Download Trivy HTML template
+          run: curl --fail --silent --show-error --location https://raw.githubusercontent.com/aquasecurity/trivy/v0.70.0/contrib/html.tpl --output trivy-html.tpl
+
       -   name: Run Alpine Trivy vulnerability scanner and create html file
-          uses: aquasecurity/trivy-action@0.24.0
+          uses: aquasecurity/trivy-action@v0.36.0
           env:
             TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'template'
-            template: '@/contrib/html.tpl'
+            template: '@trivy-html.tpl'
             output: 'vulnerability-report.html'
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file
-          uses: aquasecurity/trivy-action@0.24.0
+          uses: aquasecurity/trivy-action@v0.36.0
           env:
             TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
@@ -102,7 +108,7 @@ jobs:
           run: wget "https://img.shields.io/static/v1.png?label=vulnerabilites&message=${{ env.FIXED_VULNERABILITIES }}&color=red" -O vulnerability-status.png
 
       -   name: Run Alpine Trivy vulnerability scanner and upload to github security tab
-          uses: aquasecurity/trivy-action@0.24.0
+          uses: aquasecurity/trivy-action@v0.36.0
           env:
             TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
