@@ -13,24 +13,24 @@ This is a docker php image is based on an alpine (and ubuntu) distribution inclu
 
 [github_actions_85_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.5
 [github_actions_85_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.5
-[release_85_link]: https://github.com/endava/docker-php/releases/tag/8.5.0
-[security_report_85_badge]: https://github.com/endava/docker-php/releases/download/8.5.0/vulnerability-status.png
-[security_report_85_link]: https://github.com/endava/docker-php/releases/download/8.5.0/vulnerability-report.html
-[size_85_badge]: https://github.com/endava/docker-php/releases/download/8.5.0/size-status.png
+[release_85_link]: https://github.com/endava/docker-php/releases/tag/8.5.6
+[security_report_85_badge]: https://github.com/endava/docker-php/releases/download/8.5.6/vulnerability-status.png
+[security_report_85_link]: https://github.com/endava/docker-php/releases/download/8.5.6/vulnerability-report.html
+[size_85_badge]: https://github.com/endava/docker-php/releases/download/8.5.6/size-status.png
 
 [github_actions_84_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.4
 [github_actions_84_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.4
-[release_84_link]: https://github.com/endava/docker-php/releases/tag/8.4.5
-[security_report_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.5/vulnerability-status.png
-[security_report_84_link]: https://github.com/endava/docker-php/releases/download/8.4.5/vulnerability-report.html
-[size_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.5/size-status.png
+[release_84_link]: https://github.com/endava/docker-php/releases/tag/8.4.14
+[security_report_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.14/vulnerability-status.png
+[security_report_84_link]: https://github.com/endava/docker-php/releases/download/8.4.14/vulnerability-report.html
+[size_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.14/size-status.png
 
 [github_actions_83_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.3
 [github_actions_83_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3
-[release_83_link]: https://github.com/endava/docker-php/releases/tag/8.3.18
-[security_report_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.18/vulnerability-status.png
-[security_report_83_link]: https://github.com/endava/docker-php/releases/download/8.3.18/vulnerability-report.html
-[size_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.18/size-status.png
+[release_83_link]: https://github.com/endava/docker-php/releases/tag/8.3.19
+[security_report_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.19/vulnerability-status.png
+[security_report_83_link]: https://github.com/endava/docker-php/releases/download/8.3.19/vulnerability-report.html
+[size_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.19/size-status.png
 
 [github_actions_82_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.2
 [github_actions_82_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2
@@ -52,9 +52,11 @@ This is a docker php image is based on an alpine (and ubuntu) distribution inclu
 
 | Version | Branch | Latest Release | Status | Vulnerability Report | Fitness Functions |
 | --- | --- | --- | --- | --- | --- |
+| <sup>**8.5 (ZTS)**</sup> | <sup>[release/8.5-zts](https://github.com/endava/docker-php/tree/release/8.5-zts)</sup> | [![Size][size_85zts_badge]][release_85zts_link] | [![Build Status][github_actions_85zts_badge]][github_actions_85zts_link] | [![Security Report][security_report_85zts_badge]][security_report_85zts_link] | [![php 8.5-zts Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.5-zts.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.5-zts.yml)
 | <sup>**8.4 (ZTS)**</sup> | <sup>[release/8.4-zts](https://github.com/endava/docker-php/tree/release/8.4-zts)</sup> | [![Size][size_84zts_badge]][release_84zts_link] | [![Build Status][github_actions_84zts_badge]][github_actions_84zts_link] | [![Security Report][security_report_84zts_badge]][security_report_84zts_link] | [![php 8.4-zts Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.4-zts.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.4-zts.yml)
 | <sup>**8.3 (ZTS)**</sup> | <sup>[release/8.3-zts](https://github.com/endava/docker-php/tree/release/8.3-zts)</sup> | [![Size][size_83zts_badge]][release_83zts_link] | [![Build Status][github_actions_83zts_badge]][github_actions_83zts_link] | [![Security Report][security_report_83zts_badge]][security_report_83zts_link] | [![php 8.3-zts Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-zts.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-zts.yml)
 | <sup>**8.2 (ZTS)**</sup> | <sup>[release/8.2-zts](https://github.com/endava/docker-php/tree/release/8.2-zts)</sup> | [![Size][size_82zts_badge]][release_82zts_link] | [![Build Status][github_actions_82zts_badge]][github_actions_82zts_link] | [![Security Report][security_report_82zts_badge]][security_report_82zts_link] | [![php 8.2-zts Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-zts.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-zts.yml)
+| <sup>**8.5 (Ubuntu)**</sup> | <sup>[release/8.5-ubuntu](https://github.com/endava/docker-php/tree/release/8.5-ubuntu)</sup> | [![Size][size_85ubuntu_badge]][release_85ubuntu_link] | [![Build Status][github_actions_85ubuntu_badge]][github_actions_85ubuntu_link] | [![Security Report][security_report_85ubuntu_badge]][security_report_85ubuntu_link] | [![php 8.5-ubuntu Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.5-ubuntu.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.5-ubuntu.yml)
 | <sup>**8.4 (Ubuntu)**</sup> | <sup>[release/8.4-ubuntu](https://github.com/endava/docker-php/tree/release/8.4-ubuntu)</sup> | [![Size][size_84ubuntu_badge]][release_84ubuntu_link] | [![Build Status][github_actions_84ubuntu_badge]][github_actions_84ubuntu_link] | [![Security Report][security_report_84ubuntu_badge]][security_report_84ubuntu_link] | [![php 8.4-ubuntu Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.4-ubuntu.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.4-ubuntu.yml)
 | <sup>**8.3 (Ubuntu)**</sup> | <sup>[release/8.3-ubuntu](https://github.com/endava/docker-php/tree/release/8.3-ubuntu)</sup> | [![Size][size_83ubuntu_badge]][release_83ubuntu_link] | [![Build Status][github_actions_83ubuntu_badge]][github_actions_83ubuntu_link] | [![Security Report][security_report_83ubuntu_badge]][security_report_83ubuntu_link] | [![php 8.3-ubuntu Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-ubuntu.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.3-ubuntu.yml)
 | <sup>**8.2 (Ubuntu)**</sup> | <sup>[release/8.2-ubuntu](https://github.com/endava/docker-php/tree/release/8.2-ubuntu)</sup> | [![Size][size_82ubuntu_badge]][release_82ubuntu_link] | [![Build Status][github_actions_82ubuntu_badge]][github_actions_82ubuntu_link] | [![Security Report][security_report_82ubuntu_badge]][security_report_82ubuntu_link] | [![php 8.2-ubuntu Fitness Functions](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-ubuntu.yml/badge.svg)](https://github.com/Endava/docker-php/actions/workflows/fitness-functions-release-8.2-ubuntu.yml)
@@ -62,31 +64,38 @@ This is a docker php image is based on an alpine (and ubuntu) distribution inclu
 
 [github_actions_81ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.1-ubuntu
 [github_actions_81ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.1-ubuntu
-[release_81ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.1.31-ubuntu
-[security_report_81ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.1.31-ubuntu/vulnerability-status.png
-[security_report_81ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.1.31-ubuntu/vulnerability-report.html
-[size_81ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.1.31-ubuntu/size-status.png
+[release_81ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.1.34-ubuntu
+[security_report_81ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.1.34-ubuntu/vulnerability-status.png
+[security_report_81ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.1.34-ubuntu/vulnerability-report.html
+[size_81ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.1.34-ubuntu/size-status.png
 
 [github_actions_82ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.2-ubuntu
 [github_actions_82ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2-ubuntu
-[release_82ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.2.27-ubuntu
-[security_report_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.27-ubuntu/vulnerability-status.png
-[security_report_82ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.2.27-ubuntu/vulnerability-report.html
-[size_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.27-ubuntu/size-status.png
+[release_82ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.2.33-ubuntu
+[security_report_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.33-ubuntu/vulnerability-status.png
+[security_report_82ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.2.33-ubuntu/vulnerability-report.html
+[size_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.33-ubuntu/size-status.png
 
 [github_actions_83ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.3-ubuntu
 [github_actions_83ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3-ubuntu
-[release_83ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.3.17-ubuntu
-[security_report_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.17-ubuntu/vulnerability-status.png
-[security_report_83ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.3.17-ubuntu/vulnerability-report.html
-[size_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.17-ubuntu/size-status.png
+[release_83ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.3.33-ubuntu
+[security_report_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.33-ubuntu/vulnerability-status.png
+[security_report_83ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.3.33-ubuntu/vulnerability-report.html
+[size_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.33-ubuntu/size-status.png
 
 [github_actions_84ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.4-ubuntu
 [github_actions_84ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.4-ubuntu
-[release_84ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.4.4-ubuntu
-[security_report_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.4-ubuntu/vulnerability-status.png
-[security_report_84ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.4.4-ubuntu/vulnerability-report.html
-[size_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.4-ubuntu/size-status.png
+[release_84ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.4.25-ubuntu
+[security_report_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.25-ubuntu/vulnerability-status.png
+[security_report_84ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.4.25-ubuntu/vulnerability-report.html
+[size_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.25-ubuntu/size-status.png
+
+[github_actions_85ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.5-ubuntu
+[github_actions_85ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.5-ubuntu
+[release_85ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.5.10-ubuntu
+[security_report_85ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.5.10-ubuntu/vulnerability-status.png
+[security_report_85ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.5.10-ubuntu/vulnerability-report.html
+[size_85ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.5.10-ubuntu/size-status.png
 
 [github_actions_82zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.2-zts
 [github_actions_82zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2-zts
@@ -97,17 +106,24 @@ This is a docker php image is based on an alpine (and ubuntu) distribution inclu
 
 [github_actions_83zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.3-zts
 [github_actions_83zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3-zts
-[release_83zts_link]: https://github.com/endava/docker-php/releases/tag/8.3.17-zts
-[security_report_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.17-zts/vulnerability-status.png
-[security_report_83zts_link]: https://github.com/endava/docker-php/releases/download/8.3.17-zts/vulnerability-report.html
-[size_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.17-zts/size-status.png
+[release_83zts_link]: https://github.com/endava/docker-php/releases/tag/8.3.19-zts
+[security_report_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.19-zts/vulnerability-status.png
+[security_report_83zts_link]: https://github.com/endava/docker-php/releases/download/8.3.19-zts/vulnerability-report.html
+[size_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.19-zts/size-status.png
 
 [github_actions_84zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.4-zts
 [github_actions_84zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.4-zts
-[release_84zts_link]: https://github.com/endava/docker-php/releases/tag/8.4.4-zts
-[security_report_84zts_badge]: https://github.com/endava/docker-php/releases/download/8.4.4-zts/vulnerability-status.png
-[security_report_84zts_link]: https://github.com/endava/docker-php/releases/download/8.4.4-zts/vulnerability-report.html
-[size_84zts_badge]: https://github.com/endava/docker-php/releases/download/8.4.4-zts/size-status.png
+[release_84zts_link]: https://github.com/endava/docker-php/releases/tag/8.4.14-zts
+[security_report_84zts_badge]: https://github.com/endava/docker-php/releases/download/8.4.14-zts/vulnerability-status.png
+[security_report_84zts_link]: https://github.com/endava/docker-php/releases/download/8.4.14-zts/vulnerability-report.html
+[size_84zts_badge]: https://github.com/endava/docker-php/releases/download/8.4.14-zts/size-status.png
+
+[github_actions_85zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.5-zts
+[github_actions_85zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.5-zts
+[release_85zts_link]: https://github.com/endava/docker-php/releases/tag/8.5.6-zts
+[security_report_85zts_badge]: https://github.com/endava/docker-php/releases/download/8.5.6-zts/vulnerability-status.png
+[security_report_85zts_link]: https://github.com/endava/docker-php/releases/download/8.5.6-zts/vulnerability-report.html
+[size_85zts_badge]: https://github.com/endava/docker-php/releases/download/8.5.6-zts/size-status.png
 
 # Unsupported Versions
 
@@ -157,9 +173,29 @@ The new approach has a disadvantage:
 
 
 
+# Release Branch Maintenance
+
+Each `release/X.Y` branch is an independent image line. Its PHP point version
+is pinned in that branch's `Dockerfile`; changes to `main` do not update release
+branches automatically.
+
+For a release update:
+
+1. Fork the repository and create a branch from the matching `release/X.Y`
+   branch.
+2. Update the branch's Dockerfile and workflow configuration as required.
+3. Open a pull request from the fork to the matching Endava release branch.
+4. Wait for the amd64, ARM64, test, scan, and upload checks to pass.
+5. After review and merge, create the semver release tag through the normal
+   Endava release flow.
+
+ARM64 jobs run on GitHub-hosted `ubuntu-24.04-arm` runners. This README update
+is ready to merge only after each corresponding release tag, vulnerability
+report, and image-size artifact exists; unreleased versions must not be
+published in the live README.
+
 # Contributing
 Please refer to [CONTRIBUTING.md](CONTRIBUTING.md). 
 
 # License
 Please refer to [LICENSE](LICENSE). 
-
