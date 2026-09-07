@@ -139,13 +139,13 @@ jobs:
             args: "--org=${{ secrets.SNYK_ORG }} --fail-on=upgradable --project-name=docker-php:${{ env.PHP_VERSION }} --target-reference=${{ env.PHP_VERSION }}"
             command: monitor
       -   if: contains(github.ref, 'refs/heads/main')
-          name: Upload vulnerability Report to Github Release Artifacts
-          uses: softprops/action-gh-release@v3
-          with:
-            tag_name: ${{ env.PHP_VERSION }}
-            append_body: true
-            body: ""
-            files: |
-              vulnerability-report.html
-              vulnerability-status.png
-              size-status.png
+          name: Upload vulnerability reports to GitHub Release
+          env:
+            GH_TOKEN: ${{ github.token }}
+          run: |
+            gh release upload "$PHP_VERSION" \
+              vulnerability-report.html \
+              vulnerability-status.png \
+              size-status.png \
+              --clobber \
+              --repo "$GITHUB_REPOSITORY"
