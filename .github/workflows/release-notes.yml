@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Export ZTS_SUFFIX (if zts is enabled)
         run: echo "ZTS_SUFFIX=`echo ${{ github.ref_name }} | grep 'zts' > /dev/null && echo '-zts' || echo ''`" >> $GITHUB_ENV
       - name: "Fetch all existing tags"
@@ -25,7 +25,7 @@ jobs:
       - name: Generate Changelog
         run: docker run --rm -v `pwd`/previous-php-i.txt:/usr/src/app/previous-php-i.txt -v `pwd`/generate-changelog.php:/usr/src/app/generate-changelog.php ghcr.io/endava/docker-php:${{ github.ref_name }} php /usr/src/app/generate-changelog.php ghcr.io/endava/docker-php:${{ github.ref_name }} > RELEASE_NOTES.txt
       - name: Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3
         if: startsWith(github.ref, 'refs/tags/')
         with:
           body_path: RELEASE_NOTES.txt
