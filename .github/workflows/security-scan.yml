@@ -12,6 +12,11 @@ jobs:
   security-scan:
     name: Security Scan
 
+    permissions:
+      actions: read
+      contents: write
+      security-events: write
+
     runs-on: ubuntu-latest
 
     continue-on-error: false
