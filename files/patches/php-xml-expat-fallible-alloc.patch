@@ -1,0 +1,53 @@
+docker-php: applied to the ZTS build in Dockerfile (php-zts-builder stage).
+Upstream fix proposed in https://github.com/php/php-src/pull/24516 (for https://github.com/php/php-src/issues/24492).
+Remove once a PHP 8.5 release contains an upstream fix (the patch then fails to apply).
+
+From ee62bc9dba693d109cb495b70eb288e3d527c1f9 Mon Sep 17 00:00:00 2001
+From: Richard Metzler <richard@paadee.com>
+Date: Wed, 21 Oct 2026 20:25:35 +0200
+Subject: [PATCH] Fix ext/xml with Expat reaching the hard memory limit
+
+The memory handling suite passed to Expat used the non-fallible
+allocator, so a document making Expat allocate past memory_limit
+killed the process at the hard memory limit instead of raising the
+regular "Allowed memory size exhausted" error.
+
+Expat handles allocation failures (XML_ERROR_NO_MEMORY), so use the
+fallible allocator like the other converted third-party wrappers.
+
+Fixes ext/xml/tests/oom_xml_parse_ns.phpt and ext/xml/tests/gh14637.phpt
+when building with --with-expat.
+
+See GH-24492.
+
+Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
+---
+ ext/xml/xml.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/ext/xml/xml.c b/ext/xml/xml.c
+index a80f8ade6f..df4deac1c3 100644
+--- a/ext/xml/xml.c
++++ b/ext/xml/xml.c
+@@ -206,14 +206,16 @@ static PHP_GINIT_FUNCTION(xml)
+ 	xml_globals->default_encoding = (XML_Char*)"UTF-8";
+ }
+ 
++/* Expat handles allocation failures (XML_ERROR_NO_MEMORY), so let it fail
++ * instead of exceeding the hard memory limit. */
+ static void *php_xml_malloc_wrapper(size_t sz)
+ {
+-	return emalloc(sz);
++	return femalloc(sz, /* fallible */ true);
+ }
+ 
+ static void *php_xml_realloc_wrapper(void *ptr, size_t sz)
+ {
+-	return erealloc(ptr, sz);
++	return ferealloc(ptr, sz, /* fallible */ true);
+ }
+ 
+ static void php_xml_free_wrapper(void *ptr)
+-- 
+2.51.0
+

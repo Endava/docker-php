@@ -54,6 +54,17 @@ RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --enable
 RUN sed -i -e 's/--with-openssl-argon2//' APKBUILD
 #RUN sed -i -e 's/--with-password-argon2//' APKBUILD
 RUN sed -i -e 's/--with-libxml/--with-expat/' APKBUILD
+# Why: since 8.5.12, ext/xml hands Expat non-fallible allocators. A document that makes Expat exceed memory_limit
+# does not raise the regular fatal error but kills the whole process at the hard memory limit (exit 137) - with ZTS
+# that is every request handled by the process. The patch makes the allocators fallible, so Expat stops with
+# XML_ERROR_NO_MEMORY and PHP reports "Allowed memory size exhausted" as before.
+# Covered by ext/xml/tests/gh14637.phpt and oom_xml_parse_ns.phpt, which fail without it.
+# Remove: once a PHP 8.5 release contains the upstream fix, see https://github.com/php/php-src/pull/24516
+# (part of https://github.com/php/php-src/issues/24492)
+# (ext/xml/xml.c then no longer uses emalloc/erealloc in php_xml_malloc_wrapper/php_xml_realloc_wrapper; the patch
+# is then expected to no longer apply and to fail abuild prepare, which is the reminder to drop it).
+COPY --chown=alpiner files/patches/php-xml-expat-fallible-alloc.patch ./
+RUN sed -i -e 's/^source="/source="php-xml-expat-fallible-alloc.patch /' APKBUILD
 RUN sed -i -e 's/_default_php="yes"/_default_php="no"/g' APKBUILD
 RUN echo "" >> disabled-tests.list
 RUN echo "ext/posix/tests/bug75696.phpt" >> disabled-tests.list
@@ -71,6 +82,12 @@ RUN echo "ext/xml/tests/XML_OPTION_PARSE_HUGE.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-004.phpt" >> disabled-tests.list
+# Why: these tests are new in 8.5.12 and expect specific body sizes to exceed an 8M memory_limit. In our musl/ZTS
+# build the requests stay below the limit and succeed; no crash and no leak (checked with a debug build and valgrind).
+# They fail with libxml as well, so this is unrelated to the expat patch above.
+# Remove: on the next PHP update, re-enable them and drop these lines if they pass (upstream may recalibrate them).
+RUN echo "tests/basic/oom_rfc1867_mb_encoding.phpt" >> disabled-tests.list
+RUN echo "tests/basic/oom_rfc1867_upload_progress.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
