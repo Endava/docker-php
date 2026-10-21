@@ -1,5 +1,11 @@
+ARG PHP_VERSION="8.5.12"
+# sha256 of php-${PHP_VERSION}.tar.xz as published on https://www.php.net/releases/
+ARG PHP_SOURCE_SHA256="08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209"
+
 FROM alpine:3.23 AS alpine-distro
 FROM alpine-distro AS php-zts-builder
+ARG PHP_VERSION
+ARG PHP_SOURCE_SHA256
 
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache alpine-sdk
@@ -27,6 +33,11 @@ WORKDIR /workspace/aports/community/php85
 RUN cp -rf /workspace/aports/community/php85 /workspace/aports/community/phpzts85
 WORKDIR /workspace/aports/community/phpzts85
 RUN sed -i -e 's/pkgname=php85/pkgname=phpzts85/' APKBUILD
+# 3.23-stable aports lags behind upstream PHP releases, build the requested version from the official source instead
+RUN sed -i -e "s/^pkgver=.*/pkgver=${PHP_VERSION}/" -e 's/^pkgrel=.*/pkgrel=0/' APKBUILD
+RUN abuild fetch && \
+    echo "${PHP_SOURCE_SHA256}  /var/cache/distfiles/php-${PHP_VERSION}.tar.xz" > /tmp/php-source.sha256 && \
+    sha256sum -c /tmp/php-source.sha256
 # hadolint ignore=SC2016
 RUN sed -i -e 's/\$pkgname-fpm.initd/php85-fpm.initd/' APKBUILD
 # hadolint ignore=SC2016
@@ -79,7 +90,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.5.6"
+ARG PHP_VERSION
 ARG PHP_PACKAGE_BASENAME="phpzts85"
 ARG PHP_PACKAGE_INCLUDE="/usr/include/php85"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts85"
