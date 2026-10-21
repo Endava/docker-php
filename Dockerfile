@@ -35,7 +35,9 @@ WORKDIR /workspace/aports/community/phpzts85
 RUN sed -i -e 's/pkgname=php85/pkgname=phpzts85/' APKBUILD
 # 3.23-stable aports lags behind upstream PHP releases, build the requested version from the official source instead
 RUN sed -i -e "s/^pkgver=.*/pkgver=${PHP_VERSION}/" -e 's/^pkgrel=.*/pkgrel=0/' APKBUILD
-RUN abuild fetch && \
+# download into abuild's SRCDEST ourselves (abuild fetch would reject it against the stale sha512 of the recipe),
+# verify it, and let the `abuild checksum` below regenerate the sha512 from this verified file
+RUN curl -fsSL -o /var/cache/distfiles/php-${PHP_VERSION}.tar.xz https://www.php.net/distributions/php-${PHP_VERSION}.tar.xz && \
     echo "${PHP_SOURCE_SHA256}  /var/cache/distfiles/php-${PHP_VERSION}.tar.xz" > /tmp/php-source.sha256 && \
     sha256sum -c /tmp/php-source.sha256
 # hadolint ignore=SC2016
