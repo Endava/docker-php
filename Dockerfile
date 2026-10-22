@@ -41,6 +41,17 @@ RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --enable
 RUN sed -i -e 's/--with-openssl-argon2//' APKBUILD
 #RUN sed -i -e 's/--with-password-argon2//' APKBUILD
 RUN sed -i -e 's/--with-libxml/--with-expat/' APKBUILD
+# Why: since 8.3.36, ext/xml hands Expat non-fallible allocators. A document that makes Expat exceed memory_limit
+# does not raise the regular fatal error but kills the whole process at the hard memory limit (exit 137) - with ZTS
+# that is every request handled by the process. The patch makes the allocators fallible, so Expat stops with
+# XML_ERROR_NO_MEMORY and PHP reports "Allowed memory size exhausted" as before.
+# Covered by ext/xml/tests/gh14637.phpt and oom_xml_parse_ns.phpt, which fail without it.
+# Remove: once a PHP 8.3 release contains the upstream fix, see https://github.com/php/php-src/pull/24516
+# (part of https://github.com/php/php-src/issues/24492)
+# (ext/xml/xml.c then no longer uses emalloc/erealloc in php_xml_malloc_wrapper/php_xml_realloc_wrapper; the patch
+# is then expected to no longer apply and to fail abuild prepare, which is the reminder to drop it).
+COPY --chown=alpiner files/patches/php-xml-expat-fallible-alloc.patch ./
+RUN sed -i -e 's/^source="/source="php-xml-expat-fallible-alloc.patch /' APKBUILD
 RUN sed -i -e 's/_default_php="yes"/_default_php="no"/g' APKBUILD
 RUN echo "" >> disabled-tests.list
 RUN echo "ext/posix/tests/bug75696.phpt" >> disabled-tests.list
@@ -85,7 +96,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.3.19"
+ARG PHP_VERSION="8.3.36"
 ARG PHP_PACKAGE_BASENAME="phpzts83"
 ARG PHP_PACKAGE_INCLUDE="/usr/include/php83"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts83"
