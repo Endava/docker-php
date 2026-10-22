@@ -77,6 +77,10 @@ RUN abuild checksum && abuild -r
 WORKDIR /workspace/aports/community/unit
 # make phpver3 to be phpzts82
 RUN sed -i -e 's/_phpver2=82/_phpver2=zts82/' APKBUILD
+# Ruby support is optional and the Alpine Unit configure check cannot detect
+# the Ruby toolchain in this package build environment.
+RUN sed -i -e 's/\.\/configure ruby//' APKBUILD
+RUN sed -i -e 's/ python3 ruby;/ python3;/' APKBUILD
 RUN sed -i -e 's/.\/configure perl.*//' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver3 --config=php-config\$_phpver3//' APKBUILD
 RUN sed -i -e 's/.\/configure php --module=php\$_phpver4 --config=php-config\$_phpver4 .*//' APKBUILD
