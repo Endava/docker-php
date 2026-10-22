@@ -82,12 +82,6 @@ RUN echo "ext/xml/tests/XML_OPTION_PARSE_HUGE.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-004.phpt" >> disabled-tests.list
-# Why: these tests are new in 8.5.12 and expect specific body sizes to exceed an 8M memory_limit. In our musl/ZTS
-# build the requests stay below the limit and succeed; no crash and no leak (checked with a debug build and valgrind).
-# They fail with libxml as well, so this is unrelated to the expat patch above.
-# Remove: on the next PHP update, re-enable them and drop these lines if they pass (upstream may recalibrate them).
-RUN echo "tests/basic/oom_rfc1867_mb_encoding.phpt" >> disabled-tests.list
-RUN echo "tests/basic/oom_rfc1867_upload_progress.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
