@@ -51,7 +51,7 @@ jobs:
             DOCKER_REGISTRY_IMAGE: "temporary-build-image-linux-amd64"
 
       -   name: Run Alpine Trivy vulnerability scanner
-          uses: aquasecurity/trivy-action@0.24.0
+          uses: aquasecurity/trivy-action@v0.36.0
           env:
             TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
@@ -64,7 +64,7 @@ jobs:
 
       -   if: contains(github.ref, 'refs/heads/release/')
           name: Run Alpine Trivy vulnerability scanner and upload to github security tab
-          uses: aquasecurity/trivy-action@0.24.0
+          uses: aquasecurity/trivy-action@v0.36.0
           env:
             TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
@@ -80,7 +80,7 @@ jobs:
 #
       -   if: contains(github.ref, 'refs/heads/release/')
           name: Run Trivy in GitHub SBOM mode and submit results to Dependency Snapshots
-          uses: aquasecurity/trivy-action@0.24.0
+          uses: aquasecurity/trivy-action@v0.36.0
           env:
             TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
