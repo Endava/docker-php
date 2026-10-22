@@ -1,5 +1,11 @@
+ARG PHP_VERSION="8.5.12"
+# sha256 of php-${PHP_VERSION}.tar.xz as published on https://www.php.net/releases/
+ARG PHP_SOURCE_SHA256="08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209"
+
 FROM alpine:3.23 AS alpine-distro
 FROM alpine-distro AS php-zts-builder
+ARG PHP_VERSION
+ARG PHP_SOURCE_SHA256
 
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache alpine-sdk
@@ -27,6 +33,13 @@ WORKDIR /workspace/aports/community/php85
 RUN cp -rf /workspace/aports/community/php85 /workspace/aports/community/phpzts85
 WORKDIR /workspace/aports/community/phpzts85
 RUN sed -i -e 's/pkgname=php85/pkgname=phpzts85/' APKBUILD
+# 3.23-stable aports lags behind upstream PHP releases, build the requested version from the official source instead
+RUN sed -i -e "s/^pkgver=.*/pkgver=${PHP_VERSION}/" -e 's/^pkgrel=.*/pkgrel=0/' APKBUILD
+# download into abuild's SRCDEST ourselves (abuild fetch would reject it against the stale sha512 of the recipe),
+# verify it, and let the `abuild checksum` below regenerate the sha512 from this verified file
+RUN curl -fsSL -o /var/cache/distfiles/php-${PHP_VERSION}.tar.xz https://www.php.net/distributions/php-${PHP_VERSION}.tar.xz && \
+    echo "${PHP_SOURCE_SHA256}  /var/cache/distfiles/php-${PHP_VERSION}.tar.xz" > /tmp/php-source.sha256 && \
+    sha256sum -c /tmp/php-source.sha256
 # hadolint ignore=SC2016
 RUN sed -i -e 's/\$pkgname-fpm.initd/php85-fpm.initd/' APKBUILD
 # hadolint ignore=SC2016
@@ -41,6 +54,17 @@ RUN sed -i -e 's/--host/--enable-zts --enable-zend-max-execution-timers --enable
 RUN sed -i -e 's/--with-openssl-argon2//' APKBUILD
 #RUN sed -i -e 's/--with-password-argon2//' APKBUILD
 RUN sed -i -e 's/--with-libxml/--with-expat/' APKBUILD
+# Why: since 8.5.12, ext/xml hands Expat non-fallible allocators. A document that makes Expat exceed memory_limit
+# does not raise the regular fatal error but kills the whole process at the hard memory limit (exit 137) - with ZTS
+# that is every request handled by the process. The patch makes the allocators fallible, so Expat stops with
+# XML_ERROR_NO_MEMORY and PHP reports "Allowed memory size exhausted" as before.
+# Covered by ext/xml/tests/gh14637.phpt and oom_xml_parse_ns.phpt, which fail without it.
+# Remove: once a PHP 8.5 release contains the upstream fix, see https://github.com/php/php-src/pull/24516
+# (part of https://github.com/php/php-src/issues/24492)
+# (ext/xml/xml.c then no longer uses emalloc/erealloc in php_xml_malloc_wrapper/php_xml_realloc_wrapper; the patch
+# is then expected to no longer apply and to fail abuild prepare, which is the reminder to drop it).
+COPY --chown=alpiner files/patches/php-xml-expat-fallible-alloc.patch ./
+RUN sed -i -e 's/^source="/source="php-xml-expat-fallible-alloc.patch /' APKBUILD
 RUN sed -i -e 's/_default_php="yes"/_default_php="no"/g' APKBUILD
 RUN echo "" >> disabled-tests.list
 RUN echo "ext/posix/tests/bug75696.phpt" >> disabled-tests.list
@@ -79,7 +103,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.5.6"
+ARG PHP_VERSION
 ARG PHP_PACKAGE_BASENAME="phpzts85"
 ARG PHP_PACKAGE_INCLUDE="/usr/include/php85"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts85"
