@@ -83,11 +83,6 @@ RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-004.phpt" >> disabled-tests.list
 RUN echo "ext/openssl/tests/bug74796.phpt" >> disabled-tests.list
-# Why: new in 8.4.27; they need the shared mbstring/session extensions in the php-cgi child, which the test helper
-# starts with -n. Alpine disables them in newer aports (alpinelinux/aports de33c51a6b), the 3.21-stable recipe used here
-# predates that. Remove: once the recipe used here disables them itself (prepare() then fails on the duplicate rm).
-RUN echo "tests/basic/oom_rfc1867_mb_encoding.phpt" >> disabled-tests.list
-RUN echo "tests/basic/oom_rfc1867_upload_progress.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
