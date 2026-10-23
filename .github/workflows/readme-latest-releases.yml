@@ -1,0 +1,53 @@
+name: README Latest Releases
+
+on:
+  workflow_run:
+    workflows:
+      - 'Security Scan'
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  readme-latest-releases:
+    name: Update README Latest Releases
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: main
+
+      - name: Fetch published releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >
+          gh api --paginate "repos/${GITHUB_REPOSITORY}/releases?per_page=100"
+          --jq '.[] | select(.draft == false and .prerelease == false) | {tag: .tag_name, assets: [.assets[].name]}'
+          > "${RUNNER_TEMP}/releases.jsonl"
+
+      - name: Update README
+        run: |
+          php .github/scripts/update-readme-releases.php README.md "${RUNNER_TEMP}/releases.jsonl" > "${RUNNER_TEMP}/changes.txt"
+          {
+            echo 'Points the README to the latest releases with published vulnerability and size reports:'
+            echo
+            sed 's/^/* /' "${RUNNER_TEMP}/changes.txt"
+          } > "${RUNNER_TEMP}/pr-body.md"
+          cat "${RUNNER_TEMP}/changes.txt"
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          branch: chore/readme-latest-releases
+          delete-branch: true
+          add-paths: README.md
+          commit-message: Update README to the latest releases
+          title: Update README to the latest releases
+          body-path: ${{ runner.temp }}/pr-body.md
