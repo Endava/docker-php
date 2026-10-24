@@ -7,15 +7,15 @@ We love your input! We want to make contributing to this project as easy and tra
 - Submitting a fix
 - Proposing new features
 
-## We Develop with Github
+## We Develop with GitHub
 
-We use Github to host code, to track issues and feature requests, as well as accept pull requests.
+We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.
 
 ## Pull Requests
 
 Pull requests are the best way to propose changes to the codebase. We actively welcome your pull requests:
 
-1. Fork the repo and create your branch from respective `release/*` branch.
+1. Fork the repo and create your branch from the respective `release/*` branch.
 2. If you've added code that should be tested, add tests.
 6. Issue that pull request!
 
@@ -30,9 +30,9 @@ Always write a clear log message for your commits. One-line messages are fine fo
 
 When you submit code changes, your submissions are understood to be under the same [Apache 2.0](https://choosealicense.com/licenses/apache-2.0/) that covers the project. Feel free to contact the maintainers at [opensource@endava.com](opensource@endava.com) if that's a concern.
 
-## Report bugs using Github's issues
+## Report bugs using GitHub's issues
 
-We use Github issues to track public bugs. Report a bug by [opening a new issue]().
+We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/Endava/docker-php/issues/new).
 
 ## Write bug reports with detail, background, and sample code
 
@@ -50,8 +50,8 @@ We use Github issues to track public bugs. Report a bug by [opening a new issue]
 
 We use [Hadolint](https://github.com/hadolint/hadolint) for Dockerfile linting.
 
-And also please consider to:
-- run a ```hadolint Dockerfile``` to check for code quality violations
+And also please consider:
+- running a ```hadolint Dockerfile``` to check for code quality violations
 
 ## Snippets for Special Case: Build pecl package manually and fitness function check for availability
 
