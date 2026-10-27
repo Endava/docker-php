@@ -30,6 +30,7 @@ jobs:
           - 'release/8.1-ubuntu'
           - 'release/8.2'
           - 'release/8.2-ubuntu'
+          - 'release/8.2-zts'
           - 'release/8.3'
           - 'release/8.3-zts'
           - 'release/8.3-ubuntu'
@@ -52,7 +53,14 @@ jobs:
           run: echo "UBUNTU_SUFFIX=`echo '${{ matrix.branch-name }}' | grep ubuntu > /dev/null && echo '-ubuntu' || echo ''`" > $GITHUB_ENV
 
       -   name: "PHP_VERSION Env"
-          run: echo "PHP_VERSION=`grep "ARG PHP_VERSION" Dockerfile | cut -f 2 -d '"' | tr -d '_'`${{ env.ZTS_SUFFIX }}${{ env.UBUNTU_SUFFIX }}" > $GITHUB_ENV
+          shell: bash
+          run: |
+            version_assignment=$(sed -n 's/^ARG PHP_VERSION=//p' Dockerfile)
+            if [[ ! "$version_assignment" =~ ^\"([0-9]+\.[0-9]+\.[0-9]+)\"$ ]]; then
+              echo '::error::Expected exactly one ARG PHP_VERSION="X.Y.Z" assignment in Dockerfile'
+              exit 1
+            fi
+            printf 'PHP_VERSION=%s%s%s\n' "${BASH_REMATCH[1]}" "$ZTS_SUFFIX" "$UBUNTU_SUFFIX" >> "$GITHUB_ENV"
 
       -   name: "BRANCH_SHA Env"
           run: echo "BRANCH_SHA=`git rev-parse HEAD`" >> $GITHUB_ENV
@@ -104,7 +112,9 @@ jobs:
             output: 'vulnerability-report.json'
 
       -   name: "FIXED_VULNERABILITIES Env"
-          run: echo "FIXED_VULNERABILITIES=`cat vulnerability-report.json | jq '.Results[0].Vulnerabilities | length'`" > $GITHUB_ENV
+          run: |
+            count=$(jq '[.Results[]? | (.Vulnerabilities // []) | length] | add // 0' vulnerability-report.json)
+            printf 'FIXED_VULNERABILITIES=%s\n' "$count" >> "$GITHUB_ENV"
 
       -   if: ${{ env.FIXED_VULNERABILITIES == '0' }}
           run: wget "https://img.shields.io/static/v1.png?label=vulnerabilites&message=0&color=green" -O vulnerability-status.png
