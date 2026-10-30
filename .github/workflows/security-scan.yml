@@ -17,7 +17,7 @@ jobs:
       contents: write
       security-events: write
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     continue-on-error: false
 
@@ -78,8 +78,6 @@ jobs:
 
       -   name: Run Alpine Trivy vulnerability scanner
           uses: aquasecurity/trivy-action@v0.36.0
-          env:
-            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'table'
@@ -93,8 +91,6 @@ jobs:
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file
           uses: aquasecurity/trivy-action@v0.36.0
-          env:
-            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'template'
@@ -103,8 +99,6 @@ jobs:
 
       -   name: Run Alpine Trivy vulnerability scanner and create html file
           uses: aquasecurity/trivy-action@v0.36.0
-          env:
-            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'json'
@@ -124,8 +118,6 @@ jobs:
 
       -   name: Run Alpine Trivy vulnerability scanner and upload to github security tab
           uses: aquasecurity/trivy-action@v0.36.0
-          env:
-            TRIVY_DB_REPOSITORY: public.ecr.aws/aquasecurity/trivy-db:2
           with:
             image-ref: php-${{ env.PHP_VERSION }}
             format: 'sarif'
