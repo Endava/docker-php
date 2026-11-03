@@ -1,107 +1,70 @@
 # Contributing to docker-php
 
-We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
+We welcome bug reports, discussions, fixes, and feature proposals. Contributions
+are managed through GitHub issues and pull requests.
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
+## Pull requests
 
-## We Develop with GitHub
+1. Choose the target branch for the change:
+   - For a PHP image or release-specific change, use the matching `release/*`
+     branch.
+   - For repository-wide documentation or workflow changes, use `main`.
+2. Fork the repository and create a topic branch from the target branch.
+3. Make the change and add or update tests and documentation where relevant.
+4. Run the checks that apply to the change; see [Checks](#checks).
+5. Open a pull request against the same branch you used as the base. Describe
+   the change, its impact, and the checks you ran. Include relevant issue links
+   and call out any checks you could not run.
 
-We use GitHub to host code, to track issues and feature requests, as well as accept pull requests.
+Use clear commit messages. A concise summary is enough for a small change; for
+a larger change, include a short explanation of its impact.
 
-## Pull Requests
+## Checks
 
-Pull requests are the best way to propose changes to the codebase. We actively welcome your pull requests:
+For Dockerfile changes, run [Hadolint](https://github.com/hadolint/hadolint):
 
-1. Fork the repo and create your branch from the respective `release/*` branch.
-2. If you've added code that should be tested, add tests.
-6. Issue that pull request!
-
-Always write a clear log message for your commits. One-line messages are fine for small changes, but bigger changes should look like this:
-
-    $ git commit -m "A brief summary of the commit
-    > 
-    > A paragraph describing what changed and its impact."
-
-
-## Any contributions you make will be under the Apache 2.0 Software License
-
-When you submit code changes, your submissions are understood to be under the same [Apache 2.0](https://choosealicense.com/licenses/apache-2.0/) that covers the project. Feel free to contact the maintainers at [opensource@endava.com](opensource@endava.com) if that's a concern.
-
-## Report bugs using GitHub's issues
-
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](https://github.com/Endava/docker-php/issues/new).
-
-## Write bug reports with detail, background, and sample code
-
-**Great Bug Reports** tend to have:
-
-- A quick summary and/or background
-- Steps to reproduce
-  - Be specific!
-  - Give sample code if you can
-- What you expected would happen
-- What actually happens
-- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
-
-## Use a Consistent Coding Style
-
-We use [Hadolint](https://github.com/hadolint/hadolint) for Dockerfile linting.
-
-And also please consider:
-- running a ```hadolint Dockerfile``` to check for code quality violations
-
-## Snippets for Special Case: Build pecl package manually and fitness function check for availability
-
-If you need to build (e.g. pecl amqp) manually, because the package does not exist yet in packages, you have to do two things:
-
-1. add the fitness function at e.g. [.github/workflows/fitness-functions-release-8.4.yml](.github/workflows/fitness-functions-release-8.4.yml) a section for this (the example is for alpine:3.21 and the package php84-pecl-amqp)
-
-```yaml
-  packages-not-available-on-alpine-for-community-release-8-4:
-    name: Package not available on alpine for php 8.4 in community, yet
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - php84-pecl-amqp
-    steps:
-      -   name: Execute
-          run: "! docker run --rm alpine:3.21 apk --no-cache search ${{ matrix.package }} | grep ${{ matrix.package }}"
-  packages-not-available-on-alpine-testing-for-release-8-4:
-    name: Package not available on alpine 3.21 for php 8.4, yet
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package:
-          - php84-pecl-amqp
-    steps:
-      -   name: Execute
-          run: "! docker run --rm alpine:3.21 apk --no-cache search ${{ matrix.package }}  | grep ${{ matrix.package }}"
+```shell
+hadolint Dockerfile
 ```
 
-2. add the package like this in the Dockerfile at the respective part:
+Release branches have a CI workflow that builds and checks amd64 and arm64
+images, runs smoke checks and tests, and scans the image. Consult the workflow
+on the target release branch for the current commands and setup. In particular,
+the test script may expect the image name and environment prepared by CI; do not
+assume it can run by itself in a fresh checkout.
 
-```Dockerfile
-# FIXME: RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-amqp
-RUN apk add --no-cache binutils build-base openssl-dev autoconf pcre2-dev automake libtool linux-headers rabbitmq-c-dev ${PHP_PACKAGE_BASENAME}-dev~=${PHP_VERSION} --virtual .build-deps \
-    && MAKEFLAGS="-j $(nproc)" pecl84 install amqp \
-    && strip --strip-all /usr/lib/$PHP_PACKAGE_BASENAME/modules/amqp.so \
-    && echo "extension=amqp" > /etc/$PHP_PACKAGE_BASENAME/conf.d/40_amqp.ini \
-    && apk del --no-network .build-deps \
-    && apk add --no-cache rabbitmq-c
-```
+For documentation or workflow changes targeting `main`, review the affected
+workflow or links directly and explain that review in the pull request.
 
-And as soon as the fitness function fails - remove the "FIXME: " and remove the manual apk add command. That's it!
+## Reporting bugs
 
-## License
-By contributing, you agree that your contributions will be licensed under Apache 2.0 License.
+Report public bugs using [GitHub Issues](https://github.com/Endava/docker-php/issues/new).
+Include:
 
-## References
-This document was adapted from the open-source contribution guidelines for [Facebook's Draft](https://github.com/facebook/draft-js/blob/a9316a723f9e918afde44dea68b5f9f39b7d9b00/CONTRIBUTING.md) and [https://gist.github.com/briandk/3d2e8b3ec8daf5a27a62](https://gist.github.com/briandk/3d2e8b3ec8daf5a27a62)
+- A short summary and the affected PHP version, image variant, and image tag.
+- Steps to reproduce, with a minimal example when possible.
+- What you expected and what happened instead.
+- Relevant logs and troubleshooting details, with secrets and sensitive values
+  removed.
+- Whether the issue also occurs with the latest published image for that line.
 
-# Code of Conduct
+## Alpine PECL packages
 
-Please refer to [Code of Conduct](CODE_OF_CONDUCT.md)
+Some Alpine release branches use fitness functions to check whether PECL-related
+packages are available from the configured repositories. Before adding or
+changing a manually built extension, inspect the fitness workflow and Dockerfile
+on the target release branch; package names and Alpine versions differ between
+branches. Current examples of package availability checks are in the
+[ZTS fitness workflows](.github/workflows/fitness-functions-release-8.4-zts.yml).
+
+If a package is unavailable and a manual build is needed, follow the pattern
+already used by that release branch. When the package becomes available, update
+the Dockerfile to use the repository package and adjust or remove the
+unavailability check as appropriate. Do not copy a version-specific recipe
+without verifying it against the target branch.
+
+## Project policies
+
+- Contributions are licensed under the [Apache 2.0 License](LICENSE). Contact
+  [opensource@endava.com](mailto:opensource@endava.com) if you have concerns.
+- Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).

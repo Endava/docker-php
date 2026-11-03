@@ -231,5 +231,8 @@ size reports. Merging that pull request also updates the Docker Hub overview.
 # Contributing
 Please refer to [CONTRIBUTING.md](CONTRIBUTING.md). 
 
+# Maintaining this project
+See the [Maintainer Guide](MAINTAINER.md) for recurring maintenance and release tasks.
+
 # License
 Please refer to [LICENSE](LICENSE). 
