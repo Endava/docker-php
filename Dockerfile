@@ -1,5 +1,11 @@
+ARG PHP_VERSION="8.2.36"
+# sha256 of php-${PHP_VERSION}.tar.xz as published on https://www.php.net/releases/
+ARG PHP_SOURCE_SHA256="df50a00d2b453096608bf2bd98a9fab9a3df8678a77b93011b65c3cfe9a018fa"
+
 FROM alpine:3.21.0 AS alpine-distro
 FROM alpine-distro AS php-zts-builder
+ARG PHP_VERSION
+ARG PHP_SOURCE_SHA256
 
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache alpine-sdk
@@ -27,6 +33,13 @@ WORKDIR /workspace/aports/community/php82
 RUN cp -rf /workspace/aports/community/php82 /workspace/aports/community/phpzts82
 WORKDIR /workspace/aports/community/phpzts82
 RUN sed -i -e 's/pkgname=php82/pkgname=phpzts82/' APKBUILD
+# 3.21-stable aports is still on 8.2.35, build the requested version from the official source instead
+RUN sed -i -e "s/^pkgver=.*/pkgver=${PHP_VERSION}/" -e 's/^pkgrel=.*/pkgrel=0/' APKBUILD
+# download into abuild's SRCDEST ourselves (abuild fetch would reject it against the stale sha512 of the recipe),
+# verify it, and let the `abuild checksum` below regenerate the sha512 from this verified file
+RUN curl -fsSL -o /var/cache/distfiles/php-${PHP_VERSION}.tar.xz https://www.php.net/distributions/php-${PHP_VERSION}.tar.xz && \
+    echo "${PHP_SOURCE_SHA256}  /var/cache/distfiles/php-${PHP_VERSION}.tar.xz" > /tmp/php-source.sha256 && \
+    sha256sum -c /tmp/php-source.sha256
 # hadolint ignore=SC2016
 RUN sed -i -e 's/\$pkgname-fpm.initd/php82-fpm.initd/' APKBUILD
 # hadolint ignore=SC2016
@@ -94,7 +107,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.2.35"
+ARG PHP_VERSION
 ARG PHP_PACKAGE_BASENAME="phpzts82"
 ARG PHP_PACKAGE_INCLUDE="/usr/include/php82"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts82"
