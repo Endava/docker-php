@@ -1,6 +1,6 @@
-ARG PHP_VERSION="8.4.27"
+ARG PHP_VERSION="8.4.28"
 # sha256 of php-${PHP_VERSION}.tar.xz as published on https://www.php.net/releases/
-ARG PHP_SOURCE_SHA256="dcf93923b0e38e0d5252b25b796520b5a47761a08b3488b6d0b5d1115764d3f0"
+ARG PHP_SOURCE_SHA256="0c8ec360e5dd8154f270b2fd50cd44ecc824e6ee39c85f911312b80d4daecd72"
 
 FROM alpine:3.21.0 AS alpine-distro
 FROM alpine-distro AS php-zts-builder
