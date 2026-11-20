@@ -83,6 +83,10 @@ RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-004.phpt" >> disabled-tests.list
 RUN echo "ext/openssl/tests/bug74796.phpt" >> disabled-tests.list
+# Fails under `make test` (run-tests.php -n -c tmp-php.ini): the 8.4 release passes TEST_PHP_EXTRA_ARGS to the
+# "no ini file" call as well, so -c wins over -n. Fixed upstream in https://github.com/php/php-src/commit/6521c11d99
+# Remove: once a PHP 8.4 release contains that fix (expected 8.4.29)
+RUN echo "ext/standard/tests/ini_info/php_ini_loaded_file.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
