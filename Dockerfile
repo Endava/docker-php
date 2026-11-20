@@ -1,5 +1,11 @@
+ARG PHP_VERSION="8.2.36"
+# sha256 of php-${PHP_VERSION}.tar.xz as published on https://www.php.net/releases/
+ARG PHP_SOURCE_SHA256="df50a00d2b453096608bf2bd98a9fab9a3df8678a77b93011b65c3cfe9a018fa"
+
 FROM alpine:3.21.0 AS alpine-distro
 FROM alpine-distro AS php-zts-builder
+ARG PHP_VERSION
+ARG PHP_SOURCE_SHA256
 
 RUN apk add --no-cache libc6-compat
 RUN apk add --no-cache alpine-sdk
@@ -27,6 +33,13 @@ WORKDIR /workspace/aports/community/php82
 RUN cp -rf /workspace/aports/community/php82 /workspace/aports/community/phpzts82
 WORKDIR /workspace/aports/community/phpzts82
 RUN sed -i -e 's/pkgname=php82/pkgname=phpzts82/' APKBUILD
+# 3.21-stable aports is still on 8.2.35, build the requested version from the official source instead
+RUN sed -i -e "s/^pkgver=.*/pkgver=${PHP_VERSION}/" -e 's/^pkgrel=.*/pkgrel=0/' APKBUILD
+# download into abuild's SRCDEST ourselves (abuild fetch would reject it against the stale sha512 of the recipe),
+# verify it, and let the `abuild checksum` below regenerate the sha512 from this verified file
+RUN curl -fsSL -o /var/cache/distfiles/php-${PHP_VERSION}.tar.xz https://www.php.net/distributions/php-${PHP_VERSION}.tar.xz && \
+    echo "${PHP_SOURCE_SHA256}  /var/cache/distfiles/php-${PHP_VERSION}.tar.xz" > /tmp/php-source.sha256 && \
+    sha256sum -c /tmp/php-source.sha256
 # hadolint ignore=SC2016
 RUN sed -i -e 's/\$pkgname-fpm.initd/php82-fpm.initd/' APKBUILD
 # hadolint ignore=SC2016
@@ -62,6 +75,10 @@ RUN echo "ext/posix/tests/posix_getpwnam_basic_01.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getpwuid_basic.phpt" >> disabled-tests.list
 RUN echo "sapi/cli/tests/bug61546.phpt" >> disabled-tests.list
 RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests.list
+# Leaks FPM's listening socket into a background `sleep 3 &`, so the port stays bound after the test. The next FPM
+# tests then fail to start ("Address in use"), and a test that signals FPM then runs `kill -USR1 0`/`kill -USR2 0`
+# (tester.inc getPid() returns 0), which aborts the whole `make test` run.
+RUN echo "sapi/fpm/tests/gh24046-stdio-pipe-double-close.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_009.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
@@ -94,7 +111,7 @@ RUN abuild checksum && abuild -r
 
 FROM alpine-distro AS php-zts-base
 
-ARG PHP_VERSION="8.2.35"
+ARG PHP_VERSION
 ARG PHP_PACKAGE_BASENAME="phpzts82"
 ARG PHP_PACKAGE_INCLUDE="/usr/include/php82"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpmzts82"
