@@ -1,4 +1,4 @@
-FROM alpine:3.21.3
+FROM alpine:3.24
 
 ARG PHP_VERSION="8.3.37"
 ARG PHP_PACKAGE_BASENAME="php83"
@@ -92,7 +92,18 @@ RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-grpc
 
 RUN apk add --no-cache ${PHP_PACKAGE_BASENAME}-pecl-pcov
 
+# We need this, since php83 is not the _default_php in https://git.alpinelinux.org/aports/tree/community/php83/APKBUILD
 WORKDIR /usr/bin
+RUN    ln -sf php83 php \
+    && ln -sf peardev83 peardev \
+    && ln -sf pecl83 pecl \
+    && ln -sf phpize83 phpize \
+    && ln -sf php-config83 php-config \
+    && ln -sf phpdbg83 phpdbg \
+    && ln -sf lsphp83 lsphp \
+    && ln -sf php-cgi83 php-cgi \
+    && ln -sf phar83.phar phar.phar \
+    && ln -sf phar83 phar
 
 # add php.ini containing environment variables
 COPY files/php.ini /etc/${PHP_PACKAGE_BASENAME}/php.ini
