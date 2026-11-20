@@ -1,6 +1,6 @@
-ARG PHP_VERSION="8.5.12"
+ARG PHP_VERSION="8.5.13"
 # sha256 of php-${PHP_VERSION}.tar.xz as published on https://www.php.net/releases/
-ARG PHP_SOURCE_SHA256="08bc2eba2a588654ade1357174aa646b761556c862dda0678345ee29ed481209"
+ARG PHP_SOURCE_SHA256="607602acaf0c3061818e9916ec44a058e8b3d43959a83862b9cd3ec7bf5b785f"
 
 FROM alpine:3.23 AS alpine-distro
 FROM alpine-distro AS php-zts-builder
@@ -75,6 +75,10 @@ RUN echo "ext/posix/tests/posix_getpwnam_basic_01.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getpwuid_basic.phpt" >> disabled-tests.list
 RUN echo "sapi/cli/tests/bug61546.phpt" >> disabled-tests.list
 RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests.list
+# Leaks FPM's listening socket into a background `sleep 3 &`, so the port stays bound after the test. The next FPM
+# tests then fail to start ("Address in use"), and a test that signals FPM then runs `kill -USR1 0`/`kill -USR2 0`
+# (tester.inc getPid() returns 0), which aborts the whole `make test` run.
+RUN echo "sapi/fpm/tests/gh24046-stdio-pipe-double-close.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_009.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
@@ -82,6 +86,10 @@ RUN echo "ext/xml/tests/XML_OPTION_PARSE_HUGE.phpt" >> disabled-tests.list
 RUN echo "ext/xml/tests/xml003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-003.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/streams/opendir-004.phpt" >> disabled-tests.list
+# Fails under `make test` (run-tests.php -n -c tmp-php.ini): the 8.5 release passes TEST_PHP_EXTRA_ARGS to the
+# "no ini file" call as well, so -c wins over -n. Fixed upstream in https://github.com/php/php-src/commit/6521c11d99
+# Remove: once a PHP 8.5 release contains that fix (expected 8.5.14)
+RUN echo "ext/standard/tests/ini_info/php_ini_loaded_file.phpt" >> disabled-tests.list
 
 USER root
 RUN apk update
