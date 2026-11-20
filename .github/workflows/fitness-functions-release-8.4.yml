@@ -10,19 +10,19 @@ on:
 
 jobs:
   configured-alpine-is-latest-version:
-    name: "Ensure that Alpine 3.21 is the latest alpine version"
+    name: "Ensure that Alpine 3.24 is the latest alpine version"
     env:
-      LATEST_ALPINE_RELEASE: "3.21.9"
+      LATEST_ALPINE_RELEASE: "3.24.4"
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
          run: >
-             docker run --pull always --rm alpine:3.21 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
+             docker run --pull always --rm alpine:3.24 cat /etc/os-release | grep $LATEST_ALPINE_RELEASE
 
-  php83-is-not-the-default-php-on-edge:
-    name: "We need to symlink php84 until php 8.4 is the default php"
+  php84-is-not-the-default-php-on-alpine-324:
+    name: "We need to symlink php84 as long as php 8.4 is not the default php on Alpine 3.24"
     runs-on: ubuntu-latest
     steps:
       -  name: Execute
          run: >
-             ! docker run --rm alpine:3.21 sh -c 'apk add -U php84 && php -v'
+             ! docker run --rm alpine:3.24 sh -c 'apk add -U php84 && php -v'
