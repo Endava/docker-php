@@ -77,6 +77,9 @@ RUN echo "sapi/cli/tests/bug61546.phpt" >> disabled-tests.list
 RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests.list
 # flaky under the parallel test run: FPM can fail to bind its fixed test port ("Address in use"), seen on the arm64 runner
 RUN echo "sapi/fpm/tests/gh8646.phpt" >> disabled-tests.list
+# if FPM fails to start (see above), tester.inc getPid() returns 0 and this test runs `kill -USR1 0`, which signals
+# the whole process group and aborts `make test` ("User defined signal 1")
+RUN echo "sapi/fpm/tests/gh8885-stderr-fd-reload-usr1.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_009.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
