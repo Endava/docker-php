@@ -75,11 +75,10 @@ RUN echo "ext/posix/tests/posix_getpwnam_basic_01.phpt" >> disabled-tests.list
 RUN echo "ext/posix/tests/posix_getpwuid_basic.phpt" >> disabled-tests.list
 RUN echo "sapi/cli/tests/bug61546.phpt" >> disabled-tests.list
 RUN echo "sapi/fpm/tests/socket-uds-numeric-ugid-nonroot.phpt" >> disabled-tests.list
-# flaky under the parallel test run: FPM can fail to bind its fixed test port ("Address in use"), seen on the arm64 runner
-RUN echo "sapi/fpm/tests/gh8646.phpt" >> disabled-tests.list
-# if FPM fails to start (see above), tester.inc getPid() returns 0 and this test runs `kill -USR1 0`, which signals
-# the whole process group and aborts `make test` ("User defined signal 1")
-RUN echo "sapi/fpm/tests/gh8885-stderr-fd-reload-usr1.phpt" >> disabled-tests.list
+# Leaks FPM's listening socket into a background `sleep 3 &`, so the port stays bound after the test. The next FPM
+# tests then fail to start ("Address in use"), and a test that signals FPM then runs `kill -USR1 0`/`kill -USR2 0`
+# (tester.inc getPid() returns 0), which aborts the whole `make test` run.
+RUN echo "sapi/fpm/tests/gh24046-stdio-pipe-double-close.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_009.phpt" >> disabled-tests.list
 RUN echo "ext/curl/tests/curl_basic_024.phpt" >> disabled-tests.list
 RUN echo "ext/standard/tests/file/bug52820.phpt" >> disabled-tests.list
