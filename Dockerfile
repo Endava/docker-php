@@ -1,6 +1,6 @@
 FROM ubuntu:noble-20240605
 
-ARG PHP_VERSION="8.2.35"
+ARG PHP_VERSION="8.2.36"
 ARG PHP_PACKAGE_BASENAME="php8.2"
 ARG PHP_PACKAGE_BASE_VERSION="8.2"
 ARG PHP_FPM_BINARY_PATH="/usr/sbin/php-fpm8.2"
@@ -13,6 +13,10 @@ ENV UNIT_VERSION=$UNIT_VERSION
 ENV APACHE2_VERSION=$APACHE2_VERSION
 
 ENV DEBIAN_FRONTEND=noninteractive
+
+# ppa.launchpadcontent.net intermittently answers 503 under load (e.g. right after a PHP security release),
+# and the apt default of 3 retries is not always enough
+RUN echo 'Acquire::Retries "10";' > /etc/apt/apt.conf.d/80-retries
 
 RUN apt-get update && apt-get install -y software-properties-common gpg-agent --no-install-recommends && LC_ALL=C.UTF-8 add-apt-repository -y ppa:ondrej/php && apt-get remove --purge -y software-properties-common && apt-get autoremove -y
 
