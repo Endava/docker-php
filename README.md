@@ -42,24 +42,24 @@ and open http://localhost:8080. See the README of the respective release branch 
 
 [github_actions_85_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.5
 [github_actions_85_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.5
-[release_85_link]: https://github.com/endava/docker-php/releases/tag/8.5.12
-[security_report_85_badge]: https://github.com/endava/docker-php/releases/download/8.5.12/vulnerability-status.png
-[security_report_85_link]: https://github.com/endava/docker-php/releases/download/8.5.12/vulnerability-report.html
-[size_85_badge]: https://github.com/endava/docker-php/releases/download/8.5.12/size-status.png
+[release_85_link]: https://github.com/endava/docker-php/releases/tag/8.5.13
+[security_report_85_badge]: https://github.com/endava/docker-php/releases/download/8.5.13/vulnerability-status.png
+[security_report_85_link]: https://github.com/endava/docker-php/releases/download/8.5.13/vulnerability-report.html
+[size_85_badge]: https://github.com/endava/docker-php/releases/download/8.5.13/size-status.png
 
 [github_actions_84_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.4
 [github_actions_84_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.4
-[release_84_link]: https://github.com/endava/docker-php/releases/tag/8.4.27
-[security_report_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.27/vulnerability-status.png
-[security_report_84_link]: https://github.com/endava/docker-php/releases/download/8.4.27/vulnerability-report.html
-[size_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.27/size-status.png
+[release_84_link]: https://github.com/endava/docker-php/releases/tag/8.4.28
+[security_report_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.28/vulnerability-status.png
+[security_report_84_link]: https://github.com/endava/docker-php/releases/download/8.4.28/vulnerability-report.html
+[size_84_badge]: https://github.com/endava/docker-php/releases/download/8.4.28/size-status.png
 
 [github_actions_83_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.3
 [github_actions_83_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3
-[release_83_link]: https://github.com/endava/docker-php/releases/tag/8.3.36
-[security_report_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.36/vulnerability-status.png
-[security_report_83_link]: https://github.com/endava/docker-php/releases/download/8.3.36/vulnerability-report.html
-[size_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.36/size-status.png
+[release_83_link]: https://github.com/endava/docker-php/releases/tag/8.3.37
+[security_report_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.37/vulnerability-status.png
+[security_report_83_link]: https://github.com/endava/docker-php/releases/download/8.3.37/vulnerability-report.html
+[size_83_badge]: https://github.com/endava/docker-php/releases/download/8.3.37/size-status.png
 
 [github_actions_82_badge]: https://github.com/Endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release%2F8.2
 [github_actions_82_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2
@@ -85,59 +85,59 @@ and open http://localhost:8080. See the README of the respective release branch 
 
 [github_actions_82ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.2-ubuntu
 [github_actions_82ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2-ubuntu
-[release_82ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.2.35-ubuntu
-[security_report_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.35-ubuntu/vulnerability-status.png
-[security_report_82ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.2.35-ubuntu/vulnerability-report.html
-[size_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.35-ubuntu/size-status.png
+[release_82ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.2.36-ubuntu
+[security_report_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.36-ubuntu/vulnerability-status.png
+[security_report_82ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.2.36-ubuntu/vulnerability-report.html
+[size_82ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.2.36-ubuntu/size-status.png
 
 [github_actions_83ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.3-ubuntu
 [github_actions_83ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3-ubuntu
-[release_83ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.3.36-ubuntu
-[security_report_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.36-ubuntu/vulnerability-status.png
-[security_report_83ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.3.36-ubuntu/vulnerability-report.html
-[size_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.36-ubuntu/size-status.png
+[release_83ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.3.37-ubuntu
+[security_report_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.37-ubuntu/vulnerability-status.png
+[security_report_83ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.3.37-ubuntu/vulnerability-report.html
+[size_83ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.3.37-ubuntu/size-status.png
 
 [github_actions_84ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.4-ubuntu
 [github_actions_84ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.4-ubuntu
-[release_84ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.4.27-ubuntu
-[security_report_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.27-ubuntu/vulnerability-status.png
-[security_report_84ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.4.27-ubuntu/vulnerability-report.html
-[size_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.27-ubuntu/size-status.png
+[release_84ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.4.28-ubuntu
+[security_report_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.28-ubuntu/vulnerability-status.png
+[security_report_84ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.4.28-ubuntu/vulnerability-report.html
+[size_84ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.4.28-ubuntu/size-status.png
 
 [github_actions_85ubuntu_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.5-ubuntu
 [github_actions_85ubuntu_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.5-ubuntu
-[release_85ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.5.12-ubuntu
-[security_report_85ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.5.12-ubuntu/vulnerability-status.png
-[security_report_85ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.5.12-ubuntu/vulnerability-report.html
-[size_85ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.5.12-ubuntu/size-status.png
+[release_85ubuntu_link]: https://github.com/endava/docker-php/releases/tag/8.5.13-ubuntu
+[security_report_85ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.5.13-ubuntu/vulnerability-status.png
+[security_report_85ubuntu_link]: https://github.com/endava/docker-php/releases/download/8.5.13-ubuntu/vulnerability-report.html
+[size_85ubuntu_badge]: https://github.com/endava/docker-php/releases/download/8.5.13-ubuntu/size-status.png
 
 [github_actions_82zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.2-zts
 [github_actions_82zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.2-zts
-[release_82zts_link]: https://github.com/endava/docker-php/releases/tag/8.2.35-zts
-[security_report_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.35-zts/vulnerability-status.png
-[security_report_82zts_link]: https://github.com/endava/docker-php/releases/download/8.2.35-zts/vulnerability-report.html
-[size_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.35-zts/size-status.png
+[release_82zts_link]: https://github.com/endava/docker-php/releases/tag/8.2.36-zts
+[security_report_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.36-zts/vulnerability-status.png
+[security_report_82zts_link]: https://github.com/endava/docker-php/releases/download/8.2.36-zts/vulnerability-report.html
+[size_82zts_badge]: https://github.com/endava/docker-php/releases/download/8.2.36-zts/size-status.png
 
 [github_actions_83zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.3-zts
 [github_actions_83zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.3-zts
-[release_83zts_link]: https://github.com/endava/docker-php/releases/tag/8.3.36-zts
-[security_report_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.36-zts/vulnerability-status.png
-[security_report_83zts_link]: https://github.com/endava/docker-php/releases/download/8.3.36-zts/vulnerability-report.html
-[size_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.36-zts/size-status.png
+[release_83zts_link]: https://github.com/endava/docker-php/releases/tag/8.3.37-zts
+[security_report_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.37-zts/vulnerability-status.png
+[security_report_83zts_link]: https://github.com/endava/docker-php/releases/download/8.3.37-zts/vulnerability-report.html
+[size_83zts_badge]: https://github.com/endava/docker-php/releases/download/8.3.37-zts/size-status.png
 
 [github_actions_84zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.4-zts
 [github_actions_84zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.4-zts
-[release_84zts_link]: https://github.com/endava/docker-php/releases/tag/8.4.27-zts
-[security_report_84zts_badge]: https://github.com/endava/docker-php/releases/download/8.4.27-zts/vulnerability-status.png
-[security_report_84zts_link]: https://github.com/endava/docker-php/releases/download/8.4.27-zts/vulnerability-report.html
-[size_84zts_badge]: https://github.com/endava/docker-php/releases/download/8.4.27-zts/size-status.png
+[release_84zts_link]: https://github.com/endava/docker-php/releases/tag/8.4.28-zts
+[security_report_84zts_badge]: https://github.com/endava/docker-php/releases/download/8.4.28-zts/vulnerability-status.png
+[security_report_84zts_link]: https://github.com/endava/docker-php/releases/download/8.4.28-zts/vulnerability-report.html
+[size_84zts_badge]: https://github.com/endava/docker-php/releases/download/8.4.28-zts/size-status.png
 
 [github_actions_85zts_badge]: https://github.com/endava/docker-php/actions/workflows/ci.yml/badge.svg?branch=release/8.5-zts
 [github_actions_85zts_link]: https://github.com/endava/docker-php/actions?query=branch%3Arelease%2F8.5-zts
-[release_85zts_link]: https://github.com/endava/docker-php/releases/tag/8.5.12-zts
-[security_report_85zts_badge]: https://github.com/endava/docker-php/releases/download/8.5.12-zts/vulnerability-status.png
-[security_report_85zts_link]: https://github.com/endava/docker-php/releases/download/8.5.12-zts/vulnerability-report.html
-[size_85zts_badge]: https://github.com/endava/docker-php/releases/download/8.5.12-zts/size-status.png
+[release_85zts_link]: https://github.com/endava/docker-php/releases/tag/8.5.13-zts
+[security_report_85zts_badge]: https://github.com/endava/docker-php/releases/download/8.5.13-zts/vulnerability-status.png
+[security_report_85zts_link]: https://github.com/endava/docker-php/releases/download/8.5.13-zts/vulnerability-report.html
+[size_85zts_badge]: https://github.com/endava/docker-php/releases/download/8.5.13-zts/size-status.png
 
 # Unsupported Versions
 
